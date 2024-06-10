@@ -1,0 +1,396 @@
+---
+title: "Predictive Modeling - Tree based models"
+author: "Dr. Roch Nianogo, Bowen Zhang, Dr. Hua Zhou"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+    link-external-icon: true
+    link-external-newwindow: true
+knitr:
+  opts_chunk: 
+    cache: false    
+    echo: true
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+jupyter:
+    kernelspec:
+        name: "ir43"
+        language: "R"
+        display_name: "R 4.3.2"    
+comments:
+  hypothesis: true
+---
+
+```{r}
+#| code-fold: true
+#| output: false
+
+library(tidyverse)
+library(tidycensus)
+census_api_key("4cf445b70eabd0b297a45e7f62f52c27ba3b5cae",
+               install = TRUE, overwrite = TRUE)
+Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
+library(censusapi)
+library(gtsummary)
+library(knitr)
+library(tigris)
+library(maps)
+library(ggplot2)
+library(tidymodels)
+
+```
+
+
+<div style="text-align: center;">
+  <img src="https://d33wubrfki0l68.cloudfront.net/795c039ba2520455d833b4034befc8cf360a70ba/558a5/diagrams/data-science-explore.png" alt="Data Science Diagram">
+</div>
+
+```{r, include=FALSE}
+#| eval: true
+
+
+fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
+                                    vintage = 2021,
+                                    vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
+                                             "HRHTYPE", "GEREG", "HRPOOR",
+                                             "PRTAGE", "PEEDUCA", "PRCHLD",
+                                             "PEMLR", "PTDTRACE", "PEHSPNON",
+                                             "HRFS12M1", "HHSUPWGT",
+                                             "PERRP")) |>
+  as_tibble() |>
+  filter(PERRP %in% c(40, 41), # Reference person
+         HRFS12M1 %in% c(1, 2, 3), # Valid food security status codes
+         PEMLR %in% c(1, 2, 3, 4, 5, 6, 7), # Valid employment status codes
+         ) |>
+  
+  # Keep householder of the family
+  group_by(HRHHID, HRHHID2) |>
+  slice_min(PERRP) |>
+  ungroup() |>
+  
+  # Data preprocessing
+  mutate(HRFS12M1 = factor(HRFS12M1,
+                           levels = c("1", "2", "3"),
+                           labels = c("Food Security",
+                                      "Low Food Security",
+                                      "Very Low Food Security")),
+         HRNUMHOU = as.numeric(HRNUMHOU),
+         HHSUPWGT = as.numeric(HHSUPWGT),
+         
+         # Combining some categories
+         HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 3, 6, 9, 10),
+                       labels = c("MarriedFamily", "UnmarriedFamily",
+                                  "Individual", "GroupQuarters")),
+         GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
+                        labels = c("Northeast", "Midwest", "South", "West")),
+         PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 39, 43, 46),
+                       labels = c("LessThanHighSchool",
+                                  "HighSchoolOrAssociateDegree",
+                                  "CollegeOrHigher")),
+         PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 3, 5, 7),
+                     labels = c("Employed", "NotEmployed",
+                                "NotInLaborForce")),
+         
+         PRTAGE = as.numeric(PRTAGE),
+         PEHSPNON = factor(PEHSPNON, levels = c(1, 2),
+                           labels = c("Hispanic", "Non-Hispanic")),
+         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 2, 3, 26),
+                        labels = c("White", "Black", "Others")),
+         RACE = ifelse(PEHSPNON == "Hispanic",
+                       "Hispanic", str_c(PTDTRACE, " non-Hispanic")),
+         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children"),
+         HRPOOR = factor(HRPOOR, levels = c(1, 2),
+                         labels = c("Poor", "NotPoor"))
+  )
+
+data_clean <- fss_21_data |>
+  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
+         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
+  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security", 0, 1))
+```
+
+## Classification and Regression Trees (CART) (Machine Learning, A Probabilistic Perspective 18.1)
+
+A CART model is a tree structure conisting of a set of nested decision rules. At each node $i$,  the feature dimension $d_i$ of the input vector $\mathbf x$ is compared to a threshold value $t_i$, and the input is then passed down to the left or right branch, depending on whether it is above or below threshold.  (For categorical values, we compare if $x_{d_i}$ is equal to the target value $t_i$ or not.) At the leaves of the tree, the model specifies a distribution over the output for points that are in that part of the input space.
+
+Formally, a CART model can be defined by
+
+$$
+T(\mathbf x; \theta) = \sum_{j=1}^J w_j \mathbf 1(\mathbf x \in R_j)
+$$
+
+where $R_j$ is the region specified by the $j$’th leaf node, $w_j$ is the predicted output for that node, and $\boldsymbol \theta = \{ (R_j, w_j): j = 1:J \}$ (For regression, the predicted output for each leaf $w_j$ is a scalar; for classification, it can be the logits or class probabilities.)
+
+<div style="text-align: center;">
+  <img src="./18_1.jpg" alt="default" width=750>
+</div>
+
+Tree-based models are non-parametric models, so the loss function is not differentiable. Instead, The standard practice is to use a greedy procedure, in which we iteratively grow the tree one node at a time. This approach is used by CART, C4.5, and ID3, which are three popular implementations of the method.
+
+For classification, we first compute the empirical distribution over class labels for this node:
+
+$$
+\widehat \pi_{i,c} = \frac{1}{|D_i|} \sum_{n \in D_i} \mathbf 1(y_n = c)
+$$
+
+Given this, we can then compute the **Gini index**:
+
+$$
+G_i = \sum_{c=1}^C \widehat \pi_{i,c} (1 - \widehat \pi_{i,c})
+$$
+
+This is the expected error rate. To see this, note that $\widehat \pi_{i,c}$ is the probability a random entry in the leaf belongs to class $c$, and $1 - \widehat \pi_{i,c}$ is the probability it would be misclassified.
+
+Each node in the tree is a partition of the input space. If we want to further partition the space into left and right subtrees, we choose the best feature $j_i$ to split on, and the best value for that feature $t_i$, as follows:
+
+$$
+(j_i, t_i) = \arg \min_{j,t} \left[ \frac{|D_{i}^L(j,t)|}{|D_i|} G_{i}^L(j,t) + \frac{|D_{i}^R(j,t)|}{|D_i|} G_{i}^R(j,t) \right]
+$$
+
+Alternatively we can replace the Gini index by the **entropy** or deviance of the node:
+
+$$
+H_i = - \sum_{c=1}^C \widehat \pi_{i,c} \log \widehat \pi_{i,c}
+$$
+
+A node that is pure (i.e., only has examples of one class) will have 0 entropy.
+
+According to the above rule, we can to pick the best feature, and best threshold at each node. We then partition the data, and call the fitting algorithm recursively on each subset of the data.
+
+If we let the tree become deep enough, it can achieve 0 error on the training set (assuming no label noise), by partioning the input space into sufficiently small regions where the output is constant. However, this will typically result in overfitting. To prevent this, there are two main approaches: The first is to stop the tree growing process according to some heuristic. The second approach is to grow the tree to its maximum
+ depth, where no more splits are possible, and then to prune it back.
+ 
+-   Advantages of trees
+    -   Trees are easy to interpret.
+    -   Some people believe that decision trees more closely mirror human decision-making.
+    -   Trees can be displayed graphically.
+    -   Trees can easily handle qualitative predictors.
+-   Disadvantages of trees
+    -   Trees have Bad predictions.
+    -   Trees can be very non-robust.
+
+## Bagging, Random Forests, Boosting (ISL 8.2)
+
+### Bagging
+
+The decision trees suffer from high variance. This means that if we split the training data into two parts at random, and fit a decision tree to both halves, the results that we get could be quite different. 
+
+Bootstrap aggregation, or bagging, is a general-purpose procedure for reducing the bagging variance of a statistical learning method.
+
+**Averaging a set of observations reduces variance**, we generate B different bootstrapped training data sets to get $\hat f^{*b}(x)$. We then train our method on the $b$th bootstrapped training set, and finally average all the predictions, to obtain
+
+$$
+\hat f_{\text{bag}}(x) =  \frac{1}{B} \sum_{b=1}^B \hat f^{*b}(x)
+$$
+
+Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
+
+### Random Forests
+
+Random forests provide an improvement over bagged trees by way of a small tweak that decorrelates the trees. As in bagging, we build a number of decision trees on bootstrapped training samples. But when building these decision trees, each time a split in a tree is considered, a random sample of $m$ predictors is chosen as split candidates from the full set of $p$ predictors. **The split is allowed to use only one of those** $m$ **predictors**. Using a small value of m in building a random forest will typically be helpful when we have a large number of correlated predictors.
+
+### Boosting
+
+Boosting works in a similar way as bagging, except that **the trees are grown sequentially**: each tree is grown using information from previously grown trees. Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.
+
+For binary classification problem, each classifier $F_m \in \{-1, +1\}$. In particular, we first $F_1$ on the original data, and then we weight the data samples by the errors made by $F_1$, so misclassified examples get more weight. Next we fit $F_2$ to this weighted data set. We keep repeating this process until we have fit the desired number $M$ of components.
+
+It can be shown that, as long as each $F_m$ has an accuracy that is better than chance (even on the weighted dataset), then the final ensemble of classifiers will have higher accuracy than any given component. That is, if $F_m$ is a **weak learner** (so its accuracy is only slightly better than 50%), then we can boost its performance using the above procedure so that the final f becomes a **strong learner**.
+
+Note that boosting reduces the bias of the strong learner, by fitting trees that depend on each other, whereas bagging and RF reduce the variance by fitting independent trees. In many cases, boosting can work better (but take more time to train).
+
+
+
+## Random forest workflow
+
+```{r}
+#| eval: true
+
+data_clean <- fss_21_data |>
+  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
+         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
+  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security",
+                           "Food Security", "Food Insecurity"))
+```
+
+### Initial split into test and non-test sets
+
+```{r}
+#| eval: true
+
+# For reproducibility
+set.seed(2024)
+
+data_split <- initial_split(
+  data_clean, 
+  # stratify by HRFS12M1
+  strata = "HRFS12M1", 
+  prop = 0.75
+  )
+data_split
+
+data_other <- training(data_split)
+dim(data_other)
+
+data_test <- testing(data_split)
+dim(data_test)
+```
+
+### Recipe
+
+```{r}
+#| eval: true
+
+recipe <- 
+  recipe(
+    HRFS12M1 ~ .,
+    data = data_other
+  ) |>
+  # remove the weights
+  step_rm(HHSUPWGT) |>
+  # create dummy variables for categorical predictors
+  step_dummy(all_nominal_predictors()) |>
+  # zero-variance filter
+  step_zv(all_numeric_predictors()) |> 
+  # center and scale numeric data
+  step_normalize(all_numeric_predictors()) |>
+  # estimate the means and standard deviations
+  print()
+
+```
+
+### Model
+
+```{r}
+#| eval: true
+
+library(ranger)
+
+rf_mod <- 
+  rand_forest(
+    mode = "classification",
+    # Number of predictors randomly sampled in each split
+    mtry = tune(),
+    # Number of trees in ensemble
+    trees = tune()
+  ) |> 
+  set_engine("ranger")
+rf_mod
+```
+
+
+### Workflow
+
+```{r}
+#| eval: true
+
+rf_wf <- workflow() |>
+  add_recipe(recipe) |>
+  add_model(rf_mod)
+rf_wf
+```
+
+### Tuning grid
+
+```{r}
+#| eval: true
+
+param_grid <- grid_regular(
+  trees(range = c(100L, 500L)), 
+  mtry(range = c(1L, 5L)),
+  levels = c(5, 5)
+  )
+param_grid
+```
+
+### Cross-validation (CV)
+
+Set cross-validation partitions.
+
+```{r}
+#| eval: true
+
+set.seed(2024)
+
+folds <- vfold_cv(data_other, v = 5)
+folds
+```
+
+Fit cross-validation.
+
+```{r}
+#| eval: true
+
+set.seed(2024)
+
+rf_fit <- rf_wf |>
+  tune_grid(
+    resamples = folds,
+    grid = param_grid,
+    metrics = metric_set(roc_auc, accuracy)
+    )
+rf_fit
+
+```
+
+Visualize CV results:
+
+```{r}
+#| eval: true
+
+rf_fit |>
+  collect_metrics() |>
+  print(width = Inf) |>
+  filter(.metric == "roc_auc") |>
+  ggplot(mapping = aes(x = trees, y = mean, color = factor(mtry))) +
+  geom_point() + 
+  # geom_line() + 
+  labs(x = "Num. of Trees", y = "CV AUC")
+```
+
+Show the top 5 models.
+
+```{r}
+#| eval: true
+
+rf_fit |>
+  show_best(metric = "roc_auc")
+```
+
+Let’s select the best model.
+
+```{r}
+#| eval: true
+
+best_rf <- rf_fit |>
+  select_best(metric = "roc_auc")
+best_rf
+```
+
+### Final model
+
+```{r}
+#| eval: true
+
+# Final workflow
+final_wf <- rf_wf |>
+  finalize_workflow(best_rf)
+
+final_fit <- 
+  final_wf |>
+  last_fit(data_split)
+
+# Test metrics
+final_fit |> 
+  collect_metrics()
+```
+
+Random forest model has a better performance than logistic regression model in terms of AUC and accuracy.

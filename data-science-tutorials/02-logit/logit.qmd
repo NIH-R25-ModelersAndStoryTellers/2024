@@ -1,0 +1,637 @@
+---
+title: "Predictive Modeling - Logistic Regression and Regularization"
+author: "Dr. Roch Nianogo, Bowen Zhang, Dr. Hua Zhou"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+    link-external-icon: true
+    link-external-newwindow: true
+knitr:
+  opts_chunk: 
+    cache: false    
+    echo: true
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+jupyter:
+    kernelspec:
+        name: "ir43"
+        language: "R"
+        display_name: "R 4.3.2"    
+comments:
+  hypothesis: true
+---
+
+```{r}
+#| code-fold: true
+#| output: false
+
+library(tidyverse)
+library(tidycensus)
+census_api_key("4cf445b70eabd0b297a45e7f62f52c27ba3b5cae",
+               install = TRUE, overwrite = TRUE)
+Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
+library(censusapi)
+library(gtsummary)
+library(knitr)
+library(tigris)
+library(maps)
+library(ggplot2)
+
+```
+
+
+<div style="text-align: center;">
+  <img src="https://d33wubrfki0l68.cloudfront.net/795c039ba2520455d833b4034befc8cf360a70ba/558a5/diagrams/data-science-explore.png" alt="Data Science Diagram">
+</div>
+
+
+## Logistic Regression
+
+### Brief review of linear regression
+
+<div style="text-align: center;">
+  <img src="https://www.frontiersin.org/files/Articles/815717/fbuil-08-815717-HTML/image_m/fbuil-08-815717-g003.jpg" alt="Machine Learning">
+</div>
+
+-   `Default` dataset
+
+We are interested in predicting whether an individual will default on his or her credit card payment, on the basis of annual income and monthly credit card balance.
+
+<div style="text-align: center;">
+  <img src="./4_1.jpg" alt="default" width=700>
+</div>
+
+The response `default` falls into one of two categories, Yes or No. Rather than modeling this response Y directly, logistic regression models the probability that Y belongs to a particular category.
+
+<div style="text-align: center;">
+  <img src="./4_2.jpg" alt="default" width=700>
+</div>
+
+$$
+Y_i = \begin{cases}
+1 & \text{with probability } p_i \\
+0 & \text{with probability } 1 - p_i
+\end{cases}
+$$
+
+The parameter $p_i = \mathbb{E}(Y_i)$ will be related to the predictors $\mathbf{x}_i$ via
+
+$$
+p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
+$$
+where $\eta_i$ is the **linear predictor** or **systematic component**
+$$
+\eta_i = \mathbf{x}_i^T \boldsymbol{\beta}
+$$
+
+$$
+\log \left( \frac{p}{1-p} \right) = \log(\text{odds}) = \beta_0 + \beta_1  x_1 + \beta_2  x_2 + \dots + \beta_q  x_q. 
+$$
+
+Therefore $\beta_1$ can be interpreted as a unit increase in $x_1$ with other predictors held fixed increases the **log-odds** of success by $\beta_1$, or increase the odds of success by a factor of $e^{\beta_1}$. 
+
+### Logistic Regression on Food Security Data
+
+To further investigate the factors that are associated with food insecurity, we can use logistic regression to model the probability of a household being in low food security.
+
+We include the following independent variables in the model:
+
+-   HRNUMHOU: Total number of persons living in the household.
+-   HRHTYPE: Household type
+    -   0 = Non-interview household
+    -   1 = Husband/wife primary family (neither AF)
+    -   2 = Husband/wife primary family (either/both AF)
+    -   3 = Unmarried civilian male-primary. family householder
+    -   4 = Unmarried civilian female-prim family householder
+    -   5 = Primary family householder-rp in AF, unmarried.
+    -   6 = Civilian male primary individual
+    -   7 = Civilian female primary individual
+    -   8 = Primary individual householder-rp in AF
+    -   9 = Group quarters with family
+    -   10 = Group quarters without family
+-   GEREG: Region
+    -   1 = Northeast
+    -   2 = Midwest
+    -   3 = South
+    -   4 = West
+-   PRTAGE: Age of the reference person
+-   PEHSPNON: Hispanic or non-hispanic of the reference person
+    -   1 = Hispanic
+    -   2 = Non-Hispanic
+-   PTDTRACE: Race of the reference person
+    -   1 = White only
+    -   2 = Black only
+    -   3\~26 = Others
+-   PEEDUCA: Highest level of education completed
+    -   31 = Less than 1st grade
+    -   32 = 1st, 2nd, 3rd, or 4th grade
+    -   33 = 5th or 6th grade
+    -   34 = 7th or 8th grade
+    -   35 = 9th grade
+    -   36 = 10th grade
+    -   37 = 11th grade
+    -   38 = 12th grade no diploma
+    -   39 = High school grad-diploma or equiv (GED)
+    -   40 = Some college but no degree
+    -   41 = Associate degree-occupational/vocational
+    -   42 = Associate degree-academic program
+    -   43 = Bachelor's degree (ex: BA, AB, BS)
+    -   44 = Master's degree (ex: MA, MS, MEng, MEd, MSW)
+    -   45 = Professional school degree (ex: MD, DDS, DVM)
+    -   46 = Doctorate degree (ex: PhD, EdD)
+-   PEMLR: Employment status
+    -   1 = Employed-at work
+    -   2 = Employed-absent
+    -   3 = Unemployed-on layoff
+    -   4 = Unemployed-looking
+    -   5 = Not in labor force-retired
+    -   6 = Not in labor force-disabled
+    -   7 = Not in labor force-other
+-   PRCHLD: Presence of own children < 18 years old
+    -   0 = No children
+    -   1~15 = Have children
+-   HRPOOR: Poverty status
+    -   1 = Poor (Below 185% poverty)
+    -   2 = Not poor (Above 185% poverty or income not reported)
+
+```{r}
+#| eval: true
+
+fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
+                                    vintage = 2021,
+                                    vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
+                                             "HRHTYPE", "GEREG", "HRPOOR",
+                                             "PRTAGE", "PEEDUCA", "PRCHLD",
+                                             "PEMLR", "PTDTRACE", "PEHSPNON",
+                                             "HRFS12M1", "HHSUPWGT",
+                                             "PERRP")) |>
+  as_tibble() |>
+  filter(PERRP %in% c(40, 41), # Reference person
+         HRFS12M1 %in% c(1, 2, 3), # Valid food security status codes
+         PEMLR %in% c(1, 2, 3, 4, 5, 6, 7), # Valid employment status codes
+         ) |>
+  
+  # Keep householder of the family
+  group_by(HRHHID, HRHHID2) |>
+  slice_min(PERRP) |>
+  ungroup() |>
+  
+  # Data preprocessing
+  mutate(HRFS12M1 = factor(HRFS12M1,
+                           levels = c("1", "2", "3"),
+                           labels = c("Food Security",
+                                      "Low Food Security",
+                                      "Very Low Food Security")),
+         HRNUMHOU = as.numeric(HRNUMHOU),
+         HHSUPWGT = as.numeric(HHSUPWGT),
+         
+         # Combining some categories
+         HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 3, 6, 9, 10),
+                       labels = c("MarriedFamily", "UnmarriedFamily",
+                                  "Individual", "GroupQuarters")),
+         GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
+                        labels = c("Northeast", "Midwest", "South", "West")),
+         PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 39, 43, 46),
+                       labels = c("LessThanHighSchool",
+                                  "HighSchoolOrAssociateDegree",
+                                  "CollegeOrHigher")),
+         PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 3, 5, 7),
+                     labels = c("Employed", "NotEmployed",
+                                "NotInLaborForce")),
+         
+         PRTAGE = as.numeric(PRTAGE),
+         PEHSPNON = factor(PEHSPNON, levels = c(1, 2),
+                           labels = c("Hispanic", "Non-Hispanic")),
+         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 2, 3, 26),
+                        labels = c("White", "Black", "Others")),
+         RACE = ifelse(PEHSPNON == "Hispanic",
+                       "Hispanic", str_c(PTDTRACE, " non-Hispanic")),
+         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children"),
+         HRPOOR = factor(HRPOOR, levels = c(1, 2),
+                         labels = c("Poor", "NotPoor"))
+  )
+```
+
+
+To transform the response variable `HRFS12M1` into a binary variable, we set `HRFS12M1 = 0` if the household is in food security and `HRFS12M1 = 1` otherwise.
+
+
+```{r}
+#| eval: true
+
+data_clean <- fss_21_data |>
+  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
+         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
+  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security", 0, 1))
+
+logit_model <- glm(HRFS12M1 ~ . - HHSUPWGT,
+                   data = data_clean, family = "binomial")
+
+# gtsummary package offers a nice summary of the model
+logit_model |>
+  tbl_regression() |>
+  bold_labels() |>
+  bold_p(t = 0.05)
+```
+
+
+### ROC Curve
+
+If we want to use this model for prediction, we need to evaluate its performance. There are many metrics related to classification models, such as accuracy, precision, recall, Sensitivity, Specificity,...
+
+$$
+\begin{aligned}
+\text{Accuracy} &= \frac{TP + TN}{TP + TN + FP + FN} \\
+\text{Precision} &= \frac{TP}{TP + FP} \\
+\text{Recall} &= \frac{TP}{TP + FN} \\
+\text{Sensitivity} &= \frac{TP}{TP + FN} \\
+\text{Specificity} &= \frac{TN}{TN + FP}
+\end{aligned}
+$$
+
+
+```{r}
+#| eval: true
+
+pred_prob <- predict(logit_model, type = "response")
+
+# Set the threshold 0.5
+threshold <- 0.5
+
+predicted_class <- ifelse(pred_prob > threshold, 1, 0)
+predicted_class <- as.factor(predicted_class)
+actual_class <- data_clean$HRFS12M1
+
+ctb_50 <- table(Predicted = predicted_class, Actual = actual_class)
+
+# Set the threshold 0.1
+threshold <- 0.1
+
+predicted_class <- ifelse(pred_prob > threshold, 1, 0)
+predicted_class <- as.factor(predicted_class)
+actual_class <- data_clean$HRFS12M1
+
+ctb_10 <- table(Predicted = predicted_class, Actual = actual_class)
+
+list(threshold50 = ctb_50, threshold10 = ctb_10)
+
+```
+
+If we set different thresholds, the confusion matrix will change, thus the metrics will change.
+
+```{r}
+#| eval: true
+
+# Calculate metrics under different thresholds
+calc_metrics <- function(ct) {
+  c(Accuracy = (ct[1, 1] + ct[2, 2]) / sum(ct),
+    Sensitivity = ct[2, 2] / sum(ct[, 2]),
+    Specificity = ct[1, 1] / sum(ct[, 1]),
+    Precision = ct[2, 2] / sum(ct[2, ]))
+}
+
+
+metrics50 <- calc_metrics(ctb_50)
+metrics10 <- calc_metrics(ctb_10)
+
+data.frame(threshold50 = metrics50, threshold10 = metrics10) |>
+  t() |>
+  round(2) |>
+  kable()
+
+```
+
+If we set the threshold to 0.5, the accuracy is 0.90, which is quite higher than setting threshold to 0.1. However, the sensitivity is only 0.02, which means the model can only capture 2% of the households in low food security. In contrast, if we set the threshold to 0.1, the sensitivity is 0.69, which means the model can capture 68% of the households in low food security. However, the specificity decreases to 0.76. This trade-off is common in classification models.
+
+Therefore, we need a metric that can evaluate the model's performance under different thresholds. The ROC curve is a good choice. The ROC curve is a popular graphic for simultaneously displaying the two types of errors for all possible thresholds. The name “ROC” is historic, and comes from communications theory. It is an acronym for receiver operating characteristics.
+
+The overall performance of a classifier, summarized over all possible thresholds, is given by the area under the (ROC) curve (AUC). An ideal ROC curve will hug the top left corner, so the larger area under the AUC the better the classifier. We expect a classifier that performs no better than chance to have an AUC of 0.5.
+
+There is another similar plot called the precision-recall curve, which sets the x-axis as recall and the y-axis as precision. The classifier that has a higher AUC on the ROC curve will always have a higher AUC on the PR curve as well.
+
+```{r}
+#| eval: true
+
+library(pROC)
+
+data_clean <- data_clean |>
+  mutate(prob = predict(logit_model, type = "response"))
+
+roc_data <- roc(data_clean$HRFS12M1, data_clean$prob)
+
+ggroc(roc_data, legacy.axes = TRUE) +
+  labs(title = "ROC Curve for Logistic Regression Model",
+       x = "1 - Specificity",
+       y = "Sensitivity") +
+  theme_minimal() +
+  annotate("text", x = 0.5, y = 0.5,
+           label = paste("AUC =", round(auc(roc_data), 3)))
+```
+
+The logistic regression model has an AUC of 0.788, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
+
+## Assessing Model Accuracy
+
+### Measuring the Quality of Fit (ISL 2.2)
+
+In order to evaluate the performance of a statistical learning method on a given data set, we need some way to measure how well its predictions actually match the observed data. That is, we need to quantify the extent to which the predicted response value for a given observation is close to the true response value for that observation. In the regression setting, the most commonly-used measure is the mean squared error (MSE), given by
+
+$$
+\text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}(x_i))^2.
+$$
+The MSE will be small if the predicted responses are very close to the true responses, and will be large if for some of the observations, the predicted and true responses differ substantially.
+
+The MSE is computed using the training data that was used to fit the model. But in general, we do not really care how well the method works training on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unseen test data. We’d like to select the model for which the average of the test MSE is as small as possible.
+
+<div style="text-align: center;">
+  <img src="./2_9.jpg" alt="default" width=700>
+</div>
+
+As model flexibility increases, training MSE will decrease, but the test MSE may not. When a given method yields a small training MSE but a large test MSE, we are said to be overfitting the data.
+
+
+::: {.callout-tip}
+-   Does it mean simpler models are always better?
+
+**No Free Lunch Theorem** [David Wolpert, William Macready]: Any two optimization algorithms are equivalent when their performance is averaged across all possible problems.
+
+<div style="text-align: center;">
+  <img src="./nfl_train.jpg" alt="default" width=700>
+</div>
+
+The black points represent the training data. There are two models A and B, in which model B is more flexible than model A. 
+
+
+<div style="text-align: center;">
+  <img src="./nfl_test.jpg" alt="default" width=700>
+</div>
+
+The white points represent the test data. In the left panel, model A has a smaller test MSE than model B. In the right panel, model B has a smaller test MSE than model A. Therefore, we cannot say that simpler models are always better.
+:::
+
+
+In practice, one can usually compute the training MSE with relative ease, but estimating test MSE is considerably more difficult because usually no test data are available. The flexibility level corresponding to the model with the minimal test MSE can vary considerably among data sets. One important method is cross-validation, which is a cross method for estimating test MSE using the training data.
+
+### Cross-Validation (ISL 5.1)
+
+K-fold cross-validation randomly divides the set of observations into k groups, or folds, of approximately equal size. The first fold is treated as a validation set, and the method is fit on the remaining k − 1 folds. The mean squared error, $\text{MSE}_1$, is then computed on the observations in the held-out fold. This procedure is repeated k times; each time, a different group of observations is treated as a validation set. This process results in k estimates of the test error, $\text{MSE}_1$, $\text{MSE}_2$,..., $\text{MSE}_k$. The k-fold CV estimate is computed by averaging these values,
+
+$$
+\text{CV}_{(k)} = \frac{1}{k} \sum_{i=1}^{k} \text{MSE}_i.
+$$
+
+<div style="text-align: center;">
+  <img src="./kfold.jpg" alt="default" width=700>
+</div>
+
+
+
+
+## Tidymodels Overview
+
+- [tidymodels](https://www.tidymodels.org/) is an ecosystem for:
+
+    1. Feature engineering: coding qualitative predictors, transformation of predictors (e.g., log), extracting key features from raw variables (e.g., getting the day of the week out of a date variable), interaction terms, ... ([recipes](https://recipes.tidymodels.org/reference/index.html) package);  
+    2. Build and fit a model ([parsnip](https://parsnip.tidymodels.org/index.html) package);  
+    3. Evaluate model using resampling (such as cross-validation) ([tune](https://tune.tidymodels.org/) and [dial](https://dials.tidymodels.org/) packages);  
+    4. Tuning model parameters.
+
+<p align="center">
+<img src="https://rviews.rstudio.com/2020/04/21/the-case-for-tidymodels/tidymodels.png" height="300">
+</p>
+
+- tidymodels is the R analog of [sklearn.pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) in Python and [MLJ.jl](https://juliaai.github.io/MLJ.jl/stable/) in Julia.
+
+
+## Elastic Net Regularization (Shrinkage Methods, ISL 6.2)
+
+The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
+
+-   In logistic regression, for ridge regression (l-2 penalty), we need to optimize the following objective function:
+
+$$
+\ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
+$$
+  where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
+
+-   For the lasso (l-1 penalty), we need to optimize the following objective function:
+
+$$
+\ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
+$$
+  where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$. 
+
+-   The elastic net combines the ridge and lasso penalties, and the penalty term is $\lambda \left( \alpha \sum_{j=1}^{p} |\beta_j| + \frac{1 - \alpha}{2} \sum_{j=1}^{p} \beta_j^2 \right)$, where $\alpha$ controls the relative weight of the two penalties.
+
+<p align="center">
+<img src="./shrink.jpg" width=700>
+</p>
+
+Implementing ridge regression and the lasso requires a method for selecting a value for the tuning parameter $\lambda$ (and $\alpha$ if we use elastic net). Cross-validation provides a simple way to tackle this problem. We choose a grid of tuning parameters values, and compute the cross-validation error for each value of tuning parameters. We then select the tuning parameters value for which the cross-validation error is smallest. Finally, the model is re-fit using all of the available observations and the selected value of the tuning parameter.
+
+
+## Logistic regression (with enet regularization) workflow
+
+```{r}
+#| eval: true
+
+library(tidymodels)
+library(gtsummary)
+
+data_clean <- fss_21_data |>
+  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
+         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
+  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security",
+                           "Food Security", "Food Insecurity"))
+
+data_clean |>
+  tbl_summary(by = HRFS12M1)
+```
+
+### Initial split into test and non-test sets
+
+We randomly split the data into 25% test data and 75% non-test data. Stratify on food security status.
+
+```{r}
+#| eval: true
+
+# For reproducibility
+set.seed(2024)
+
+data_split <- initial_split(
+  data_clean, 
+  # stratify by HRFS12M1
+  strata = "HRFS12M1", 
+  prop = 0.75
+  )
+data_split
+
+data_other <- training(data_split)
+dim(data_other)
+
+data_test <- testing(data_split)
+dim(data_test)
+```
+
+### Recipe
+
+```{r}
+#| eval: true
+
+recipe <- 
+  recipe(
+    HRFS12M1 ~ .,
+    data = data_other
+  ) |>
+  # remove the weights
+  step_rm(HHSUPWGT) |>
+  # create dummy variables for categorical predictors
+  step_dummy(all_nominal_predictors()) |>
+  # zero-variance filter
+  step_zv(all_numeric_predictors()) |> 
+  # center and scale numeric data
+  step_normalize(all_numeric_predictors()) |>
+  # estimate the means and standard deviations
+  print()
+
+```
+
+### Model
+
+```{r}
+#| eval: true
+
+logit_mod <- 
+  logistic_reg(
+    penalty = tune(), 
+    mixture = tune()
+  ) |> 
+  set_engine("glmnet", standardize = FALSE) |>
+  print()
+```
+
+### Workflow
+
+```{r}
+#| eval: true
+
+train_weight <- round(data_other$HHSUPWGT / 1000, 0)
+train_weight <- ifelse(train_weight == 0, 1, train_weight)
+
+
+logit_wf <- workflow() |>
+  #add_case_weights(train_weight) |>
+  add_recipe(recipe) |>
+  add_model(logit_mod) |>
+  print()
+```
+
+### Tuning grid
+
+```{r}
+#| eval: true
+
+param_grid <- grid_regular(
+  penalty(range = c(-6, 3)), 
+  mixture(),
+  levels = c(100, 5)
+  ) |>
+  print()
+```
+
+
+### Cross-validation (CV)
+
+Set cross-validation partitions.
+
+```{r}
+#| eval: true
+
+set.seed(2024)
+
+folds <- vfold_cv(data_other, v = 5)
+folds
+```
+
+Fit cross-validation.
+
+```{r}
+#| eval: true
+
+(logit_fit <- logit_wf |>
+  tune_grid(
+    resamples = folds,
+    grid = param_grid,
+    metrics = metric_set(roc_auc, accuracy)
+    )) |>
+  system.time()
+```
+
+Visualize CV results:
+
+```{r}
+#| eval: true
+
+logit_fit |>
+  # aggregate metrics from K folds
+  collect_metrics() |>
+  print(width = Inf) |>
+  filter(.metric == "roc_auc") |>
+  ggplot(mapping = aes(x = penalty, y = mean, color = factor(mixture))) +
+  geom_point() +
+  labs(x = "Penalty", y = "CV AUC") +
+  scale_x_log10()
+```
+
+Show the top 5 models.
+
+```{r}
+#| eval: true
+
+logit_fit |>
+  show_best(metric = "roc_auc")
+```
+
+Let’s select the best model.
+
+```{r}
+#| eval: true
+
+best_logit <- logit_fit |>
+  select_best(metric = "roc_auc")
+best_logit
+```
+
+### Final model
+
+```{r}
+# Final workflow
+final_wf <- logit_wf |>
+  finalize_workflow(best_logit)
+final_wf
+```
+```{r}
+#| eval: true
+
+# Fit the whole training set, then predict the test cases
+final_fit <- 
+  final_wf |>
+  last_fit(data_split)
+final_fit
+```
+
+```{r}
+#| eval: true
+
+# Test metrics
+final_fit |> 
+  collect_metrics()
+```
