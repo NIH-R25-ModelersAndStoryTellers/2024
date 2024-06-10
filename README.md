@@ -14,11 +14,11 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Data science overview, data source, R, data ingestion and wrangling \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html)\] | Dr. Hua Zhou |
+| 8:30a-10:10a  | Data science overview, data source, intro. to R \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a |  | Dr. Hua Zhou |
+| 10:20a-11:50a | CPS-FSS data: ingest, wrangle, visualize \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-wrangle/wrangle.html)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
-| 12:20p-1:50p   | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html)\]  | Dr. Hua Zhou |
+| 12:20p-1:50p   | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-logit/logit.html)\]  | Dr. Hua Zhou |
 | 1:50p-2:00p   | Break |  |
 | 2:00p-2:30p   | Review/Get feedback from trainees | Dr. Hua Zhou |
 
@@ -26,9 +26,9 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html)\] | Dr. Hua Zhou |
+| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/04-rf/rf.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Policy evaluation by double machine learning \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html)\] | Dr. Hua Zhou |
+| 10:20a-11:50a | Policy evaluation by double machine learning \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/05-dml/dml.html)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
 | 12:20p-1:50p   | TBD  | Dr. Roch Nianogo |
 | 1:50p-2:00p   | Break |  |

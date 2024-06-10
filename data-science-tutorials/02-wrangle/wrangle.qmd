@@ -1,0 +1,337 @@
+---
+title: "Current Population Survey Food Security Supplement - Ingest, Wrangle, Visualize"
+author: "Dr. Roch Nianogo, Bowen Zhang, Dr. Hua Zhou"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+    link-external-icon: true
+    link-external-newwindow: true
+knitr:
+  opts_chunk: 
+    cache: false    
+    echo: true
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+jupyter:
+    kernelspec:
+        name: "ir43"
+        language: "R"
+        display_name: "R 4.3.2"    
+comments:
+  hypothesis: true    
+---
+
+```{r}
+#| code-fold: true
+#| output: false
+
+# setup code: install packages, API keys
+library(tidyverse)
+library(tidycensus)
+census_api_key("4cf445b70eabd0b297a45e7f62f52c27ba3b5cae",
+               install = TRUE, overwrite = TRUE)
+Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
+
+library(censusapi)
+library(gtsummary)
+library(maps)
+library(tigris)
+```
+
+## Roadmap
+
+A typical data science project:
+
+<p align="center">
+
+<img src="../01-dsintro/data-science.png" width="80%"/>
+
+</p>
+
+In this tutorial, we ingest, tidy, transform, and visualize the 2021 Current Population Survey Food Security Supplement (CPS-FSS) data.
+
+## Ingest CPS-FSS Data
+
+Many datasets such as the Decennial Census since 2000 and the American Community Survey (ACS) are available through the US Census Bureau’s APIs and in turn accessible with [`tidycensus`](https://walker-data.com/tidycensus/) and related tools. However, the CPS-FSS data is not available through the `tidycensus` package, which only focuses on core datasets. Other R packages provide support for the wide range of datasets available from the Census Bureau and other government agencies. `censusapi` package, for example, allows for programmatic access to all US Census Bureau APIs.
+
+### Sign up for a Census API key
+
+Sign up for a Census API key at <https://api.census.gov/data/key_signup.html> and install the key.
+
+```         
+# Set the Census API key in the environment
+Sys.setenv("CENSUS_KEY" = "PUT YOUR KEY HERE")
+```
+
+### censusapi package
+
+[censusapi](https://github.com/hrecht/censusapi) is a lightweight package to get data from the U.S. It uses the same Census API key as `tidycensus`, though references it with the R environment variable `CENSUS_KEY`. If this environment variable is set in a user’s `.Renviron` file, functions in `censusapi` will pick up the key without having to supply it directly.
+
+-   `getCensus()`: Retrieve Census data from a given API.
+-   `listCensusApis()`: Get useful dataset metadata on all available APIs as a data frame.
+-   `listCensusMetadata()`: Get information about a specific API as a data frame.
+-   `makeVarlist()`: Use variable metadata to find variables containing a given string.
+
+`censusapi`’s core function is `getCensus()`, which translates R code to Census API queries. The `name` argument references the API name; the `censusapi` documentation or the function `listCensusApis()` helps you understand how to format this.
+
+To see a current table of every available endpoint, run `listCensusApis()`:
+
+```{r}
+#| eval: true
+
+censusapi::listCensusApis() |> 
+  # convert data.frame to tibble
+  as_tibble() |>
+  select(title, name, vintage, type, temporal, url)
+```
+
+`listCensusApis()` returns a dataframe that includes: title, description, name, vintage, url, dataset type, and other useful fields. Search for the dataset you are interested in.
+
+Now we are interested in Food Security Supplement. We can search for the keyword "Food Security" in the column `title` of the table above, and see which year of data is available.
+
+```{r}
+#| eval: true
+
+censusapi::listCensusApis() |>
+  filter(str_detect(title, "Food Security"), vintage >= 2019) |>
+  select(title, name, vintage, type, description)
+
+```
+
+The example below makes a request to API for the CPS Food Security Supplement December 2021 Public-Use Microdata File. The `name` argument is set to "cps/foodsec/dec" and the `vintage` argument is set to 2021. If we are interested in Household Food Security Scale, then for the `vars` argument, we should include the following terms:
+
+-   HRHHID: Household ID
+-   HRHHID2: Household ID (Part 2)
+-   PERRP: Relationship to Reference Person
+-   GESTFIPS: State FIPS Code
+-   GTCO: County Code
+-   HRFS12M1: Summary Food Security Status, 12-Month
+    -   1 = Food Secure High or Marginal Food Security
+    -   2 = Low Food Security
+    -   3 = Very Low Food Security
+    -   -1 = Not in Universe (In this variable, not interviewed)
+    -   -9 = No Response
+-   HHSUPWGT: Household Supplemental Weight
+
+```{r}
+#| eval: true
+
+fss_21_status <- censusapi::getCensus(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  vars = c("HRHHID", "HRHHID2", "PERRP",
+           "GESTFIPS", "GTCO", "HRFS12M1",
+           "HHSUPWGT")
+  ) |>
+  as_tibble()
+
+fss_21_status
+```
+
+Notice that some columns are not in the format we want. For example, **HRFS12M1** (Food Security Status) should be a categorical variable, and we want to convert it to a factor with meaningful labels. Also, **HHSUPWGT** (Household Supplemental Weight) was ingested as a character variable, and we want to convert it to a numeric variable.
+
+```{r}
+#| eval: true
+
+fss_21_status |>
+  filter(HRFS12M1 != "-1") |>
+  mutate(HRFS12M1 = factor(HRFS12M1,
+                           levels = c("1", "2", "3", "-9"),
+                           labels = c("Food Security",
+                                      "Low Food Security",
+                                      "Very Low Food Security",
+                                      "No Response")),
+         HHSUPWGT = as.numeric(HHSUPWGT),
+         PERRP = as.numeric(PERRP),
+         HRHHID2 = as.character(HRHHID2))
+```
+
+In addition to checking the document and encoding labels manually, `listCensusMetadata()` offers a way to get the value labels of specific variables. This can be useful for understanding the meaning of variables and their values.
+
+```{r}
+#| eval: true
+
+HRFS12M1_lb <- censusapi::listCensusMetadata(name = "cps/foodsec/dec",
+                                             vintage = 2021,
+                                             type = "values",
+                                             variable = "HRFS12M1")
+
+HRFS12M1_lb
+```
+
+Therefore, we can use the following code to convert the variable `HRFS12M1` to a factor with meaningful labels.
+
+```{r}
+#| eval: true
+
+fss_21_status <- fss_21_status |>
+  filter(HRFS12M1 != "-1") |>
+  mutate(HRFS12M1 = factor(HRFS12M1,
+                           levels = HRFS12M1_lb$code,
+                           labels = HRFS12M1_lb$label),
+         HHSUPWGT = as.numeric(HHSUPWGT),
+         PERRP = as.numeric(PERRP),
+         HRHHID2 = as.character(HRHHID2))
+  
+fss_21_status
+```
+
+## Constructing household characteristics from person records
+
+To compute some household characteristics (such as household size, presence of children, or presence of elderly members), it is necessary to identify the records of all persons in the same household. Households within the December CPS-FSS are uniquely and completely identified by two household identifiers in combination, **HRHHID** and **HRHHID**. Characteristics of the household reference person can be assigned from the person record with **PERRP** 40 or 41, which will always be the record with the lowest-numbered PERRP in the household.
+
+**HRFS12M1** (Summary Food Security Status, 12-Month) is one of the household characteristics. This is the variable used for most food security statistics in USDA’s annual food security report series. In order to compute the prevalence of food insecurity, we need to aggregate the food security status of all persons in the same household. `tbl_summary()` in the `gtsummary` package can generate beautiful summary tables.
+
+```{r}
+#| eval: true
+
+fss_21_status <- fss_21_status |>
+  # Filter observations with PERRP 40 or 41 (reference person in the household) 
+  filter(PERRP %in% c(40, 41)) |>
+  # Arrange by PERRP
+  arrange(PERRP) |>
+  # Keep the record with the lowest-numbered PERRP in the household
+  slice_head(by = c(HRHHID, HRHHID2), n = 1)
+
+fss_21_status
+```
+
+```{r}
+# Display number and proportion of households in different food security status
+fss_21_status |>
+  select(HRFS12M1) |>
+  gtsummary::tbl_summary()
+```
+
+Notice that there are 27,357 + 1,844 + 1,093 + 49 = 30,343 households who attended the interview for Food Security Supplement in 2021, which matches the number in the technical documentation.
+
+The CPS is a complex probability sample, and interviewed households, as well as persons in those households, are assigned weights so that the full interviewed sample represents the total national non-institutionalized civilian population. Initial weights are assigned based on probability of selection into the sample, and weights are then adjusted iteratively to match population controls for selected demographic characteristics at State and national levels. There are two sets of household and person weights in this data file: (1) labor force survey weights, and (2) Food Security Supplement weights.
+
+We can use `makeVarlist()` function in `censusapi` package to get the list of variables in the dataset. In addition to the description and the type of each variable, we can also check column **suggested_weight** to see which weight should be used for the analysis.
+
+```{r}
+#| eval: true
+
+censusapi::makeVarlist(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  find = "",
+  output = "dataframe"
+  ) |>
+  as_tibble() |>
+  filter(name %in% c("HRHHID", "HRHHID2", "PERRP",
+                     "GESTFIPS", "HRFS12M1", "HHSUPWGT")) |>
+  select(-c(concept, group, predicateOnly))
+```
+
+Now we are interested in how much percentage of households with low food security and very low food security in 2021.
+
+-   Identify the variables needed:
+
+    HRFS12M1: Summary Food Security Status, 12-Month
+
+    HRFS12M1 = 2 OR HRFS12M1 = 3 (Low Food Security OR Very Low Food Security)
+
+-   Identify the statistical weight needed:
+
+    HHSUPWGT: Household Weight for Supplement Household
+
+-   Perform the calculation:
+
+    The rate is given by
+
+    $$
+    \text{Rate} = \frac{\sum_i w_i \cdot L_i}{\sum_i w_i \cdot H_i} \times 100\%
+    $$
+
+    where $L_i$ is an indicator variable that equals 1 if household $i$ is in low food security or very low food security, and 0 otherwise; $H_i$ is an indicator variable that equals 1 if household $i$ attended the interview for Food Security Supplement and had a response to this question, and 0 otherwise; and $w_i$ is the weight of household $i$.
+
+```{r}
+#| eval: true
+
+fss_21_status <- fss_21_status |>
+  mutate(HRFS12M1_low = ifelse(HRFS12M1 %in% c("Low Food Security",
+                                               "Very Low Food Security"),
+                               1, 0) * HHSUPWGT,
+         HRFS12M1_res = ifelse(HRFS12M1 == "No Response", 0, 1) * HHSUPWGT
+  )
+
+low_food_security_rate <-
+  sum(fss_21_status$HRFS12M1_low) / sum(fss_21_status$HRFS12M1_res) * 100
+
+low_food_security_rate
+```
+
+The percentage of households with low food security or very low food security in 2021 is 10.23%. We can verify this result by comparing this number to the Economic Research Report [Household Food Security in the United States in 2021](https://www.ers.usda.gov/webdocs/publications/104656/err-309.pdf?v=7855.7) Figure 1.
+
+Since we have already computed the rate of low food security in 2021. We can further investigate the rate of low food security in each state.
+
+We first need to match the FIPS code to the state names using `fips_codes()` function in `tigris` package.
+
+```{r}
+#| eval: true
+
+# Get the state names
+state_names <- tigris::fips_codes |>
+  select(state, state_code, state_name) |>
+  distinct() |>
+  as_tibble()
+
+state_names
+```
+
+Now we can compute the rate of low food security in each state.
+
+```{r}
+#| eval: true
+
+fss_21_status_state <- fss_21_status |>
+  
+  # Group by state FIPS code and calculate the rate by state
+  group_by(GESTFIPS) |>
+  summarize(HRFS12M1_low = sum(HRFS12M1_low),
+            HRFS12M1_res = sum(HRFS12M1_res)) |>
+  
+  # Notice that state_code is a two digit number
+  # But in fss_21_status, it is single digit if the state code is less than 10
+  mutate(GESTFIPS = ifelse(as.numeric(GESTFIPS) < 10,
+                           paste0("0", GESTFIPS),
+                           as.character(GESTFIPS))) |>
+  
+  # Left join with state names
+  left_join(state_names, by = c("GESTFIPS" = "state_code")) |>
+  mutate(low_food_security_rate = HRFS12M1_low / HRFS12M1_res * 100,
+         state_name = str_to_lower(state_name))
+```
+
+Then we can visualize the rate of low food security in each state.
+
+```{r}
+#| eval: true
+
+us_states <- ggplot2::map_data("state")
+
+us_states <- merge(us_states, fss_21_status_state, by.x = "region",
+                   by.y = "state_name", all.x = TRUE)
+
+ggplot(us_states, aes(x = long, y = lat, group = group,
+                      fill = low_food_security_rate)) +
+  geom_polygon(color = "black") +
+  scale_fill_gradient(low = "lightblue", high = "darkblue",
+                      name = "Households in Low Food Security (%)") +
+  labs(title = "Percentage of Households in Low Food Security by State") +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        axis.text = element_blank(),
+        axis.title = element_blank(),
+        legend.position = "bottom") +
+  coord_fixed(ratio = 1.5)
+```

@@ -38,18 +38,20 @@ library(tidycensus)
 census_api_key("4cf445b70eabd0b297a45e7f62f52c27ba3b5cae",
                install = TRUE, overwrite = TRUE)
 Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
+
 library(censusapi)
+library(data.table)
+library(DoubleML)
 library(gtsummary)
 library(knitr)
-library(tigris)
 library(maps)
-library(ggplot2)
+library(mlr3)
 library(tidymodels)
-
+library(tigris)
 ```
 
 ::: {style="text-align: center;"}
-![Data Science Diagram](../01-dsintro/data-science.png){alt="Data Science Diagram"}
+![Data Science Diagram](../01-dsintro/data-science.png)
 :::
 
 ## Partially linear regression and interactive regression model
@@ -270,10 +272,6 @@ The Python and R package [DoubleML](https://docs.doubleml.org/) provide an imple
 
 ```{r}
 #| eval: true
-
-library(DoubleML)
-library(data.table)
-library(mlr3)
 
 doubleML_data <- data.table(fss_20_data)
 
