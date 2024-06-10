@@ -16,9 +16,9 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 |:----------------------|:------------------------|:------------------------|
 | 8:30a-10:10a  | Data science overview, data source, R, data ingestion and wrangling \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html)\] | Dr. Hua Zhou |
+| 10:20a-11:50a |  | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
-| 12:20p-1:50p   | Gallop strength training  | Kristy Sherrer |
+| 12:20p-1:50p   | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html)\]  | Dr. Hua Zhou |
 | 1:50p-2:00p   | Break |  |
 | 2:00p-2:30p   | Review/Get feedback from trainees | Dr. Hua Zhou |
 
