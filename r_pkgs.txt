@@ -1,9 +1,0 @@
-censusapi
-dml
-gtsummary
-knitr
-maps
-tidycensus
-tidymodels
-tidyverse
-tigris
