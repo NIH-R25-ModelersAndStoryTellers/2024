@@ -28,7 +28,7 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 |:----------------------|:------------------------|:------------------------|
 | 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/04-rf/rf.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Policy evaluation by double machine learning \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/05-dml/dml.html)\] | Dr. Hua Zhou |
+| 10:20a-11:50a | Policy evaluation by DML \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/05-dml/dml.html)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
 | 12:20p-1:50p   | TBD  | Dr. Roch Nianogo |
 | 1:50p-2:00p   | Break |  |
