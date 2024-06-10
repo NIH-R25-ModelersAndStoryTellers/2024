@@ -1,20 +1,22 @@
 # Modelers and Storytellers
 
-This page contains the data science slides and tutorials for the 2024 *Modelers and Storytellers: Transdisciplinary Training to Advance Community Health Intervention Research* project.
+This page contains the data science tutorials for the 2024 *Modelers and Storytellers: Transdisciplinary Training to Advance Community Health Intervention Research* project.
 
-This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](https://ph.ucla.edu/) and sponsored by the National Institute of Child Health and Human Development (NICHD).
+This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](https://ph.ucla.edu/) and sponsored by the National Institute of Child Health and Human Development (NICHD). Principal investigators are Drs. Michael Prelip, May Wang, and Hua Zhou.
 
 ## Data Science Module, June 24-26, 2024
 
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
+Run tutorials in Rstudio: [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9)
+
+Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
 
 ### June 24
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Data science overview, data source, R, data ingestion and wrangling \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F01-dsintro%2Fdsintro.ipynb)\] | Dr. Hua Zhou |
+| 8:30a-10:10a  | Data science overview, data source, R, data ingestion and wrangling \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F02-logit%2Flogit.ipynb)\] | Dr. Hua Zhou |
+| 10:20a-11:50a | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
 | 12:20p-1:50p   | Gallop strength training  | Kristy Sherrer |
 | 1:50p-2:00p   | Break |  |
@@ -24,9 +26,9 @@ This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](ht
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F03-rf%2Frf.ipynb)\] | Dr. Hua Zhou |
+| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Policy evaluation by double machine learning \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F04-dml%2Fdml.ipynb)\] | Dr. Hua Zhou |
+| 10:20a-11:50a | Policy evaluation by double machine learning \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
 | 12:20p-1:50p   | TBD  | Dr. Roch Nianogo |
 | 1:50p-2:00p   | Break |  |
