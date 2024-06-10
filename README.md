@@ -6,13 +6,15 @@ This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](ht
 
 ## Data Science Module, June 24-26, 2024
 
+[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
+
 ### June 24
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Data science overview, data source, R, data ingestion and wrangling \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html), [Binder]()\] | Dr. Hua Zhou |
+| 8:30a-10:10a  | Data science overview, data source, R, data ingestion and wrangling \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/01-dsintro/dsintro.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F01-dsintro%2Fdsintro.ipynb)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Predictive modeling (logistic regression) [Slides](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html) | Dr. Hua Zhou |
+| 10:20a-11:50a | Predictive modeling (logistic regression) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/02-logit/logit.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F02-logit%2Flogit.ipynb)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
 | 12:20p-1:50p   | Gallop strength training  | Kristy Sherrer |
 | 1:50p-2:00p   | Break |  |
@@ -22,9 +24,9 @@ This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](ht
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Predictive modeling (random forest) [Slides](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html) | Dr. Hua Zhou |
+| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F03-rf%2Frf.ipynb)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
-| 10:20a-11:50a | Policy evaluation by double machine learning [Slides](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/04-dml/dml.html) | Dr. Hua Zhou |
+| 10:20a-11:50a | Policy evaluation by double machine learning \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/03-rf/rf.html), [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https%3A%2F%2Fgithub.com%2FNIH-R25-ModelersAndStoryTellers%2F2024.git%2Fdata-science-tutorials%2F04-dml%2Fdml.ipynb)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
 | 12:20p-1:50p   | TBD  | Dr. Roch Nianogo |
 | 1:50p-2:00p   | Break |  |
