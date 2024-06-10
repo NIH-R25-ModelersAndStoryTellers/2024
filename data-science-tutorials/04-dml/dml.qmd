@@ -48,20 +48,19 @@ library(tidymodels)
 
 ```
 
+::: {style="text-align: center;"}
+![Data Science Diagram](../01-dsintro/data-science.png){alt="Data Science Diagram"}
+:::
 
-<div style="text-align: center;">
-  <img src="https://d33wubrfki0l68.cloudfront.net/795c039ba2520455d833b4034befc8cf360a70ba/558a5/diagrams/data-science-explore.png" alt="Data Science Diagram">
-</div>
+## Partially linear regression and interactive regression model
 
-## Paritially Linear Regression and Interactive regression model
-
-### Paritially Linear Regression
+### Partially linear regression
 
 Partially linear regression (PLR) model introduced by Robinson (1988):
 
-<div style="text-align: center;">
-  <img src="./PartialLR.drawio.png" alt="PLR" width=300>
-</div>
+::: {style="text-align: center;"}
+<img src="./PartialLR.drawio.png" alt="PLR" width="300"/>
+:::
 
 $$
 \begin{aligned}
@@ -76,20 +75,20 @@ $$
 X = (X_1, \ldots, X_p)
 $$
 
-consists of other control, and $U$ and $V$ are disturbances terms. The first equation is the main equation, and $\theta_0$ is the main regression coefficient that we would like to infer.  If $D$ is exogenous conditional on controls X, $\theta_0$ has the interpretation of the treatment effect parameter or ‘lift’ parameter in business applications. The second equation keeps track of confounding, namely the dependence of the treatment variable on controls.
+consists of other control, and $U$ and $V$ are disturbances terms. The first equation is the main equation, and $\theta_0$ is the main regression coefficient that we would like to infer. If $D$ is exogenous conditional on controls X, $\theta_0$ has the interpretation of the treatment effect parameter or ‘lift’ parameter in business applications. The second equation keeps track of confounding, namely the dependence of the treatment variable on controls.
 
 The confounding factors $X$ affect the policy variable $D$ via the function $m_0(X)$ and the outcome variable via the function $g_0(X)$. These function does not need to be linear! We can take advantage of the great prediction performance of machine learning techniques to estimate these functions.
 
 Naive application of machine learning methods directly to two equations may have a very high bias.
 
-<div style="text-align: center;">
-  <img src="./bias.jpg" alt="bias" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./bias.jpg" alt="bias" width="700"/>
+:::
 
 ### Interactive regression model
 
- We consider estimation of average treatment effects when treatment effects are fully heterogeneous, i.e., the response curves under control and treatment can be different nonparametric functions, and the treatment variable is binary, $D \in \{0,1\}$. We consider vectors $(Y,D,X)$ such that
- 
+We consider estimation of average treatment effects when treatment effects are fully heterogeneous, i.e., the response curves under control and treatment can be different nonparametric functions, and the treatment variable is binary, $D \in \{0,1\}$. We consider vectors $(Y,D,X)$ such that
+
 $$
 \begin{aligned}
 Y &= g_0(D,X) + U, &E[U | X, D] = 0, \\
@@ -107,7 +106,6 @@ The confounding factors $X$ affect the policy variable via the propensity score 
 
 The general idea for identification of $θ_0$ using the IRM is similar. Once we are able to account for all confounding variables $X$ in our analysis, we can consistently estimate the causal parameter $\theta_0$. A difference to the PLR refers to assumptions on the functional form of the main regression equation. Whereas it is assumed that the effect of $D$ on $Y$ in the PLR model is additively separable, the IRM model comes with less restrictive assumptions.
 
-
 ### Basic Idea behind Double Machine Learning for the PLR Model
 
 The PLR model can be rewritten in the following residualized form:
@@ -122,25 +120,24 @@ $$
 
 The variable $W$ and $V$ represent original variables after taking out or **partialling out** the effect of X. Given identification, double machine learning for a PLR proceeds as follows:
 
-1. Estimate $\ell_0$ and $m_0$ by sloving two problems of predicting $Y$ and $D$ using $X$, using any generic machine learning method, giving us estimated residuals
-$$
-\begin{aligned}
-\hat{W} &= Y - \hat{\ell}_0(X), \\
-\hat{V} &= D - \hat{m}_0(X).
-\end{aligned}
-$$
+1.  Estimate $\ell_0$ and $m_0$ by sloving two problems of predicting $Y$ and $D$ using $X$, using any generic machine learning method, giving us estimated residuals $$
+    \begin{aligned}
+    \hat{W} &= Y - \hat{\ell}_0(X), \\
+    \hat{V} &= D - \hat{m}_0(X).
+    \end{aligned}
+    $$
 
     The residuals should be of a cross-validated form to avoid overfitting.
 
-2. Estimate $\theta_0$ by regressing the residuals $\hat{W}$ on $\hat{V}$. Use the conventional inference for this regression estimator, ignoring the estimation error in $\hat{W}$ and $\hat{V}$.
+2.  Estimate $\theta_0$ by regressing the residuals $\hat{W}$ on $\hat{V}$. Use the conventional inference for this regression estimator, ignoring the estimation error in $\hat{W}$ and $\hat{V}$.
 
-## Example: Causal Effect of WIC on Food Security
+## Example: causal effect of WIC on food security
 
 ### Background
 
-The Special Supplemental Nutrition Program for Women, Infants, and Children (WIC) is a federally funded nutrition program that provides grants to States to support distribution of supplemental foods, health care referrals, and nutrition education to safeguard the health of low-income pregnant, breastfeeding, and non-breastfeeding postpartum women; for infants in low-income families; and for children younger than age 5 in low-income families and who are found to be at nutritional risk.
+The Special Supplemental Nutrition Program for Women, Infants, and Children ([WIC](https://www.fns.usda.gov/wic)) is a federally funded nutrition program that provides grants to States to support distribution of supplemental foods, health care referrals, and nutrition education to safeguard the health of low-income pregnant, breastfeeding, and non-breastfeeding postpartum women; for infants in low-income families; and for children younger than age 5 in low-income families and who are found to be at nutritional risk.
 
-In 2020, WIC served over 6.2 million participants per month at an average monthly cost for food (after rebates to WIC from manufacturers) of about $38 per person. Many household under low food security benefit from WIC. We are curious to know the causal effect of WIC on food security status.
+In 2020, WIC served over 6.2 million participants per month at an average monthly cost for food (after rebates to WIC from manufacturers) of about \$38 per person. Many household under low food security benefit from WIC. We are curious to know the causal effect of WIC on food security status.
 
 ### Data preparation
 
@@ -148,19 +145,27 @@ We use the 2020 Current Population Survey (CPS) Food Security Supplement (FSS) d
 
 We include the following variables in our analysis:
 
-- `HRFS30D4`: Food Security Rasch Scale Score in the past 30 days. (100 - 1400) Higher score indicates lower food security.
-- `HESP8`: WIC participation status. (1: Yes, 2: No)
+-   `HRFS30D4`: Food Security Rasch Scale Score in the past 30 days. (100 - 1400) Higher score indicates lower food security.
 
-- `HRNUMHOU`: Number of people in the household.
-- `HRHTYPE`: Household type.
-- `GEREG`: Geographic region.
-- `PRCHLD`: Presence of children in the household.
-- `PRTAGE`: Age of the reference person.
-- `PEEDUCA`: Education level.
-- `PEMLR`: Employment status.
-- `RACE`: recoded from `PTDTRACE` and `PEHSPNON`.
-- `HEFAMINC`: Family income (take median of each class).
+-   `HESP8`: WIC participation status. (1: Yes, 2: No)
 
+-   `HRNUMHOU`: Number of people in the household.
+
+-   `HRHTYPE`: Household type.
+
+-   `GEREG`: Geographic region.
+
+-   `PRCHLD`: Presence of children in the household.
+
+-   `PRTAGE`: Age of the reference person.
+
+-   `PEEDUCA`: Education level.
+
+-   `PEMLR`: Employment status.
+
+-   `RACE`: recoded from `PTDTRACE` and `PEHSPNON`.
+
+-   `HEFAMINC`: Family income (take median of each class).
 
 ```{r}
 #| eval: true
@@ -237,8 +242,7 @@ fss_20_data |>
   tbl_summary()
 ```
 
-
-### Linear Regression
+### Linear regression
 
 ```{r}
 #| eval: true
@@ -252,16 +256,15 @@ fit |>
   bold_p(t = 0.05)
 ```
 
-### DoubleML Workflow
+### DoubleML workflow
 
-The Python and R package [DoubleML](https://docs.doubleml.org/) provide an implementation of the double / debiased machine learning framework of Chernozhukov et al. (2018). The R package is built on top of mlr3 and the mlr3 ecosystem (Lang et al., 2019).
+The Python and R package [DoubleML](https://docs.doubleml.org/) provide an implementation of the double / debiased machine learning framework of [Chernozhukov et al. (2018)](https://academic.oup.com/ectj/article/21/1/C1/5056401). The R package is built on top of mlr3 and the mlr3 ecosystem (Lang et al., 2019).
 
+::: {style="text-align: center;"}
+<img src="https://docs.doubleml.org/stable/logo.png" alt="DMLlogo" width="300"/>
+:::
 
-<div style="text-align: center;">
-  <img src="https://docs.doubleml.org/stable/logo.png" alt="DMLlogo" width=300>
-</div>
-
--   Data-Backend
+-   Data-backend
 
     we initialize the data-backend and thereby declare the role of the outcome, the treatment, and the confounding variables.
 
@@ -285,19 +288,17 @@ obj_dml_data <- DoubleMLData$new(
 obj_dml_data
 ```
 
-
--   Choose Causal Model
+-   Choose causal model
 
     There are several models currently implemented in DoubleML which differ in terms of the underlying causal structure. In this example, we use the interactive regression model (IRM).
 
-<div style="text-align: center;">
-  <img src="causal.jpg" alt="causalmodel" width=700>
-</div>
-
+::: {style="text-align: center;"}
+<img src="causal.jpg" alt="causalmodel" width="700"/>
+:::
 
 -   ML Methods
 
-     we can specify the machine learning tools used for estimation of the nuisance parts. We can generally choose any learner from mlr3 ecosystem in R. In this example, we use random forest for both the main equation and the confounding equation.
+    we can specify the machine learning tools used for estimation of the nuisance parts. We can generally choose any learner from mlr3 ecosystem in R. In this example, we use random forest for both the main equation and the confounding equation.
 
 ```{r}
 #| eval: true
@@ -310,11 +311,9 @@ learner_classif_m <- lrn("classif.ranger", num.trees = 500,
                          min.node.size = 2, max.depth = 5)
 ```
 
-
--   DML Specifications
+-   DML specifications
 
     we initialize and parametrize the model object which will later be used to perform the estimation. we specify the resampling, the dml algorithm and the score function.
-
 
 ```{r}
 #| eval: true
@@ -328,7 +327,6 @@ doubleml_mod <- DoubleMLIRM$new(obj_dml_data,
 doubleml_mod
 ```
 
-
 -   Estimation
 
 ```{r}
@@ -338,6 +336,3 @@ doubleml_mod$fit()
 doubleml_mod$summary()
 doubleml_mod$confint()
 ```
-
-
-

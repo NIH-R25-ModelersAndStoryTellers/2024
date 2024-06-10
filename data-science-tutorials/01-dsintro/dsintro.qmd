@@ -59,31 +59,37 @@ A typical data science project:
 
 ### Learning objectives
 
-In the next 1.5 days, we aim to learn
+In the next 1.5 days, we learn
 
 -   the life cycle of a data science project
 
--   some ecosystems (tidyverse, tidymodels) in R for Open Data Science
+-   some R ecosystems (tidyverse, tidymodels) for Open Data Science
 
 -   basic machine learning
 
 -   policy evaluation using double machine learning
 
-Dr. Roch Nianogo will lead the second part, from June 25 afternoon to June 26, with in-depth discussions on simulation modeling and causal inference, linking data science and systems science.
+Dr. Roch Nianogo will lead the second part, from June 25 afternoon to June 26, with in-depth discussions of simulation modeling, causal inference, and linking data science and systems science.
 
 ### Course materials
 
--   Read the static tutorial pages, make comments or ask questions, and complete the exercises
+During the course, you can
 
--   Adventurous ones can reproduce, improve, and generalize all the examples by the following steps:
+-   read the static tutorial pages, make comments, and ask questions; or
 
-    -   Install [R](https://cran.r-project.org/), [RStudio](https://www.rstudio.com/products/rstudio/download/), and [Quarto](https://quarto.org/docs/get-started/)
+-   interactively run `qmd` codes in RStudio on [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9) (sign up for a free account); or
 
-    -   Git clone the [course repository](https://github.com/NIH-R25-ModelersAndStoryTellers/2024)
+-   interactively run `ipynb` codes in Jupyter Notebook on [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git) (can be slow)
 
-    -   Render the qmd files
+Adventurous ones can reproduce, improve, and generalize all the examples **on your own computer** by the following steps:
 
-### Interactivity
+-   install [R](https://cran.r-project.org/), [RStudio](https://www.rstudio.com/products/rstudio/download/), and [Quarto](https://quarto.org/docs/get-started/)
+
+-   git clone the [course repository](https://github.com/NIH-R25-ModelersAndStoryTellers/2024)
+
+-   revise and render the qmd files
+
+### Questions, please
 
 Please feel free to ask questions and make comments. You can
 
@@ -155,10 +161,14 @@ To make R code more human readable, the Tidyverse tools use the pipe, `%>%`, whi
 
 # A single command
 sqrt(83)
+```
 
+```{r}
 # Base R method of running more than one command
 round(sqrt(83), digit = 2)
+```
 
+```{r}
 # Running more than one command with piping
 sqrt(83) %>% round(digit = 2)
 ```
@@ -240,25 +250,24 @@ iris_tb %>% .[, "Sepal.Length"]
 
 #### dplyr
 
-The most useful tool in the tidyverse is dplyr. It’s a swiss-army knife for data wrangling. dplyr has many handy functions that we recommend incorporating into your analysis.
+The most useful tool in the tidyverse is dplyr. It’s a Swiss-army knife for data wrangling. dplyr has many handy functions that we recommend incorporating into your analysis.
 
-- Operations on rows:  
+-   Operations on rows:
     -   `arrange()` changes the ordering of the rows.
     -   `filter()` picks cases based on their values.
     -   `distinct()` removes duplicate entries.
     -   `slice_*()` selects rows by position.
-
-- Operations on columns:    
+-   Operations on columns:
     -   `select()` extracts columns and returns a tibble.
     -   `mutate()` adds new variables that are functions of existing variables.
     -   `rename()` easily changes the name of a column(s).
     -   `pull()` extracts a single column as a vector.
-    
-- Grouped operations:    
-    -   `group_by()` aggregates data by one or more variables.  
+-   Grouped operations:
+    -   `group_by()` aggregates data by one or more variables.\
     -   `summarise()` reduces multiple values down to a single summary.
-
 -   `_join()` functions that merge two data frames together, including `inner_join()`, `left_join()`, `right_join()`, and `full_join()`.
+
+The [Posit dplyr cheatsheet](https://rstudio.github.io/cheatsheets/data-transformation.pdf) is extremely intuitive and helpful.
 
 Some examples of using dplyr functions.
 
@@ -270,7 +279,8 @@ Some examples of using dplyr functions.
 iris_tb |>
   filter(Sepal.Length > 5.0) |>
   arrange(desc(Sepal.Length)) |>
-  mutate(Sepal.Length_2 = Sepal.Length^2)
+  mutate(Sepal.Length_2 = Sepal.Length^2) |>
+  print()
 ```
 
 -   Select columns `Species`, and find the distinct values of `Species`
@@ -289,7 +299,13 @@ iris_tb |>
 #| eval: true
 
 iris_tb |>
-  # equivalent to group_by(iris_tb, Species) |> summarize(n = n())
+  group_by(Species) |> 
+  summarize(n = n())
+```
+
+```{r}
+# Shortcut for group_by() |> summarize(n = n())
+iris_tb |>
   count(Species)
 ```
 
@@ -494,10 +510,7 @@ Many datasets such as the Decennial Census since 2000 and the American Community
 
 Sign up for a Census API key at <https://api.census.gov/data/key_signup.html> and install the key.
 
-```{r}
-#| eval: false
-#| echo: true
-
+```         
 # Set the Census API key in the environment
 Sys.setenv("CENSUS_KEY" = "PUT YOUR KEY HERE")
 ```
@@ -521,11 +534,7 @@ To see a current table of every available endpoint, run `listCensusApis()`:
 censusapi::listCensusApis() |> 
   # convert data.frame to tibble
   as_tibble() |>
-  select(title, name, vintage, type, temporal, url) |>
-  head(5) |> 
-  # better display
-  kable()
-
+  select(title, name, vintage, type, temporal, url)
 ```
 
 `listCensusApis()` returns a dataframe that includes: title, description, name, vintage, url, dataset type, and other useful fields. Search for the dataset you are interested in.
@@ -537,8 +546,7 @@ Now we are interested in Food Security Supplement. We can search for the keyword
 
 censusapi::listCensusApis() |>
   filter(str_detect(title, "Food Security"), vintage >= 2019) |>
-  select(title, name, vintage, type, description) |>
-  kable()
+  select(title, name, vintage, type, description)
 
 ```
 
@@ -588,7 +596,6 @@ fss_21_status |>
          HHSUPWGT = as.numeric(HHSUPWGT),
          PERRP = as.numeric(PERRP),
          HRHHID2 = as.character(HRHHID2))
-
 ```
 
 In addition to checking the document and encoding labels manually, `listCensusMetadata()` offers a way to get the value labels of specific variables. This can be useful for understanding the meaning of variables and their values.
@@ -597,9 +604,9 @@ In addition to checking the document and encoding labels manually, `listCensusMe
 #| eval: true
 
 HRFS12M1_lb <- censusapi::listCensusMetadata(name = "cps/foodsec/dec",
-                                            vintage = 2021,
-                                            type = "values",
-                                            variable = "HRFS12M1")
+                                             vintage = 2021,
+                                             type = "values",
+                                             variable = "HRFS12M1")
 
 HRFS12M1_lb
 ```
@@ -631,16 +638,17 @@ To compute some household characteristics (such as household size, presence of c
 #| eval: true
 
 fss_21_status <- fss_21_status |>
-  
   # Filter observations with PERRP 40 or 41 (reference person in the household) 
   filter(PERRP %in% c(40, 41)) |>
-  
   # Arrange by PERRP
   arrange(PERRP) |>
-  
   # Keep the record with the lowest-numbered PERRP in the household
   slice_head(by = c(HRHHID, HRHHID2), n = 1)
 
+fss_21_status
+```
+
+```{r}
 # Display number and proportion of households in different food security status
 fss_21_status |>
   select(HRFS12M1) |>
@@ -656,16 +664,16 @@ We can use `makeVarlist()` function in `censusapi` package to get the list of va
 ```{r}
 #| eval: true
 
-varlist <- censusapi::makeVarlist(name = "cps/foodsec/dec",
-                       vintage = 2021,
-                       find = "",
-                       output = "dataframe")
-
-varlist |>
+censusapi::makeVarlist(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  find = "",
+  output = "dataframe"
+  ) |>
+  as_tibble() |>
   filter(name %in% c("HRHHID", "HRHHID2", "PERRP",
                      "GESTFIPS", "HRFS12M1", "HHSUPWGT")) |>
-  select(-c(concept, group, predicateOnly)) |>
-  kable()
+  select(-c(concept, group, predicateOnly))
 ```
 
 Now we are interested in how much percentage of households with low food security and very low food security in 2021.

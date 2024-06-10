@@ -48,10 +48,9 @@ library(tidymodels)
 
 ```
 
-
-<div style="text-align: center;">
-  <img src="https://d33wubrfki0l68.cloudfront.net/795c039ba2520455d833b4034befc8cf360a70ba/558a5/diagrams/data-science-explore.png" alt="Data Science Diagram">
-</div>
+::: {style="text-align: center;"}
+![Data Science Diagram](../01-dsintro/data-science.png){alt="Data Science Diagram"}
+:::
 
 ```{r, include=FALSE}
 #| eval: true
@@ -117,9 +116,9 @@ data_clean <- fss_21_data |>
   mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security", 0, 1))
 ```
 
-## Classification and Regression Trees (CART) (Machine Learning, A Probabilistic Perspective 18.1)
+## Classification and regression trees (CART)
 
-A CART model is a tree structure conisting of a set of nested decision rules. At each node $i$,  the feature dimension $d_i$ of the input vector $\mathbf x$ is compared to a threshold value $t_i$, and the input is then passed down to the left or right branch, depending on whether it is above or below threshold.  (For categorical values, we compare if $x_{d_i}$ is equal to the target value $t_i$ or not.) At the leaves of the tree, the model specifies a distribution over the output for points that are in that part of the input space.
+A CART model is a tree structure consisting of a set of nested decision rules. At each node $i$, the feature dimension $d_i$ of the input vector $\mathbf x$ is compared to a threshold value $t_i$, and the input is then passed down to the left or right branch, depending on whether it is above or below threshold. (For categorical values, we compare if $x_{d_i}$ is equal to the target value $t_i$ or not.) At the leaves of the tree, the model specifies a distribution over the output for points that are in that part of the input space.
 
 Formally, a CART model can be defined by
 
@@ -129,9 +128,9 @@ $$
 
 where $R_j$ is the region specified by the $j$’th leaf node, $w_j$ is the predicted output for that node, and $\boldsymbol \theta = \{ (R_j, w_j): j = 1:J \}$ (For regression, the predicted output for each leaf $w_j$ is a scalar; for classification, it can be the logits or class probabilities.)
 
-<div style="text-align: center;">
-  <img src="./18_1.jpg" alt="default" width=750>
-</div>
+::: {style="text-align: center;"}
+<img src="./18_1.jpg" alt="default" width="750"/>
+:::
 
 Tree-based models are non-parametric models, so the loss function is not differentiable. Instead, The standard practice is to use a greedy procedure, in which we iteratively grow the tree one node at a time. This approach is used by CART, C4.5, and ID3, which are three popular implementations of the method.
 
@@ -165,9 +164,8 @@ A node that is pure (i.e., only has examples of one class) will have 0 entropy.
 
 According to the above rule, we can to pick the best feature, and best threshold at each node. We then partition the data, and call the fitting algorithm recursively on each subset of the data.
 
-If we let the tree become deep enough, it can achieve 0 error on the training set (assuming no label noise), by partioning the input space into sufficiently small regions where the output is constant. However, this will typically result in overfitting. To prevent this, there are two main approaches: The first is to stop the tree growing process according to some heuristic. The second approach is to grow the tree to its maximum
- depth, where no more splits are possible, and then to prune it back.
- 
+If we let the tree become deep enough, it can achieve 0 error on the training set (assuming no label noise), by partioning the input space into sufficiently small regions where the output is constant. However, this will typically result in overfitting. To prevent this, there are two main approaches: The first is to stop the tree growing process according to some heuristic. The second approach is to grow the tree to its maximum depth, where no more splits are possible, and then to prune it back.
+
 -   Advantages of trees
     -   Trees are easy to interpret.
     -   Some people believe that decision trees more closely mirror human decision-making.
@@ -177,11 +175,11 @@ If we let the tree become deep enough, it can achieve 0 error on the training se
     -   Trees have Bad predictions.
     -   Trees can be very non-robust.
 
-## Bagging, Random Forests, Boosting (ISL 8.2)
+## Bagging, random forests, boosting
 
 ### Bagging
 
-The decision trees suffer from high variance. This means that if we split the training data into two parts at random, and fit a decision tree to both halves, the results that we get could be quite different. 
+The decision trees suffer from high variance. This means that if we split the training data into two parts at random, and fit a decision tree to both halves, the results that we get could be quite different.
 
 Bootstrap aggregation, or bagging, is a general-purpose procedure for reducing the bagging variance of a statistical learning method.
 
@@ -193,7 +191,7 @@ $$
 
 Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.
 
-### Random Forests
+### Random forests
 
 Random forests provide an improvement over bagged trees by way of a small tweak that decorrelates the trees. As in bagging, we build a number of decision trees on bootstrapped training samples. But when building these decision trees, each time a split in a tree is considered, a random sample of $m$ predictors is chosen as split candidates from the full set of $p$ predictors. **The split is allowed to use only one of those** $m$ **predictors**. Using a small value of m in building a random forest will typically be helpful when we have a large number of correlated predictors.
 
@@ -206,8 +204,6 @@ For binary classification problem, each classifier $F_m \in \{-1, +1\}$. In part
 It can be shown that, as long as each $F_m$ has an accuracy that is better than chance (even on the weighted dataset), then the final ensemble of classifiers will have higher accuracy than any given component. That is, if $F_m$ is a **weak learner** (so its accuracy is only slightly better than 50%), then we can boost its performance using the above procedure so that the final f becomes a **strong learner**.
 
 Note that boosting reduces the bias of the strong learner, by fitting trees that depend on each other, whereas bagging and RF reduce the variance by fitting independent trees. In many cases, boosting can work better (but take more time to train).
-
-
 
 ## Random forest workflow
 
@@ -286,7 +282,6 @@ rf_mod <-
 rf_mod
 ```
 
-
 ### Workflow
 
 ```{r}
@@ -338,7 +333,6 @@ rf_fit <- rf_wf |>
     metrics = metric_set(roc_auc, accuracy)
     )
 rf_fit
-
 ```
 
 Visualize CV results:

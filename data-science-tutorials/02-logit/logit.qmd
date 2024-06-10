@@ -47,33 +47,56 @@ library(ggplot2)
 
 ```
 
+## Roadmap
 
-<div style="text-align: center;">
-  <img src="https://d33wubrfki0l68.cloudfront.net/795c039ba2520455d833b4034befc8cf360a70ba/558a5/diagrams/data-science-explore.png" alt="Data Science Diagram">
-</div>
+::: {style="text-align: center;"}
+![Data Science Diagram](../01-dsintro/data-science.png)
+:::
 
+In the last lecture, we focus on data wrangling (import, tidy, transform, visualize). Now we progress to the modeling part. In this lecture, we focus on predictive modeling using machine learning methods (logistic, random forest, ...). In the next lecture, we focus on policy evaluation using double machine learning.
 
-## Logistic Regression
+## Machine learning overview
 
-### Brief review of linear regression
+::: {style="text-align: center;"}
+<img src="https://www.frontiersin.org/files/Articles/815717/fbuil-08-815717-HTML/image_m/fbuil-08-815717-g003.jpg" alt="Machine Learning"/>
+:::
 
-<div style="text-align: center;">
-  <img src="https://www.frontiersin.org/files/Articles/815717/fbuil-08-815717-HTML/image_m/fbuil-08-815717-g003.jpg" alt="Machine Learning">
-</div>
+### Supervised vs unsupervised learning
+
+-   **Supervised learning**: input(s) -\> output.
+
+    -   Prediction (or **regression**): the output is continuous (income, weight, bmi, ...).
+    -   **Classification**: the output is categorical (disease or not, pattern recognition, ...).
+
+-   **Unsupervised learning**: no output. We learn relationships and structure in the data.
+
+    -   Clustering.
+    -   Dimension reduction.
+    -   Embedding.
+
+-   In modern applications, the line between supervised and unsupervised learning is blurred.
+
+    -   Matrix completion: Netflix problem. Both supervise and unsupervised techniques are used.
+
+    -   Large language model (LLM) combines supervised learning and reinforcement learning.
+
+## Logistic regression
+
+### Why not linear regression?
 
 -   `Default` dataset
 
 We are interested in predicting whether an individual will default on his or her credit card payment, on the basis of annual income and monthly credit card balance.
 
-<div style="text-align: center;">
-  <img src="./4_1.jpg" alt="default" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./4_1.jpg" alt="default" width="700"/>
+:::
 
 The response `default` falls into one of two categories, Yes or No. Rather than modeling this response Y directly, logistic regression models the probability that Y belongs to a particular category.
 
-<div style="text-align: center;">
-  <img src="./4_2.jpg" alt="default" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./4_2.jpg" alt="default" width="700"/>
+:::
 
 $$
 Y_i = \begin{cases}
@@ -86,9 +109,7 @@ The parameter $p_i = \mathbb{E}(Y_i)$ will be related to the predictors $\mathbf
 
 $$
 p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
-$$
-where $\eta_i$ is the **linear predictor** or **systematic component**
-$$
+$$ where $\eta_i$ is the **linear predictor** or **systematic component** $$
 \eta_i = \mathbf{x}_i^T \boldsymbol{\beta}
 $$
 
@@ -96,9 +117,9 @@ $$
 \log \left( \frac{p}{1-p} \right) = \log(\text{odds}) = \beta_0 + \beta_1  x_1 + \beta_2  x_2 + \dots + \beta_q  x_q. 
 $$
 
-Therefore $\beta_1$ can be interpreted as a unit increase in $x_1$ with other predictors held fixed increases the **log-odds** of success by $\beta_1$, or increase the odds of success by a factor of $e^{\beta_1}$. 
+Therefore $\beta_1$ can be interpreted as a unit increase in $x_1$ with other predictors held fixed increases the **log-odds** of success by $\beta_1$, or increase the odds of success by a factor of $e^{\beta_1}$.
 
-### Logistic Regression on Food Security Data
+### Logistic regression on food security data
 
 To further investigate the factors that are associated with food insecurity, we can use logistic regression to model the probability of a household being in low food security.
 
@@ -155,9 +176,9 @@ We include the following independent variables in the model:
     -   5 = Not in labor force-retired
     -   6 = Not in labor force-disabled
     -   7 = Not in labor force-other
--   PRCHLD: Presence of own children < 18 years old
+-   PRCHLD: Presence of own children \< 18 years old
     -   0 = No children
-    -   1~15 = Have children
+    -   1\~15 = Have children
 -   HRPOOR: Poverty status
     -   1 = Poor (Below 185% poverty)
     -   2 = Not poor (Above 185% poverty or income not reported)
@@ -220,9 +241,7 @@ fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
   )
 ```
 
-
 To transform the response variable `HRFS12M1` into a binary variable, we set `HRFS12M1 = 0` if the household is in food security and `HRFS12M1 = 1` otherwise.
-
 
 ```{r}
 #| eval: true
@@ -231,9 +250,18 @@ data_clean <- fss_21_data |>
   select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
          PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
   mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security", 0, 1))
+```
 
+```{r}
+#| eval: true
+
+# Fit logistic regression
 logit_model <- glm(HRFS12M1 ~ . - HHSUPWGT,
                    data = data_clean, family = "binomial")
+```
+
+```{r}
+#| eval: true
 
 # gtsummary package offers a nice summary of the model
 logit_model |>
@@ -242,10 +270,11 @@ logit_model |>
   bold_p(t = 0.05)
 ```
 
+### ROC curve
 
-### ROC Curve
+![](https://research.aimultiple.com/wp-content/uploads/2019/07/positive-negative-true-false-matrix-1648x600.png.webp){fig-align="center"}
 
-If we want to use this model for prediction, we need to evaluate its performance. There are many metrics related to classification models, such as accuracy, precision, recall, Sensitivity, Specificity,...
+If we want to use this model for prediction, we need to evaluate its performance. There are many metrics related to classification models, such as accuracy, precision, recall, sensitivity, specificity, ...
 
 $$
 \begin{aligned}
@@ -256,7 +285,6 @@ $$
 \text{Specificity} &= \frac{TN}{TN + FP}
 \end{aligned}
 $$
-
 
 ```{r}
 #| eval: true
@@ -298,7 +326,6 @@ calc_metrics <- function(ct) {
     Precision = ct[2, 2] / sum(ct[2, ]))
 }
 
-
 metrics50 <- calc_metrics(ctb_50)
 metrics10 <- calc_metrics(ctb_10)
 
@@ -311,11 +338,11 @@ data.frame(threshold50 = metrics50, threshold10 = metrics10) |>
 
 If we set the threshold to 0.5, the accuracy is 0.90, which is quite higher than setting threshold to 0.1. However, the sensitivity is only 0.02, which means the model can only capture 2% of the households in low food security. In contrast, if we set the threshold to 0.1, the sensitivity is 0.69, which means the model can capture 68% of the households in low food security. However, the specificity decreases to 0.76. This trade-off is common in classification models.
 
-Therefore, we need a metric that can evaluate the model's performance under different thresholds. The ROC curve is a good choice. The ROC curve is a popular graphic for simultaneously displaying the two types of errors for all possible thresholds. The name “ROC” is historic, and comes from communications theory. It is an acronym for receiver operating characteristics.
+Therefore, we need a metric that can evaluate the model's performance under different thresholds. The ROC curve is a good choice. The **ROC** curve is a popular graphic for simultaneously displaying the two types of errors for all possible thresholds. The name “ROC” is historic, and comes from communications theory. It is an acronym for receiver operating characteristics.
 
-The overall performance of a classifier, summarized over all possible thresholds, is given by the area under the (ROC) curve (AUC). An ideal ROC curve will hug the top left corner, so the larger area under the AUC the better the classifier. We expect a classifier that performs no better than chance to have an AUC of 0.5.
+The overall performance of a classifier, summarized over all possible thresholds, is given by the area under the (ROC) curve (**AUC**). An ideal ROC curve will hug the top left corner, so the larger area under the AUC the better the classifier. We expect a classifier that performs no better than chance to have an AUC of 0.5.
 
-There is another similar plot called the precision-recall curve, which sets the x-axis as recall and the y-axis as precision. The classifier that has a higher AUC on the ROC curve will always have a higher AUC on the PR curve as well.
+There is another similar plot called the **precision-recall curve**, which sets the x-axis as recall and the y-axis as precision. The classifier that has a higher AUC on the ROC curve will always have a higher AUC on the PR curve as well.
 
 ```{r}
 #| eval: true
@@ -338,49 +365,45 @@ ggroc(roc_data, legacy.axes = TRUE) +
 
 The logistic regression model has an AUC of 0.788, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
 
-## Assessing Model Accuracy
+## Assessing model accuracy
 
-### Measuring the Quality of Fit (ISL 2.2)
+### Measuring the quality of fit
 
 In order to evaluate the performance of a statistical learning method on a given data set, we need some way to measure how well its predictions actually match the observed data. That is, we need to quantify the extent to which the predicted response value for a given observation is close to the true response value for that observation. In the regression setting, the most commonly-used measure is the mean squared error (MSE), given by
 
 $$
 \text{MSE} = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{f}(x_i))^2.
-$$
-The MSE will be small if the predicted responses are very close to the true responses, and will be large if for some of the observations, the predicted and true responses differ substantially.
+$$ The MSE will be small if the predicted responses are very close to the true responses, and will be large if for some of the observations, the predicted and true responses differ substantially.
 
 The MSE is computed using the training data that was used to fit the model. But in general, we do not really care how well the method works training on the training data. Rather, we are interested in the accuracy of the predictions that we obtain when we apply our method to previously unseen test data. We’d like to select the model for which the average of the test MSE is as small as possible.
 
-<div style="text-align: center;">
-  <img src="./2_9.jpg" alt="default" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./2_9.jpg" alt="default" width="700"/>
+:::
 
 As model flexibility increases, training MSE will decrease, but the test MSE may not. When a given method yields a small training MSE but a large test MSE, we are said to be overfitting the data.
 
-
-::: {.callout-tip}
+::: callout-tip
 -   Does it mean simpler models are always better?
 
-**No Free Lunch Theorem** [David Wolpert, William Macready]: Any two optimization algorithms are equivalent when their performance is averaged across all possible problems.
+**No Free Lunch Theorem** \[David Wolpert, William Macready\]: Any two optimization algorithms are equivalent when their performance is averaged across all possible problems.
 
-<div style="text-align: center;">
-  <img src="./nfl_train.jpg" alt="default" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./nfl_train.jpg" alt="default" width="700"/>
+:::
 
-The black points represent the training data. There are two models A and B, in which model B is more flexible than model A. 
+The black points represent the training data. There are two models A and B, in which model B is more flexible than model A.
 
-
-<div style="text-align: center;">
-  <img src="./nfl_test.jpg" alt="default" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./nfl_test.jpg" alt="default" width="700"/>
+:::
 
 The white points represent the test data. In the left panel, model A has a smaller test MSE than model B. In the right panel, model B has a smaller test MSE than model A. Therefore, we cannot say that simpler models are always better.
 :::
 
-
 In practice, one can usually compute the training MSE with relative ease, but estimating test MSE is considerably more difficult because usually no test data are available. The flexibility level corresponding to the model with the minimal test MSE can vary considerably among data sets. One important method is cross-validation, which is a cross method for estimating test MSE using the training data.
 
-### Cross-Validation (ISL 5.1)
+### Cross-validation
 
 K-fold cross-validation randomly divides the set of observations into k groups, or folds, of approximately equal size. The first fold is treated as a validation set, and the method is fit on the remaining k − 1 folds. The mean squared error, $\text{MSE}_1$, is then computed on the observations in the held-out fold. This procedure is repeated k times; each time, a different group of observations is treated as a validation set. This process results in k estimates of the test error, $\text{MSE}_1$, $\text{MSE}_2$,..., $\text{MSE}_k$. The k-fold CV estimate is computed by averaging these values,
 
@@ -388,30 +411,28 @@ $$
 \text{CV}_{(k)} = \frac{1}{k} \sum_{i=1}^{k} \text{MSE}_i.
 $$
 
-<div style="text-align: center;">
-  <img src="./kfold.jpg" alt="default" width=700>
-</div>
+::: {style="text-align: center;"}
+<img src="./kfold.jpg" alt="default" width="700"/>
+:::
 
+## Tidymodels overview
 
+-   [tidymodels](https://www.tidymodels.org/) is an ecosystem for:
 
-
-## Tidymodels Overview
-
-- [tidymodels](https://www.tidymodels.org/) is an ecosystem for:
-
-    1. Feature engineering: coding qualitative predictors, transformation of predictors (e.g., log), extracting key features from raw variables (e.g., getting the day of the week out of a date variable), interaction terms, ... ([recipes](https://recipes.tidymodels.org/reference/index.html) package);  
-    2. Build and fit a model ([parsnip](https://parsnip.tidymodels.org/index.html) package);  
-    3. Evaluate model using resampling (such as cross-validation) ([tune](https://tune.tidymodels.org/) and [dial](https://dials.tidymodels.org/) packages);  
-    4. Tuning model parameters.
+    1.  Feature engineering: coding qualitative predictors, transformation of predictors (e.g., log), extracting key features from raw variables (e.g., getting the day of the week out of a date variable), interaction terms, ... ([recipes](https://recipes.tidymodels.org/reference/index.html) package);
+    2.  Build and fit a model ([parsnip](https://parsnip.tidymodels.org/index.html) package);
+    3.  Evaluate model using resampling (such as cross-validation) ([tune](https://tune.tidymodels.org/) and [dial](https://dials.tidymodels.org/) packages);
+    4.  Tuning model parameters.
 
 <p align="center">
-<img src="https://rviews.rstudio.com/2020/04/21/the-case-for-tidymodels/tidymodels.png" height="300">
+
+![](https://rviews.rstudio.com/2020/04/21/the-case-for-tidymodels/tidymodels.png){fig-align="center" height="300"}
+
 </p>
 
-- tidymodels is the R analog of [sklearn.pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) in Python and [MLJ.jl](https://juliaai.github.io/MLJ.jl/stable/) in Julia.
+-   tidymodels is the R analog of [sklearn.pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) in Python and [MLJ.jl](https://juliaai.github.io/MLJ.jl/stable/) in Julia.
 
-
-## Elastic Net Regularization (Shrinkage Methods, ISL 6.2)
+## Elastic-net (enet) regularization and shrinkage methods
 
 The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
 
@@ -419,24 +440,23 @@ The subset selection methods such as best subset selection, forward stepwise sel
 
 $$
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
-$$
-  where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
+$$ where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
 
 -   For the lasso (l-1 penalty), we need to optimize the following objective function:
 
 $$
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
-$$
-  where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$. 
+$$ where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$.
 
 -   The elastic net combines the ridge and lasso penalties, and the penalty term is $\lambda \left( \alpha \sum_{j=1}^{p} |\beta_j| + \frac{1 - \alpha}{2} \sum_{j=1}^{p} \beta_j^2 \right)$, where $\alpha$ controls the relative weight of the two penalties.
 
 <p align="center">
-<img src="./shrink.jpg" width=700>
+
+<img src="./shrink.jpg" width="700"/>
+
 </p>
 
 Implementing ridge regression and the lasso requires a method for selecting a value for the tuning parameter $\lambda$ (and $\alpha$ if we use elastic net). Cross-validation provides a simple way to tackle this problem. We choose a grid of tuning parameters values, and compute the cross-validation error for each value of tuning parameters. We then select the tuning parameters value for which the cross-validation error is smallest. Finally, the model is re-fit using all of the available observations and the selected value of the tuning parameter.
-
 
 ## Logistic regression (with enet regularization) workflow
 
@@ -547,7 +567,6 @@ param_grid <- grid_regular(
   print()
 ```
 
-
 ### Cross-validation (CV)
 
 Set cross-validation partitions.
@@ -618,6 +637,7 @@ final_wf <- logit_wf |>
   finalize_workflow(best_logit)
 final_wf
 ```
+
 ```{r}
 #| eval: true
 
