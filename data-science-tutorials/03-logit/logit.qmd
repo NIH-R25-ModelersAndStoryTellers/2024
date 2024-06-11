@@ -38,13 +38,13 @@ library(tidycensus)
 census_api_key("4cf445b70eabd0b297a45e7f62f52c27ba3b5cae",
                install = TRUE, overwrite = TRUE)
 Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
+
 library(censusapi)
+library(glmnet)
 library(gtsummary)
 library(knitr)
-library(tigris)
 library(maps)
-library(ggplot2)
-
+library(tigris)
 ```
 
 ## Roadmap
