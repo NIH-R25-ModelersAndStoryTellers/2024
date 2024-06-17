@@ -65,11 +65,11 @@ Dr. Roch Nianogo will lead the second part, from June 25 afternoon to June 26, w
 
 During the course, you can
 
--   read the static tutorial pages, make comments, and ask questions; or
+-   read the static [tutorial pages](https://github.com/NIH-R25-ModelersAndStoryTellers/2024), make comments, and ask questions; or
 
--   interactively run `qmd` codes in RStudio on [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9) (sign up for a free account); or
+-   interactively run `qmd` files in RStudio on [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9) (sign up for a free account); or
 
--   interactively run `ipynb` codes in Jupyter Notebook on [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git) (can be slow)
+-   interactively run `ipynb` files in Jupyter Notebook on [Binder](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git) (can be slow)
 
 Adventurous ones can reproduce, improve, and generalize all the examples **on your own computer** by the following steps:
 
@@ -253,7 +253,7 @@ The most useful tool in the tidyverse is dplyr. It’s a Swiss-army knife for da
     -   `rename()` easily changes the name of a column(s).
     -   `pull()` extracts a single column as a vector.
 -   Grouped operations:
-    -   `group_by()` aggregates data by one or more variables.\
+    -   `group_by()` aggregates data by one or more variables.
     -   `summarise()` reduces multiple values down to a single summary.
 -   `_join()` functions that merge two data frames together, including `inner_join()`, `left_join()`, `right_join()`, and `full_join()`.
 
