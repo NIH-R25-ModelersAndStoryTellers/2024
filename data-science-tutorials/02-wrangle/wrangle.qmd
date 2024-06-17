@@ -43,6 +43,7 @@ Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
 library(censusapi)
 library(gtsummary)
 library(maps)
+library(plotly)
 library(tigris)
 ```
 
@@ -103,7 +104,6 @@ Now we are interested in Food Security Supplement. We can search for the keyword
 censusapi::listCensusApis() |>
   filter(str_detect(title, "Food Security"), vintage >= 2019) |>
   select(title, name, vintage, type, description)
-
 ```
 
 The example below makes a request to API for the CPS Food Security Supplement December 2021 Public-Use Microdata File. The `name` argument is set to "cps/foodsec/dec" and the `vintage` argument is set to 2021. If we are interested in Household Food Security Scale, then for the `vars` argument, we should include the following terms:
@@ -131,9 +131,8 @@ fss_21_status <- censusapi::getCensus(
            "GESTFIPS", "GTCO", "HRFS12M1",
            "HHSUPWGT")
   ) |>
-  as_tibble()
-
-fss_21_status
+  as_tibble() |>
+  print()
 ```
 
 Notice that some columns are not in the format we want. For example, **HRFS12M1** (Food Security Status) should be a categorical variable, and we want to convert it to a factor with meaningful labels. Also, **HHSUPWGT** (Household Supplemental Weight) was ingested as a character variable, and we want to convert it to a numeric variable.
@@ -159,10 +158,12 @@ In addition to checking the document and encoding labels manually, `listCensusMe
 ```{r}
 #| eval: true
 
-HRFS12M1_lb <- censusapi::listCensusMetadata(name = "cps/foodsec/dec",
-                                             vintage = 2021,
-                                             type = "values",
-                                             variable = "HRFS12M1")
+HRFS12M1_lb <- censusapi::listCensusMetadata(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  type = "values",
+  variable = "HRFS12M1"
+  )
 
 HRFS12M1_lb
 ```
@@ -186,7 +187,7 @@ fss_21_status
 
 ## Constructing household characteristics from person records
 
-To compute some household characteristics (such as household size, presence of children, or presence of elderly members), it is necessary to identify the records of all persons in the same household. Households within the December CPS-FSS are uniquely and completely identified by two household identifiers in combination, **HRHHID** and **HRHHID**. Characteristics of the household reference person can be assigned from the person record with **PERRP** 40 or 41, which will always be the record with the lowest-numbered PERRP in the household.
+To compute some household characteristics (such as household size, presence of children, or presence of elderly members), it is necessary to identify the records of all persons in the same household. Households within the December CPS-FSS are uniquely and completely identified by two household identifiers in combination, **HRHHID** and **HRHHID2**. Characteristics of the household reference person can be assigned from the person record with **PERRP** 40 or 41, which will always be the record with the lowest-numbered PERRP in the household.
 
 **HRFS12M1** (Summary Food Security Status, 12-Month) is one of the household characteristics. This is the variable used for most food security statistics in USDA’s annual food security report series. In order to compute the prevalence of food insecurity, we need to aggregate the food security status of all persons in the same household. `tbl_summary()` in the `gtsummary` package can generate beautiful summary tables.
 
@@ -199,9 +200,8 @@ fss_21_status <- fss_21_status |>
   # Arrange by PERRP
   arrange(PERRP) |>
   # Keep the record with the lowest-numbered PERRP in the household
-  slice_head(by = c(HRHHID, HRHHID2), n = 1)
-
-fss_21_status
+  slice_head(by = c(HRHHID, HRHHID2), n = 1) |>
+  print()
 ```
 
 ```{r}
@@ -229,7 +229,8 @@ censusapi::makeVarlist(
   as_tibble() |>
   filter(name %in% c("HRHHID", "HRHHID2", "PERRP",
                      "GESTFIPS", "HRFS12M1", "HHSUPWGT")) |>
-  select(-c(concept, group, predicateOnly))
+  select(-c(concept, group, predicateOnly)) |>
+  print()
 ```
 
 Now we are interested in how much percentage of households with low food security and very low food security in 2021.
@@ -262,12 +263,13 @@ fss_21_status <- fss_21_status |>
                                                "Very Low Food Security"),
                                1, 0) * HHSUPWGT,
          HRFS12M1_res = ifelse(HRFS12M1 == "No Response", 0, 1) * HHSUPWGT
-  )
+  ) |>
+  print()
+```
 
-low_food_security_rate <-
-  sum(fss_21_status$HRFS12M1_low) / sum(fss_21_status$HRFS12M1_res) * 100
-
-low_food_security_rate
+```{r}
+# percentage of households with low or very low food security in 2021 
+sum(fss_21_status$HRFS12M1_low) / sum(fss_21_status$HRFS12M1_res) * 100
 ```
 
 The percentage of households with low food security or very low food security in 2021 is 10.23%. We can verify this result by comparing this number to the Economic Research Report [Household Food Security in the United States in 2021](https://www.ers.usda.gov/webdocs/publications/104656/err-309.pdf?v=7855.7) Figure 1.
@@ -283,9 +285,8 @@ We first need to match the FIPS code to the state names using `fips_codes()` fun
 state_names <- tigris::fips_codes |>
   select(state, state_code, state_name) |>
   distinct() |>
-  as_tibble()
-
-state_names
+  as_tibble() |>
+  print()
 ```
 
 Now we can compute the rate of low food security in each state.
@@ -294,22 +295,20 @@ Now we can compute the rate of low food security in each state.
 #| eval: true
 
 fss_21_status_state <- fss_21_status |>
-  
   # Group by state FIPS code and calculate the rate by state
   group_by(GESTFIPS) |>
   summarize(HRFS12M1_low = sum(HRFS12M1_low),
             HRFS12M1_res = sum(HRFS12M1_res)) |>
-  
   # Notice that state_code is a two digit number
   # But in fss_21_status, it is single digit if the state code is less than 10
   mutate(GESTFIPS = ifelse(as.numeric(GESTFIPS) < 10,
-                           paste0("0", GESTFIPS),
+                           str_c("0", GESTFIPS),
                            as.character(GESTFIPS))) |>
-  
   # Left join with state names
   left_join(state_names, by = c("GESTFIPS" = "state_code")) |>
   mutate(low_food_security_rate = HRFS12M1_low / HRFS12M1_res * 100,
-         state_name = str_to_lower(state_name))
+         state_name = str_to_lower(state_name)) |>
+  print()
 ```
 
 Then we can visualize the rate of low food security in each state.
@@ -317,13 +316,11 @@ Then we can visualize the rate of low food security in each state.
 ```{r}
 #| eval: true
 
-us_states <- ggplot2::map_data("state")
-
-us_states <- merge(us_states, fss_21_status_state, by.x = "region",
-                   by.y = "state_name", all.x = TRUE)
-
-ggplot(us_states, aes(x = long, y = lat, group = group,
-                      fill = low_food_security_rate)) +
+ggplot2::map_data("state") |>
+  merge(fss_21_status_state, by.x = "region",
+        by.y = "state_name", all.x = TRUE) |>
+  ggplot(aes(x = long, y = lat, group = group,
+             fill = low_food_security_rate)) +
   geom_polygon(color = "black") +
   scale_fill_gradient(low = "lightblue", high = "darkblue",
                       name = "Households in Low Food Security (%)") +

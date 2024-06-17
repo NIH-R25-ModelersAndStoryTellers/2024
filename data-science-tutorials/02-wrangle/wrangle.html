@@ -3274,7 +3274,8 @@ window.Quarto = {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(censusapi)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="roadmap" class="level2" data-number="1">
@@ -3311,20 +3312,20 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(title, name, vintage, type, temporal, url)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1,610 × 6
+<pre><code># A tibble: 1,611 × 6
    title                                      name  vintage type  temporal url  
    &lt;chr&gt;                                      &lt;chr&gt;   &lt;int&gt; &lt;chr&gt; &lt;chr&gt;    &lt;chr&gt;
  1 Current Population Survey: Basic Monthly   cps/…    2024 Micr… 2024-04… http…
  2 Current Population Survey: Basic Monthly   cps/…    2024 Micr… 2024-02… http…
  3 Current Population Survey: Basic Monthly   cps/…    2024 Micr… 2024-01… http…
  4 Current Population Survey: Basic Monthly   cps/…    2024 Micr… 2024-03… http…
- 5 Current Population Survey Annual Social a… cps/…    2023 Micr… 2023-03… http…
- 6 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-04… http…
- 7 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-08… http…
- 8 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-12… http…
- 9 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-02… http…
-10 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-01… http…
-# ℹ 1,600 more rows</code></pre>
+ 5 Current Population Survey: Basic Monthly   cps/…    2024 Micr… 2024-05… http…
+ 6 Current Population Survey Annual Social a… cps/…    2023 Micr… 2023-03… http…
+ 7 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-04… http…
+ 8 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-08… http…
+ 9 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-12… http…
+10 Current Population Survey: Basic Monthly   cps/…    2023 Micr… 2023-02… http…
+# ℹ 1,601 more rows</code></pre>
 </div>
 </div>
 <p><code>listCensusApis()</code> returns a dataframe that includes: title, description, name, vintage, url, dataset type, and other useful fields. Search for the dataset you are interested in.</p>
@@ -3376,9 +3377,8 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;GESTFIPS&quot;</span>, <span class="st">&quot;GTCO&quot;</span>, <span class="st">&quot;HRFS12M1&quot;</span>,</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;HHSUPWGT&quot;</span>)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>fss_21_status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 102,025 × 7
    HRHHID          HRHHID2 PERRP GESTFIPS GTCO  HRFS12M1 HHSUPWGT  
@@ -3428,12 +3428,14 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 </div>
 <p>In addition to checking the document and encoding labels manually, <code>listCensusMetadata()</code> offers a way to get the value labels of specific variables. This can be useful for understanding the meaning of variables and their values.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>HRFS12M1_lb <span class="ot">&lt;-</span> censusapi<span class="sc">::</span><span class="fu">listCensusMetadata</span>(<span class="at">name =</span> <span class="st">&quot;cps/foodsec/dec&quot;</span>,</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">vintage =</span> <span class="dv">2021</span>,</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">type =</span> <span class="st">&quot;values&quot;</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                             <span class="at">variable =</span> <span class="st">&quot;HRFS12M1&quot;</span>)</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>HRFS12M1_lb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>HRFS12M1_lb <span class="ot">&lt;-</span> censusapi<span class="sc">::</span><span class="fu">listCensusMetadata</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">name =</span> <span class="st">&quot;cps/foodsec/dec&quot;</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">vintage =</span> <span class="dv">2021</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">type =</span> <span class="st">&quot;values&quot;</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="st">&quot;HRFS12M1&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>HRFS12M1_lb</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  code                                      label
 1    3                     Very Low Food Security
@@ -3475,7 +3477,7 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 </section>
 <section id="constructing-household-characteristics-from-person-records" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="constructing-household-characteristics-from-person-records"><span class="header-section-number">3</span> Constructing household characteristics from person records</h2>
-<p>To compute some household characteristics (such as household size, presence of children, or presence of elderly members), it is necessary to identify the records of all persons in the same household. Households within the December CPS-FSS are uniquely and completely identified by two household identifiers in combination, <strong>HRHHID</strong> and <strong>HRHHID</strong>. Characteristics of the household reference person can be assigned from the person record with <strong>PERRP</strong> 40 or 41, which will always be the record with the lowest-numbered PERRP in the household.</p>
+<p>To compute some household characteristics (such as household size, presence of children, or presence of elderly members), it is necessary to identify the records of all persons in the same household. Households within the December CPS-FSS are uniquely and completely identified by two household identifiers in combination, <strong>HRHHID</strong> and <strong>HRHHID2</strong>. Characteristics of the household reference person can be assigned from the person record with <strong>PERRP</strong> 40 or 41, which will always be the record with the lowest-numbered PERRP in the household.</p>
 <p><strong>HRFS12M1</strong> (Summary Food Security Status, 12-Month) is one of the household characteristics. This is the variable used for most food security statistics in USDA’s annual food security report series. In order to compute the prevalence of food insecurity, we need to aggregate the food security status of all persons in the same household. <code>tbl_summary()</code> in the <code>gtsummary</code> package can generate beautiful summary tables.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fss_21_status <span class="ot">&lt;-</span> fss_21_status <span class="sc">|&gt;</span></span>
@@ -3484,9 +3486,8 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Arrange by PERRP</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(PERRP) <span class="sc">|&gt;</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Keep the record with the lowest-numbered PERRP in the household</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">by =</span> <span class="fu">c</span>(HRHHID, HRHHID2), <span class="at">n =</span> <span class="dv">1</span>)</span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>fss_21_status</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">slice_head</span>(<span class="at">by =</span> <span class="fu">c</span>(HRHHID, HRHHID2), <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30,343 × 7
    HRHHID          HRHHID2 PERRP GESTFIPS GTCO  HRFS12M1                HHSUPWGT
@@ -3510,20 +3511,20 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(HRFS12M1) <span class="sc">|&gt;</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  gtsummary<span class="sc">::</span><span class="fu">tbl_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="viluiepkjx" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#viluiepkjx table {
+<div id="ubndqcszmm" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#ubndqcszmm table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#viluiepkjx thead, #viluiepkjx tbody, #viluiepkjx tfoot, #viluiepkjx tr, #viluiepkjx td, #viluiepkjx th {
+#ubndqcszmm thead, #ubndqcszmm tbody, #ubndqcszmm tfoot, #ubndqcszmm tr, #ubndqcszmm td, #ubndqcszmm th {
 border-style: none;
 }
-#viluiepkjx p {
+#ubndqcszmm p {
 margin: 0;
 padding: 0;
 }
-#viluiepkjx .gt_table {
+#ubndqcszmm .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3548,11 +3549,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#viluiepkjx .gt_caption {
+#ubndqcszmm .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#viluiepkjx .gt_title {
+#ubndqcszmm .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3563,7 +3564,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#viluiepkjx .gt_subtitle {
+#ubndqcszmm .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3574,7 +3575,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#viluiepkjx .gt_heading {
+#ubndqcszmm .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3585,12 +3586,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#viluiepkjx .gt_bottom_border {
+#ubndqcszmm .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#viluiepkjx .gt_col_headings {
+#ubndqcszmm .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3604,7 +3605,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#viluiepkjx .gt_col_heading {
+#ubndqcszmm .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3623,7 +3624,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#viluiepkjx .gt_column_spanner_outer {
+#ubndqcszmm .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3634,13 +3635,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#viluiepkjx .gt_column_spanner_outer:first-child {
+#ubndqcszmm .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#viluiepkjx .gt_column_spanner_outer:last-child {
+#ubndqcszmm .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#viluiepkjx .gt_column_spanner {
+#ubndqcszmm .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3651,10 +3652,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#viluiepkjx .gt_spanner_row {
+#ubndqcszmm .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#viluiepkjx .gt_group_heading {
+#ubndqcszmm .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3679,7 +3680,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#viluiepkjx .gt_empty_group_heading {
+#ubndqcszmm .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3693,13 +3694,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#viluiepkjx .gt_from_md > :first-child {
+#ubndqcszmm .gt_from_md > :first-child {
 margin-top: 0;
 }
-#viluiepkjx .gt_from_md > :last-child {
+#ubndqcszmm .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#viluiepkjx .gt_row {
+#ubndqcszmm .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3717,7 +3718,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#viluiepkjx .gt_stub {
+#ubndqcszmm .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3729,7 +3730,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#viluiepkjx .gt_stub_row_group {
+#ubndqcszmm .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3742,13 +3743,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#viluiepkjx .gt_row_group_first td {
+#ubndqcszmm .gt_row_group_first td {
 border-top-width: 2px;
 }
-#viluiepkjx .gt_row_group_first th {
+#ubndqcszmm .gt_row_group_first th {
 border-top-width: 2px;
 }
-#viluiepkjx .gt_summary_row {
+#ubndqcszmm .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3757,14 +3758,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#viluiepkjx .gt_first_summary_row {
+#ubndqcszmm .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#viluiepkjx .gt_first_summary_row.thick {
+#ubndqcszmm .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#viluiepkjx .gt_last_summary_row {
+#ubndqcszmm .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3773,7 +3774,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#viluiepkjx .gt_grand_summary_row {
+#ubndqcszmm .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3782,7 +3783,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#viluiepkjx .gt_first_grand_summary_row {
+#ubndqcszmm .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3791,7 +3792,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#viluiepkjx .gt_last_grand_summary_row_top {
+#ubndqcszmm .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3800,10 +3801,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#viluiepkjx .gt_striped {
+#ubndqcszmm .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#viluiepkjx .gt_table_body {
+#ubndqcszmm .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3811,7 +3812,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#viluiepkjx .gt_footnotes {
+#ubndqcszmm .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3824,7 +3825,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#viluiepkjx .gt_footnote {
+#ubndqcszmm .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3832,7 +3833,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#viluiepkjx .gt_sourcenotes {
+#ubndqcszmm .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3845,57 +3846,57 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#viluiepkjx .gt_sourcenote {
+#ubndqcszmm .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#viluiepkjx .gt_left {
+#ubndqcszmm .gt_left {
 text-align: left;
 }
-#viluiepkjx .gt_center {
+#ubndqcszmm .gt_center {
 text-align: center;
 }
-#viluiepkjx .gt_right {
+#ubndqcszmm .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#viluiepkjx .gt_font_normal {
+#ubndqcszmm .gt_font_normal {
 font-weight: normal;
 }
-#viluiepkjx .gt_font_bold {
+#ubndqcszmm .gt_font_bold {
 font-weight: bold;
 }
-#viluiepkjx .gt_font_italic {
+#ubndqcszmm .gt_font_italic {
 font-style: italic;
 }
-#viluiepkjx .gt_super {
+#ubndqcszmm .gt_super {
 font-size: 65%;
 }
-#viluiepkjx .gt_footnote_marks {
+#ubndqcszmm .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#viluiepkjx .gt_asterisk {
+#ubndqcszmm .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#viluiepkjx .gt_indent_1 {
+#ubndqcszmm .gt_indent_1 {
 text-indent: 5px;
 }
-#viluiepkjx .gt_indent_2 {
+#ubndqcszmm .gt_indent_2 {
 text-indent: 10px;
 }
-#viluiepkjx .gt_indent_3 {
+#ubndqcszmm .gt_indent_3 {
 text-indent: 15px;
 }
-#viluiepkjx .gt_indent_4 {
+#ubndqcszmm .gt_indent_4 {
 text-indent: 20px;
 }
-#viluiepkjx .gt_indent_5 {
+#ubndqcszmm .gt_indent_5 {
 text-indent: 25px;
 }
 </style>
@@ -3957,7 +3958,8 @@ text-indent: 25px;
 <span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
 <span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;HRHHID&quot;</span>, <span class="st">&quot;HRHHID2&quot;</span>, <span class="st">&quot;PERRP&quot;</span>,</span>
 <span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>                     <span class="st">&quot;GESTFIPS&quot;</span>, <span class="st">&quot;HRFS12M1&quot;</span>, <span class="st">&quot;HHSUPWGT&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(concept, group, predicateOnly))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span><span class="fu">c</span>(concept, group, predicateOnly)) <span class="sc">|&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 6 × 6
   name     label                  predicateType limit suggested_weight is_weight
@@ -3990,12 +3992,29 @@ text-indent: 25px;
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>                                               <span class="st">&quot;Very Low Food Security&quot;</span>),</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>                               <span class="dv">1</span>, <span class="dv">0</span>) <span class="sc">*</span> HHSUPWGT,</span>
 <span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">HRFS12M1_res =</span> <span class="fu">ifelse</span>(HRFS12M1 <span class="sc">==</span> <span class="st">&quot;No Response&quot;</span>, <span class="dv">0</span>, <span class="dv">1</span>) <span class="sc">*</span> HHSUPWGT</span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>low_food_security_rate <span class="ot">&lt;-</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">sum</span>(fss_21_status<span class="sc">$</span>HRFS12M1_low) <span class="sc">/</span> <span class="fu">sum</span>(fss_21_status<span class="sc">$</span>HRFS12M1_res) <span class="sc">*</span> <span class="dv">100</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>low_food_security_rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 30,343 × 9
+   HRHHID          HRHHID2 PERRP GESTFIPS GTCO  HRFS12M1   HHSUPWGT HRFS12M1_low
+   &lt;chr&gt;           &lt;chr&gt;   &lt;dbl&gt; &lt;chr&gt;    &lt;chr&gt; &lt;fct&gt;         &lt;dbl&gt;        &lt;dbl&gt;
+ 1 000013041104291 13011      40 13       139   Food Secu…    6486.           0 
+ 2 000013941103291 12011      40 13       139   Food Secu…    6284.           0 
+ 3 000015897210171 13011      40 2        0     Food Secu…     651.           0 
+ 4 000017986207521 13011      40 27       0     Low Food …    4323.        4323.
+ 5 000018385405241 14011      40 48       0     Food Secu…    5896.           0 
+ 6 000056133206001 13011      40 26       81    Food Secu…    5031.           0 
+ 7 000067043406081 12011      40 47       0     Food Secu…    5780.           0 
+ 8 000067998401911 13111      40 47       0     Food Secu…    4455.           0 
+ 9 000076591004941 12011      40 6        89    Food Secu…    6678.           0 
+10 000078191105941 12012      40 18       89    Food Secu…    4523.           0 
+# ℹ 30,333 more rows
+# ℹ 1 more variable: HRFS12M1_res &lt;dbl&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># percentage of households with low or very low food security in 2021 </span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(fss_21_status<span class="sc">$</span>HRFS12M1_low) <span class="sc">/</span> <span class="fu">sum</span>(fss_21_status<span class="sc">$</span>HRFS12M1_res) <span class="sc">*</span> <span class="dv">100</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 10.23089</code></pre>
 </div>
@@ -4004,13 +4023,12 @@ text-indent: 25px;
 <p>Since we have already computed the rate of low food security in 2021. We can further investigate the rate of low food security in each state.</p>
 <p>We first need to match the FIPS code to the state names using <code>fips_codes()</code> function in <code>tigris</code> package.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the state names</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>state_names <span class="ot">&lt;-</span> tigris<span class="sc">::</span>fips_codes <span class="sc">|&gt;</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(state, state_code, state_name) <span class="sc">|&gt;</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>()</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>state_names</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the state names</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>state_names <span class="ot">&lt;-</span> tigris<span class="sc">::</span>fips_codes <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(state, state_code, state_name) <span class="sc">|&gt;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 57 × 3
    state state_code state_name          
@@ -4030,43 +4048,55 @@ text-indent: 25px;
 </div>
 <p>Now we can compute the rate of low food security in each state.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fss_21_status_state <span class="ot">&lt;-</span> fss_21_status <span class="sc">|&gt;</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group by state FIPS code and calculate the rate by state</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(GESTFIPS) <span class="sc">|&gt;</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">HRFS12M1_low =</span> <span class="fu">sum</span>(HRFS12M1_low),</span>
-<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">HRFS12M1_res =</span> <span class="fu">sum</span>(HRFS12M1_res)) <span class="sc">|&gt;</span></span>
-<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Notice that state_code is a two digit number</span></span>
-<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># But in fss_21_status, it is single digit if the state code is less than 10</span></span>
-<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GESTFIPS =</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(GESTFIPS) <span class="sc">&lt;</span> <span class="dv">10</span>,</span>
-<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">paste0</span>(<span class="st">&quot;0&quot;</span>, GESTFIPS),</span>
-<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">as.character</span>(GESTFIPS))) <span class="sc">|&gt;</span></span>
-<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Left join with state names</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(state_names, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;GESTFIPS&quot;</span> <span class="ot">=</span> <span class="st">&quot;state_code&quot;</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_food_security_rate =</span> HRFS12M1_low <span class="sc">/</span> HRFS12M1_res <span class="sc">*</span> <span class="dv">100</span>,</span>
-<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>         <span class="at">state_name =</span> <span class="fu">str_to_lower</span>(state_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>fss_21_status_state <span class="ot">&lt;-</span> fss_21_status <span class="sc">|&gt;</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Group by state FIPS code and calculate the rate by state</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(GESTFIPS) <span class="sc">|&gt;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(<span class="at">HRFS12M1_low =</span> <span class="fu">sum</span>(HRFS12M1_low),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">HRFS12M1_res =</span> <span class="fu">sum</span>(HRFS12M1_res)) <span class="sc">|&gt;</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Notice that state_code is a two digit number</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># But in fss_21_status, it is single digit if the state code is less than 10</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">GESTFIPS =</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(GESTFIPS) <span class="sc">&lt;</span> <span class="dv">10</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">str_c</span>(<span class="st">&quot;0&quot;</span>, GESTFIPS),</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                           <span class="fu">as.character</span>(GESTFIPS))) <span class="sc">|&gt;</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Left join with state names</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(state_names, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;GESTFIPS&quot;</span> <span class="ot">=</span> <span class="st">&quot;state_code&quot;</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">low_food_security_rate =</span> HRFS12M1_low <span class="sc">/</span> HRFS12M1_res <span class="sc">*</span> <span class="dv">100</span>,</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>         <span class="at">state_name =</span> <span class="fu">str_to_lower</span>(state_name)) <span class="sc">|&gt;</span></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 51 × 6
+   GESTFIPS HRFS12M1_low HRFS12M1_res state state_name    low_food_security_rate
+   &lt;chr&gt;           &lt;dbl&gt;        &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;                          &lt;dbl&gt;
+ 1 01            243182.     2095336. AL    alabama                        11.6 
+ 2 10             52513.      399009. DE    delaware                       13.2 
+ 3 11             23157.      342487. DC    district of …                   6.76
+ 4 12            918419.     9217306. FL    florida                         9.96
+ 5 13            331508.     4233220. GA    georgia                         7.83
+ 6 15             39073.      469880. HI    hawaii                          8.32
+ 7 16             67953.      717091. ID    idaho                           9.48
+ 8 17            488714.     5129502. IL    illinois                        9.53
+ 9 18            249582.     2730181. IN    indiana                         9.14
+10 19             92188.     1344716. IA    iowa                            6.86
+# ℹ 41 more rows</code></pre>
+</div>
 </div>
 <p>Then we can visualize the rate of low food security in each state.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>us_states <span class="ot">&lt;-</span> ggplot2<span class="sc">::</span><span class="fu">map_data</span>(<span class="st">&quot;state&quot;</span>)</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>us_states <span class="ot">&lt;-</span> <span class="fu">merge</span>(us_states, fss_21_status_state, <span class="at">by.x =</span> <span class="st">&quot;region&quot;</span>,</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">by.y =</span> <span class="st">&quot;state_name&quot;</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(us_states, <span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group,</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                      <span class="at">fill =</span> low_food_security_rate)) <span class="sc">+</span></span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
-<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;lightblue&quot;</span>, <span class="at">high =</span> <span class="st">&quot;darkblue&quot;</span>,</span>
-<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                      <span class="at">name =</span> <span class="st">&quot;Households in Low Food Security (%)&quot;</span>) <span class="sc">+</span></span>
-<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Percentage of Households in Low Food Security by State&quot;</span>) <span class="sc">+</span></span>
-<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
-<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ggplot2<span class="sc">::</span><span class="fu">map_data</span>(<span class="st">&quot;state&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">merge</span>(fss_21_status_state, <span class="at">by.x =</span> <span class="st">&quot;region&quot;</span>,</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">by.y =</span> <span class="st">&quot;state_name&quot;</span>, <span class="at">all.x =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> long, <span class="at">y =</span> lat, <span class="at">group =</span> group,</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill =</span> low_food_security_rate)) <span class="sc">+</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_polygon</span>(<span class="at">color =</span> <span class="st">&quot;black&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;lightblue&quot;</span>, <span class="at">high =</span> <span class="st">&quot;darkblue&quot;</span>,</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>                      <span class="at">name =</span> <span class="st">&quot;Households in Low Food Security (%)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">&quot;Percentage of Households in Low Food Security by State&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">axis.title =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>) <span class="sc">+</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_fixed</span>(<span class="at">ratio =</span> <span class="fl">1.5</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
