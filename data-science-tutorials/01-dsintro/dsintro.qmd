@@ -63,7 +63,7 @@ Dr. Roch Nianogo will lead the second part, from June 25 afternoon to June 26, w
 
 ### Course materials
 
-During the course, you can
+All course materials are available on [GitHub](https://github.com/NIH-R25-ModelersAndStoryTellers/2024). During the course, you can
 
 -   read the static [tutorial pages](https://github.com/NIH-R25-ModelersAndStoryTellers/2024), make comments, and ask questions; or
 
@@ -79,7 +79,7 @@ Adventurous ones can reproduce, improve, and generalize all the examples **on yo
 
 -   revise and render the qmd files
 
-### Questions, please
+### Questions please
 
 Please feel free to ask questions and make comments. You can
 
@@ -91,11 +91,23 @@ Please feel free to ask questions and make comments. You can
 
 ## Data source
 
-### Current Population Survey (CPS)
+![Census Bureau](https://www.census.gov/etc.clientlibs/census/clientlibs/census-pattern-library/resources/images/USCENSUS_IDENTITY_SOLO_BLACK_1.5in_R_no_padding.svg){fig-align="center" width="240"}
 
-::: {style="text-align: center;"}
-<img src="https://www.census.gov/etc.clientlibs/census/clientlibs/census-pattern-library/resources/images/USCENSUS_IDENTITY_SOLO_BLACK_1.5in_R_no_padding.svg" alt="Census Bureau" width="240"/>
-:::
+### Census and ACS
+
+US Constitution Article I, Sections 2 and 9:
+
+> The actual enumeration shall be made within three years after the first meeting of the Congress of the United States, and within every subsequent term of ten years, in such manner as they shall by law direct.
+
+-   **Decennial census data**. Every 10 years (1790, 1800, ..., 2010, 2020) administered by the [United States Census Bureau](https://www.census.gov/en.html). Complete enumeration of the US population to assist with *apportionment*. A limited set of questions on race, ethnicity, age, sex, and housing tenure.
+
+-   **American Community Survey (ACS)**. Before the 2010 decennial Census, 1 in 6 Americans also received the Census long form, which asked a wider range of demographic questions on income, education, language, housing, and more. The Census long form has since been replaced by the American Community Survey, which is now the premier source of detailed demographic information about the US population. The ACS is mailed to approximately 3.5 million households per year (around 3% of the US population), allowing for annual data updates. The Census Bureau releases two ACS datasets to the public:
+
+    -   **1-year ACS**: covers areas of population 65,000 and greater
+
+    -   **5-year ACS**: moving average of data over a 5-year period that covers geographies down to the Census block group.
+
+### Current population survey (CPS)
 
 The [Current Population Survey (CPS)](https://www.census.gov/programs-surveys/cps.html), sponsored jointly by the U.S. Census Bureau and the U.S. Bureau of Labor Statistics (BLS), is the primary source of labor force statistics for the population of the United States.
 
@@ -103,7 +115,7 @@ The CPS is one of the oldest, largest, and most well-recognized surveys in the U
 
 In addition to being the primary source of monthly labor force statistics, the CPS is used to collect data for a variety of other studies that keep the nation informed of the economic and social well-being of its people. This is done by adding a set of supplemental questions to the monthly basic CPS questions. Supplemental inquiries vary month to month and cover a wide variety of topics such as child support, volunteerism, health insurance coverage, school enrollment, and **food security**. A listing and brief description of the CPS supplements are available [here](https://www.census.gov/programs-surveys/cps/about/supplemental-surveys.html).
 
-### Food Security Supplement (CPS-FSS)
+### Food security supplement (CPS-FSS)
 
 Take the **CPS Food Security Supplement December 2021 Public-Use Microdata File** as an example. The Food Security Supplement was completed for 30,343 interviewed households with 71,571 person records.
 
@@ -134,7 +146,7 @@ It is worth noting that beginning in 2015 and continuing through 2021, there wer
 <img src="https://hbctraining.github.io/Intro-to-R/img/tidyverse_website.png" alt="Tidyverse"/>
 :::
 
-As it is difficult to change how fundamental base R structures/functions work, the Tidyverse suite of packages create and use data structures, functions and operators to make working with data more intuitive. The two most basic changes are in the use of pipes and tibbles.
+The Tidyverse suite of packages create and use data structures, functions and operators to make working with data more intuitive. The two most basic changes are in the use of pipes and tibbles.
 
 -   The lead developer Hadley Wickham won the 2019 *COPSS Presidents’ Award* (the Nobel Prize of Statistics)
 
@@ -147,8 +159,6 @@ Stringing together commands in R can be quite daunting. Also, trying to understa
 To make R code more human readable, the Tidyverse tools use the pipe, `%>%`, which was acquired from the **magrittr** package and comes installed automatically with Tidyverse. The pipe allows the output of a previous command to be used as input to another command instead of using nested functions.
 
 ```{r}
-#| eval: true
-
 # A single command
 sqrt(83)
 ```
@@ -170,8 +180,6 @@ R 4.1.0 introduced a native pipe operator `|>`, which is mostly compatible with 
 :::
 
 ```{r}
-#| eval: true
-
 # R base pipe
 sqrt(83) |> round(digit = 2)
 ```
@@ -189,8 +197,6 @@ The main differences between tibbles and data.frames relate to printing and subs
 :::
 
 ```{r}
-#| eval: true
-
 # By default, R displays ALL rows of a regular data frame!
 iris
 ```
@@ -198,23 +204,17 @@ iris
 -   Convert a regular data frame to tibble, which by default only displays the first 10 rows of data.
 
 ```{r}
-#| eval: true
-
 # Convert iris to a tibble
 iris_tb <- as_tibble(iris)
 iris_tb
 ```
 
 ```{r}
-#| eval: true
-
 # If subsetting a single column from a data.frame, R will output a vector
 iris[, "Sepal.Length"]
 ```
 
 ```{r}
-#| eval: true
-
 # If subsetting a single column from a tibble, R will output a tibble
 iris_tb[, "Sepal.Length"]
 ```
@@ -257,15 +257,13 @@ The most useful tool in the tidyverse is dplyr. It’s a Swiss-army knife for da
     -   `summarise()` reduces multiple values down to a single summary.
 -   `_join()` functions that merge two data frames together, including `inner_join()`, `left_join()`, `right_join()`, and `full_join()`.
 
-The [Posit dplyr cheatsheet](https://rstudio.github.io/cheatsheets/data-transformation.pdf) is extremely intuitive and helpful.
+The [Posit dplyr cheat sheet](https://rstudio.github.io/cheatsheets/data-transformation.pdf) is extremely intuitive and helpful.
 
 Some examples of using dplyr functions.
 
 -   Filter observations with `Sepal.Length` greater than 5.0, arrange the data by `Sepal.Length` in descending, and create a new column `Sepal.Length_2` that is the square of `Sepal.Length`.
 
 ```{r}
-#| eval: true
-
 iris_tb |>
   filter(Sepal.Length > 5.0) |>
   arrange(desc(Sepal.Length)) |>
@@ -276,8 +274,6 @@ iris_tb |>
 -   Select columns `Species`, and find the distinct values of `Species`
 
 ```{r}
-#| eval: true
-
 iris_tb |>
   select(Species) |>
   distinct()
@@ -286,8 +282,6 @@ iris_tb |>
 -   Count the number of rows in each species
 
 ```{r}
-#| eval: true
-
 iris_tb |>
   group_by(Species) |> 
   summarize(n = n())
@@ -302,8 +296,6 @@ iris_tb |>
 -   Calculate the mean of `Sepal.Length` for each `Species`
 
 ```{r}
-#| eval: true
-
 iris_tb |>
   group_by(Species) |>
   summarize(mean_Sepal_Length = mean(Sepal.Length))
@@ -312,8 +304,6 @@ iris_tb |>
 -   Find the observation with the maximum `Sepal.Length` for each `Species`
 
 ```{r}
-#| eval: true
-
 iris_tb |>
   group_by(Species) |>
   slice_max(Sepal.Length)
@@ -324,8 +314,6 @@ iris_tb |>
 -   Demo tables
 
 ```{r}
-#| eval: true
-
 (x <- tribble(
   ~key, ~val_x,
   1, "x1",
@@ -335,8 +323,6 @@ iris_tb |>
 ```
 
 ```{r}
-#| eval: true
-
 (y <- tribble(
   ~key, ~val_y,
   1, "y1",
@@ -354,8 +340,6 @@ iris_tb |>
 </p>
 
 ```{r}
-#| eval: true
-
 inner_join(x, y, by = "key")
 ```
 
@@ -372,24 +356,18 @@ inner_join(x, y, by = "key")
 -   A **left join** keeps all observations in `x`.
 
 ```{r}
-#| eval: true
-
 left_join(x, y, by = "key")
 ```
 
 -   A **right join** keeps all observations in `y`.
 
 ```{r}
-#| eval: true
-
 right_join(x, y, by = "key")
 ```
 
 -   A **full join** keeps all observations in `x` and `y`.
 
 ```{r}
-#| eval: true
-
 full_join(x, y, by = "key")
 ```
 
@@ -402,8 +380,6 @@ full_join(x, y, by = "key")
 </p>
 
 ```{r}
-#| eval: true
-
 x <- tribble(
   ~key, ~val_x,
   1, "x1",
@@ -428,8 +404,6 @@ left_join(x, y, by = "key")
 </p>
 
 ```{r}
-#| eval: true
-
 x <- tribble(
   ~key, ~val_x,
   1, "x1",
@@ -459,8 +433,6 @@ left_join(x, y, by = "key")
 </p>
 
 ```{r}
-#| eval: true
-
 x <- tribble(
   ~key, ~val_x,
   1, "x1",
@@ -487,7 +459,50 @@ semi_join(x, y, by = "key")
 </p>
 
 ```{r}
-#| eval: true
-
 anti_join(x, y, by = "key")
 ```
+
+### Data visualization using ggplot
+
+-   `ggplot2` is a powerful and flexible package for creating plots in R.
+
+-   The basic idea is to map data to aesthetics (color, shape, size, etc.) and then add layers (points, lines, bars, etc.) to the plot.
+
+```{r}
+ggplot(iris_tb) +
+  # Scatter plot
+  geom_point(mapping = aes(
+    x = Petal.Length, 
+    y = Petal.Width, 
+    color = Species
+    )) + 
+  # Add one more layer of line plot
+  geom_smooth(mapping = aes(
+    x = Petal.Length, 
+    y = Petal.Width, 
+    color = Species
+    )) +
+  # Axis labels, title, caption, etc
+  labs(x = "Petal Length (cm)",
+       y = "Petal Width (cm)",
+  )
+```
+
+-   Again the [Posit dplyr cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf) is extremely intuitive and helpful.
+-   Interactive plots are easily achieved by `plotly` package. Interactive apps can be developed by the popular `shiny` package.
+
+### Exercises
+
+1.  Find the median `Petal.Length` of each Iris species.
+
+    ```{r}
+    # try to use pipe
+
+    ```
+
+2.  Plot the histograms of `Petal.Length`, grouped by `Species`.
+
+    ```{r}
+    # geom_histogram
+
+    ```
