@@ -86,11 +86,10 @@ Sys.setenv("CENSUS_KEY" = "PUT YOUR KEY HERE")
 To see a current table of every available endpoint, run `listCensusApis()`:
 
 ```{r}
-#| eval: true
-
 censusapi::listCensusApis() |> 
   # convert data.frame to tibble
   as_tibble() |>
+  # only keep the columns needed
   select(title, name, vintage, type, temporal, url)
 ```
 
@@ -99,8 +98,6 @@ censusapi::listCensusApis() |>
 Now we are interested in Food Security Supplement. We can search for the keyword "Food Security" in the column `title` of the table above, and see which year of data is available.
 
 ```{r}
-#| eval: true
-
 censusapi::listCensusApis() |>
   filter(str_detect(title, "Food Security"), vintage >= 2019) |>
   select(title, name, vintage, type, description)
@@ -122,14 +119,13 @@ The example below makes a request to API for the CPS Food Security Supplement De
 -   HHSUPWGT: Household Supplemental Weight
 
 ```{r}
-#| eval: true
-
 fss_21_status <- censusapi::getCensus(
   name = "cps/foodsec/dec",
   vintage = 2021,
+  # vars is required
   vars = c("HRHHID", "HRHHID2", "PERRP",
            "GESTFIPS", "GTCO", "HRFS12M1",
-           "HHSUPWGT")
+           "HHSUPWGT") 
   ) |>
   as_tibble() |>
   print()
@@ -138,41 +134,37 @@ fss_21_status <- censusapi::getCensus(
 Notice that some columns are not in the format we want. For example, **HRFS12M1** (Food Security Status) should be a categorical variable, and we want to convert it to a factor with meaningful labels. Also, **HHSUPWGT** (Household Supplemental Weight) was ingested as a character variable, and we want to convert it to a numeric variable.
 
 ```{r}
-#| eval: true
-
 fss_21_status |>
   filter(HRFS12M1 != "-1") |>
-  mutate(HRFS12M1 = factor(HRFS12M1,
-                           levels = c("1", "2", "3", "-9"),
-                           labels = c("Food Security",
-                                      "Low Food Security",
-                                      "Very Low Food Security",
-                                      "No Response")),
-         HHSUPWGT = as.numeric(HHSUPWGT),
-         PERRP = as.numeric(PERRP),
-         HRHHID2 = as.character(HRHHID2))
+  mutate(
+    HRFS12M1 = factor(HRFS12M1,
+                      levels = c("1", "2", "3", "-9"),
+                      labels = c("Food Security",
+                                 "Low Food Security",
+                                 "Very Low Food Security",
+                                 "No Response")),
+    HHSUPWGT = as.numeric(HHSUPWGT),
+    PERRP = as.numeric(PERRP),
+    HRHHID2 = as.character(HRHHID2)
+    )
 ```
 
 In addition to checking the document and encoding labels manually, `listCensusMetadata()` offers a way to get the value labels of specific variables. This can be useful for understanding the meaning of variables and their values.
 
 ```{r}
-#| eval: true
-
 HRFS12M1_lb <- censusapi::listCensusMetadata(
   name = "cps/foodsec/dec",
   vintage = 2021,
   type = "values",
   variable = "HRFS12M1"
-  )
-
-HRFS12M1_lb
+  ) |>
+  as_tibble() |>
+  print()
 ```
 
 Therefore, we can use the following code to convert the variable `HRFS12M1` to a factor with meaningful labels.
 
 ```{r}
-#| eval: true
-
 fss_21_status <- fss_21_status |>
   filter(HRFS12M1 != "-1") |>
   mutate(HRFS12M1 = factor(HRFS12M1,
@@ -180,9 +172,8 @@ fss_21_status <- fss_21_status |>
                            labels = HRFS12M1_lb$label),
          HHSUPWGT = as.numeric(HHSUPWGT),
          PERRP = as.numeric(PERRP),
-         HRHHID2 = as.character(HRHHID2))
-  
-fss_21_status
+         HRHHID2 = as.character(HRHHID2)) |>
+  print()
 ```
 
 ## Constructing household characteristics from person records
@@ -192,8 +183,6 @@ To compute some household characteristics (such as household size, presence of c
 **HRFS12M1** (Summary Food Security Status, 12-Month) is one of the household characteristics. This is the variable used for most food security statistics in USDA’s annual food security report series. In order to compute the prevalence of food insecurity, we need to aggregate the food security status of all persons in the same household. `tbl_summary()` in the `gtsummary` package can generate beautiful summary tables.
 
 ```{r}
-#| eval: true
-
 fss_21_status <- fss_21_status |>
   # Filter observations with PERRP 40 or 41 (reference person in the household) 
   filter(PERRP %in% c(40, 41)) |>
@@ -211,6 +200,12 @@ fss_21_status |>
   gtsummary::tbl_summary()
 ```
 
+**Exercise**: display the bar plot of variable **`HRFS12M1`**.
+
+```{r}
+# geom_bar
+```
+
 Notice that there are 27,357 + 1,844 + 1,093 + 49 = 30,343 households who attended the interview for Food Security Supplement in 2021, which matches the number in the technical documentation.
 
 The CPS is a complex probability sample, and interviewed households, as well as persons in those households, are assigned weights so that the full interviewed sample represents the total national non-institutionalized civilian population. Initial weights are assigned based on probability of selection into the sample, and weights are then adjusted iteratively to match population controls for selected demographic characteristics at State and national levels. There are two sets of household and person weights in this data file: (1) labor force survey weights, and (2) Food Security Supplement weights.
@@ -218,8 +213,6 @@ The CPS is a complex probability sample, and interviewed households, as well as 
 We can use `makeVarlist()` function in `censusapi` package to get the list of variables in the dataset. In addition to the description and the type of each variable, we can also check column **suggested_weight** to see which weight should be used for the analysis.
 
 ```{r}
-#| eval: true
-
 censusapi::makeVarlist(
   name = "cps/foodsec/dec",
   vintage = 2021,
@@ -256,8 +249,6 @@ Now we are interested in how much percentage of households with low food securit
     where $L_i$ is an indicator variable that equals 1 if household $i$ is in low food security or very low food security, and 0 otherwise; $H_i$ is an indicator variable that equals 1 if household $i$ attended the interview for Food Security Supplement and had a response to this question, and 0 otherwise; and $w_i$ is the weight of household $i$.
 
 ```{r}
-#| eval: true
-
 fss_21_status <- fss_21_status |>
   mutate(HRFS12M1_low = ifelse(HRFS12M1 %in% c("Low Food Security",
                                                "Very Low Food Security"),
@@ -279,8 +270,6 @@ Since we have already computed the rate of low food security in 2021. We can fur
 We first need to match the FIPS code to the state names using `fips_codes()` function in `tigris` package.
 
 ```{r}
-#| eval: true
-
 # Get the state names
 state_names <- tigris::fips_codes |>
   select(state, state_code, state_name) |>
@@ -292,8 +281,6 @@ state_names <- tigris::fips_codes |>
 Now we can compute the rate of low food security in each state.
 
 ```{r}
-#| eval: true
-
 fss_21_status_state <- fss_21_status |>
   # Group by state FIPS code and calculate the rate by state
   group_by(GESTFIPS) |>
@@ -314,8 +301,6 @@ fss_21_status_state <- fss_21_status |>
 Then we can visualize the rate of low food security in each state.
 
 ```{r}
-#| eval: true
-
 ggplot2::map_data("state") |>
   merge(fss_21_status_state, by.x = "region",
         by.y = "state_name", all.x = TRUE) |>
@@ -332,3 +317,102 @@ ggplot2::map_data("state") |>
         legend.position = "bottom") +
   coord_fixed(ratio = 1.5)
 ```
+
+## Exercises
+
+1.  Display the food security disparity in 2021 in terms of race, household income, education level, or other social-economic determinants.
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+# Inf about race variable PTDTRACE
+PTDTRACE_lb <- censusapi::listCensusMetadata(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  type = "values",
+  variable = "PTDTRACE"
+  ) |>
+  as_tibble() |>
+  mutate(code = as.numeric(as.character(code))) |>
+  arrange(code) |>
+  print(n = Inf)
+```
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+# Ingest FSS 2021 data with race info. on household
+fss_21_race <- censusapi::getCensus(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  # vars is required
+  vars = c("HRHHID", "HRHHID2", "PERRP",
+           "GESTFIPS", "GTCO", "HRFS12M1",
+           "HHSUPWGT", "PTDTRACE")
+  ) |>
+  as_tibble() |>
+  # remove non-interviewed ones
+  filter(HRFS12M1 != "-1") |>
+  # enforce column data types
+  mutate(
+    HRFS12M1 = factor(HRFS12M1,
+                      levels = c("1", "2", "3", "-9"),
+                      labels = c("Food Security",
+                                 "Low Food Security",
+                                 "Very Low Food Security",
+                                 "No Response")),
+    HHSUPWGT = as.numeric(HHSUPWGT),
+    PERRP = as.numeric(PERRP),
+    HRHHID2 = as.character(HRHHID2),
+    PTDTRACE = factor(as.numeric(PTDTRACE),
+                      levels = PTDTRACE_lb$code,
+                      labels = PTDTRACE_lb$label) |>
+      fct_other(keep = c(
+        "American Indian, Alaskan Native Only",
+        "White only",
+        "Black only",
+        "Asian only",
+        "Hawaiian/Pacific Islander Only"
+        ))
+  ) |>
+  # only keep reference person per household
+  group_by(HRHHID, HRHHID2) |>
+  slice_min(PERRP) |>
+  ungroup() |>
+  print()
+```
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+# Summarize race information
+fss_21_race |>
+  select(PTDTRACE) |>
+  gtsummary::tbl_summary()
+```
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+# Calculate the rate of low food security by race
+fss_21_race |>
+  group_by(PTDTRACE) |>
+  summarise(
+    fd_insec_weight = sum((HRFS12M1 %in% c("Low Food Security", "Very Low Food Security")) * HHSUPWGT),
+    total_weight = sum(HHSUPWGT),
+    low_food_security_rate = fd_insec_weight / total_weight * 100
+    ) |>
+  ggplot() + 
+    geom_col(mapping = aes(y = PTDTRACE, x = low_food_security_rate)) + 
+  labs(
+    x = "Low Food Security Rate",
+    y = ""
+    )
+```
+
+2.  How does COVID impact the food security status of households in the U.S.? Does the impact differ by state, race, household income, or other social-economic determinants?
+
