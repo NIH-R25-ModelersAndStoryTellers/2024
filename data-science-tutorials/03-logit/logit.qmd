@@ -215,23 +215,23 @@ fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
          HHSUPWGT = as.numeric(HHSUPWGT),
          
          # Combining some categories
-         HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 3, 6, 9, 10),
+         HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 2, 5, 8, 10),
                        labels = c("MarriedFamily", "UnmarriedFamily",
                                   "Individual", "GroupQuarters")),
          GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
                         labels = c("Northeast", "Midwest", "South", "West")),
-         PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 39, 43, 46),
+         PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 38, 42, 46),
                        labels = c("LessThanHighSchool",
                                   "HighSchoolOrAssociateDegree",
                                   "CollegeOrHigher")),
-         PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 3, 5, 7),
+         PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 2, 4, 7),
                      labels = c("Employed", "NotEmployed",
                                 "NotInLaborForce")),
          
          PRTAGE = as.numeric(PRTAGE),
          PEHSPNON = factor(PEHSPNON, levels = c(1, 2),
                            labels = c("Hispanic", "Non-Hispanic")),
-         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 2, 3, 26),
+         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 1, 2, 26),
                         labels = c("White", "Black", "Others")),
          RACE = ifelse(PEHSPNON == "Hispanic",
                        "Hispanic", str_c(PTDTRACE, " non-Hispanic")),
@@ -336,7 +336,7 @@ data.frame(threshold50 = metrics50, threshold10 = metrics10) |>
 
 ```
 
-If we set the threshold to 0.5, the accuracy is 0.90, which is quite higher than setting threshold to 0.1. However, the sensitivity is only 0.02, which means the model can only capture 2% of the households in low food security. In contrast, if we set the threshold to 0.1, the sensitivity is 0.69, which means the model can capture 68% of the households in low food security. However, the specificity decreases to 0.76. This trade-off is common in classification models.
+If we set the threshold to 0.5, the accuracy is 0.90, which is quite higher than setting threshold to 0.1. However, the sensitivity is only 0.02, which means the model can only capture 2% of the households in low food security. In contrast, if we set the threshold to 0.1, the sensitivity is 0.71, which means the model can capture 71% of the households in low food security. However, the specificity decreases to 0.74. This trade-off is common in classification models.
 
 Therefore, we need a metric that can evaluate the model's performance under different thresholds. The ROC curve is a good choice. The **ROC** curve is a popular graphic for simultaneously displaying the two types of errors for all possible thresholds. The name “ROC” is historic, and comes from communications theory. It is an acronym for receiver operating characteristics.
 
@@ -363,7 +363,7 @@ ggroc(roc_data, legacy.axes = TRUE) +
            label = paste("AUC =", round(auc(roc_data), 3)))
 ```
 
-The logistic regression model has an AUC of 0.788, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
+The logistic regression model has an AUC of 0.792, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
 
 ## Assessing model accuracy
 
