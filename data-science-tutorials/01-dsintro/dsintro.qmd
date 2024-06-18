@@ -37,6 +37,12 @@ comments:
 library(tidyverse)
 ```
 
+## Poll
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt) or scan QR code
+
+![](slido_session_1.png){fig-align="center"}
+
 ## Roadmap
 
 A typical data science project:
@@ -488,7 +494,7 @@ ggplot(iris_tb) +
   )
 ```
 
--   Again the [Posit dplyr cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf) is extremely intuitive and helpful.
+-   Again the [Posit ggplot2 cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf) is extremely intuitive and helpful.
 -   Interactive plots are easily achieved by `plotly` package. Interactive apps can be developed by the popular `shiny` package.
 
 ### Exercises
