@@ -1,5 +1,5 @@
 ---
-title: "Policy Evaluation - Double Machine Learning"
+title: "Policy Evaluation by Double Machine Learning"
 author: "Dr. Roch Nianogo, Bowen Zhang, Dr. Hua Zhou"
 format:
   html:
@@ -43,16 +43,23 @@ library(censusapi)
 library(data.table)
 library(DoubleML)
 library(gtsummary)
-library(knitr)
-library(maps)
 library(mlr3)
 library(tidymodels)
-library(tigris)
 ```
 
 ::: {style="text-align: center;"}
 ![Data Science Diagram](../01-dsintro/data-science.png)
 :::
+
+## Causal inference
+
+-   Main approaches:
+
+    -   **RCT** (randomized controlled trials): gold standard, but impractical in most Community-Based Participatory Research **(**CBPR).
+
+    -   Observational studies under unconfoundedness: matching, regression estimators, inverse-propensity-score weighting.
+
+    -   Observational studies without unconfoundedness: instrumental variable, difference-in-differences (DID), synthetic control, regression discontinuity designs.
 
 ## Partially linear regression and interactive regression model
 
@@ -170,8 +177,6 @@ We include the following variables in our analysis:
 -   `HEFAMINC`: Family income (take median of each class).
 
 ```{r}
-#| eval: true
-
 fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
                                     vintage = 2020,
                                     vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
@@ -186,9 +191,6 @@ fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
          PEMLR %in% c(1, 2, 3, 4, 5, 6, 7),
          HESP8 %in% c(1, 2),
          HRFS30D4 != -6) |>
-  group_by(HRHHID, HRHHID2) |>
-  slice_min(PERRP) |>
-  ungroup() |>
   mutate(HRFS30D1 = factor(HRFS30D1,
                            levels = c("1", "2", "3"),
                            labels = c("Food Security",
@@ -199,7 +201,7 @@ fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
          HHSUPWGT = as.numeric(HHSUPWGT),
          HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 2, 5, 8, 10),
                        labels = c("MarriedFamily", "UnmarriedFamily",
-                                  "Individual", "GroupQuarters")),
+                                  "Individual", "GroupQuarters")) |> fct_drop(),
          GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
                         labels = c("Northeast", "Midwest", "South", "West")),
          PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 38, 42, 46),
@@ -210,13 +212,16 @@ fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
                      labels = c("Employed", "NotEmployed",
                                 "NotInLaborForce")),
          PRTAGE = as.numeric(PRTAGE),
-         PEHSPNON = factor(PEHSPNON, levels = c(1, 2),
-                           labels = c("Hispanic", "Non-Hispanic")),
-         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 1, 2, 26),
-                        labels = c("White", "Black", "Others")),
-         RACE = ifelse(PEHSPNON == "Hispanic",
-                       "Hispanic", str_c(PTDTRACE, " non-Hispanic")),
-         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children"),
+         PEHSPNON = factor(PEHSPNON, levels = c(2, 1),
+                           labels = c("Non-Hispanic", "Hispanic")),
+         PTDTRACE = fct_recode(PTDTRACE,
+                          "White" = "1" ,
+                          "Black" = "2",
+                          "AIAN" = "3",
+                          "Asian" = "4",
+                          "HPI" = "5") |>
+           fct_other(keep = c("White", "Black", "AIAN", "Asian", "HPI")),
+         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children") |> as_factor() |> relevel(ref = "NoChildren"),
          HEFAMINC = case_when(HEFAMINC == 1 ~ 2500,
                               HEFAMINC == 2 ~ 6250,
                               HEFAMINC == 3 ~ 8750,
@@ -235,23 +240,26 @@ fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
                               HEFAMINC == 16 ~ 175000),
          HEFAMINC = as.numeric(HEFAMINC),
          HRFS30D4 = as.numeric(HRFS30D4),
-         #HRFS30D4 = ifelse(HRFS30D4 == -6, 0, HRFS30D4)
-  )
+  ) |>
+  print()
+```
 
+```{r}
 fss_20_data |>
   select(HRFS30D4, HESP8, HRNUMHOU, HRHTYPE, GEREG, PRTAGE,
-         PEEDUCA, PRCHLD, PEMLR, HEFAMINC, RACE) |>
+         PEEDUCA, PRCHLD, PEMLR, HEFAMINC, PEHSPNON) |>
   tbl_summary()
 ```
 
 ### Linear regression
 
 ```{r}
-#| eval: true
-
 fit <- lm(HRFS30D4 ~ factor(HESP8) + HRNUMHOU + HRHTYPE + GEREG + PRTAGE +
-            PEEDUCA + PRCHLD + PEMLR + HEFAMINC + RACE, data = fss_20_data)
+            PEEDUCA + PRCHLD + PEMLR + HEFAMINC + PEHSPNON, data = fss_20_data)
+fit
+```
 
+```{r}
 fit |>
   tbl_regression() |>
   bold_labels() |>
@@ -271,8 +279,6 @@ The Python and R package [DoubleML](https://docs.doubleml.org/) provide an imple
     we initialize the data-backend and thereby declare the role of the outcome, the treatment, and the confounding variables.
 
 ```{r}
-#| eval: true
-
 doubleML_data <- data.table(fss_20_data)
 
 obj_dml_data <- DoubleMLData$new(
@@ -280,7 +286,7 @@ obj_dml_data <- DoubleMLData$new(
   y_col = "HRFS30D4",
   d_cols = "HESP8",
   x_cols = c("HRNUMHOU", "HRHTYPE", "GEREG", "PRCHLD", "PRTAGE",
-             "PEEDUCA", "PEMLR", "RACE", "HEFAMINC")
+             "PEEDUCA", "PEMLR", "HEFAMINC", "PEHSPNON")
 )
 
 obj_dml_data
@@ -299,8 +305,6 @@ obj_dml_data
     we can specify the machine learning tools used for estimation of the nuisance parts. We can generally choose any learner from mlr3 ecosystem in R. In this example, we use random forest for both the main equation and the confounding equation.
 
 ```{r}
-#| eval: true
-
 set.seed(2024)
 
 learner_g <- lrn("regr.ranger", num.trees = 500, min.node.size = 2,
@@ -314,8 +318,6 @@ learner_classif_m <- lrn("classif.ranger", num.trees = 500,
     we initialize and parametrize the model object which will later be used to perform the estimation. we specify the resampling, the dml algorithm and the score function.
 
 ```{r}
-#| eval: true
-
 set.seed(2024)
 doubleml_mod <- DoubleMLIRM$new(obj_dml_data,
                                 ml_g = learner_g, ml_m = learner_classif_m,
@@ -328,8 +330,6 @@ doubleml_mod
 -   Estimation
 
 ```{r}
-#| eval: true
-
 doubleml_mod$fit()
 doubleml_mod$summary()
 doubleml_mod$confint()

@@ -3230,10 +3230,7 @@ window.Quarto = {
   <li><a href="#logistic-regression" id="toc-logistic-regression" class="nav-link" data-scroll-target="#logistic-regression"><span class="header-section-number">3</span> Logistic regression</a>
   <ul>
   <li><a href="#why-not-linear-regression" id="toc-why-not-linear-regression" class="nav-link" data-scroll-target="#why-not-linear-regression"><span class="header-section-number">3.1</span> Why not linear regression?</a></li>
-  <li><a href="#logistic-regression-on-food-security-data" id="toc-logistic-regression-on-food-security-data" class="nav-link" data-scroll-target="#logistic-regression-on-food-security-data"><span class="header-section-number">3.2</span> Logistic regression on food security data</a>
-  <ul class="collapse">
-  <li><a href="#model-fit" id="toc-model-fit" class="nav-link" data-scroll-target="#model-fit"><span class="header-section-number">3.2.1</span> Model fit</a></li>
-  </ul></li>
+  <li><a href="#logistic-regression-on-food-security-data" id="toc-logistic-regression-on-food-security-data" class="nav-link" data-scroll-target="#logistic-regression-on-food-security-data"><span class="header-section-number">3.2</span> Logistic regression on food security data</a></li>
   <li><a href="#roc-curve" id="toc-roc-curve" class="nav-link" data-scroll-target="#roc-curve"><span class="header-section-number">3.3</span> ROC curve</a></li>
   </ul></li>
   <li><a href="#assessing-model-accuracy" id="toc-assessing-model-accuracy" class="nav-link" data-scroll-target="#assessing-model-accuracy"><span class="header-section-number">4</span> Assessing model accuracy</a>
@@ -3345,7 +3342,7 @@ window.Quarto = {
 </section>
 <section id="logistic-regression" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="logistic-regression"><span class="header-section-number">3</span> Logistic regression</h2>
-<p>We load the Food Security Supplement data we curated earlier. Our goal is to predict food insecurity using household’s socio-economical status.</p>
+<p>We load the Food Security Supplement household data we curated earlier. Our goal is to predict food insecurity status using household’s socio-economical status.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">&quot;../02-wrangle/fss21.rds&quot;</span>) <span class="sc">|&gt;</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -3393,8 +3390,6 @@ p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
 <section id="logistic-regression-on-food-security-data" class="level3" data-number="3.2">
 <h3 data-number="3.2" class="anchored" data-anchor-id="logistic-regression-on-food-security-data"><span class="header-section-number">3.2</span> Logistic regression on food security data</h3>
 <p>To further investigate the factors that are associated with food insecurity, we can use logistic regression to model the probability of a household being in low food security.</p>
-<section id="model-fit" class="level4" data-number="3.2.1">
-<h4 data-number="3.2.1" class="anchored" data-anchor-id="model-fit"><span class="header-section-number">3.2.1</span> Model fit</h4>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fit logistic regression</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>logit_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
@@ -3443,20 +3438,20 @@ Residual Deviance: 16270    AIC: 16310</code></pre>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>() <span class="sc">|&gt;</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_p</span>(<span class="at">t =</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="tattzycdap" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tattzycdap table {
+<div id="nxvuxwqzng" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#nxvuxwqzng table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#tattzycdap thead, #tattzycdap tbody, #tattzycdap tfoot, #tattzycdap tr, #tattzycdap td, #tattzycdap th {
+#nxvuxwqzng thead, #nxvuxwqzng tbody, #nxvuxwqzng tfoot, #nxvuxwqzng tr, #nxvuxwqzng td, #nxvuxwqzng th {
 border-style: none;
 }
-#tattzycdap p {
+#nxvuxwqzng p {
 margin: 0;
 padding: 0;
 }
-#tattzycdap .gt_table {
+#nxvuxwqzng .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3481,11 +3476,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#tattzycdap .gt_caption {
+#nxvuxwqzng .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#tattzycdap .gt_title {
+#nxvuxwqzng .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3496,7 +3491,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#tattzycdap .gt_subtitle {
+#nxvuxwqzng .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3507,7 +3502,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#tattzycdap .gt_heading {
+#nxvuxwqzng .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3518,12 +3513,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tattzycdap .gt_bottom_border {
+#nxvuxwqzng .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tattzycdap .gt_col_headings {
+#nxvuxwqzng .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3537,7 +3532,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tattzycdap .gt_col_heading {
+#nxvuxwqzng .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3556,7 +3551,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#tattzycdap .gt_column_spanner_outer {
+#nxvuxwqzng .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3567,13 +3562,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#tattzycdap .gt_column_spanner_outer:first-child {
+#nxvuxwqzng .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#tattzycdap .gt_column_spanner_outer:last-child {
+#nxvuxwqzng .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#tattzycdap .gt_column_spanner {
+#nxvuxwqzng .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3584,10 +3579,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#tattzycdap .gt_spanner_row {
+#nxvuxwqzng .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#tattzycdap .gt_group_heading {
+#nxvuxwqzng .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3612,7 +3607,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#tattzycdap .gt_empty_group_heading {
+#nxvuxwqzng .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3626,13 +3621,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#tattzycdap .gt_from_md > :first-child {
+#nxvuxwqzng .gt_from_md > :first-child {
 margin-top: 0;
 }
-#tattzycdap .gt_from_md > :last-child {
+#nxvuxwqzng .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#tattzycdap .gt_row {
+#nxvuxwqzng .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3650,7 +3645,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#tattzycdap .gt_stub {
+#nxvuxwqzng .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3662,7 +3657,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tattzycdap .gt_stub_row_group {
+#nxvuxwqzng .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3675,13 +3670,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#tattzycdap .gt_row_group_first td {
+#nxvuxwqzng .gt_row_group_first td {
 border-top-width: 2px;
 }
-#tattzycdap .gt_row_group_first th {
+#nxvuxwqzng .gt_row_group_first th {
 border-top-width: 2px;
 }
-#tattzycdap .gt_summary_row {
+#nxvuxwqzng .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3690,14 +3685,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tattzycdap .gt_first_summary_row {
+#nxvuxwqzng .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#tattzycdap .gt_first_summary_row.thick {
+#nxvuxwqzng .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#tattzycdap .gt_last_summary_row {
+#nxvuxwqzng .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3706,7 +3701,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tattzycdap .gt_grand_summary_row {
+#nxvuxwqzng .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3715,7 +3710,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tattzycdap .gt_first_grand_summary_row {
+#nxvuxwqzng .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3724,7 +3719,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#tattzycdap .gt_last_grand_summary_row_top {
+#nxvuxwqzng .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3733,10 +3728,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#tattzycdap .gt_striped {
+#nxvuxwqzng .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#tattzycdap .gt_table_body {
+#nxvuxwqzng .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3744,7 +3739,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tattzycdap .gt_footnotes {
+#nxvuxwqzng .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3757,7 +3752,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tattzycdap .gt_footnote {
+#nxvuxwqzng .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3765,7 +3760,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tattzycdap .gt_sourcenotes {
+#nxvuxwqzng .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3778,57 +3773,57 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tattzycdap .gt_sourcenote {
+#nxvuxwqzng .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tattzycdap .gt_left {
+#nxvuxwqzng .gt_left {
 text-align: left;
 }
-#tattzycdap .gt_center {
+#nxvuxwqzng .gt_center {
 text-align: center;
 }
-#tattzycdap .gt_right {
+#nxvuxwqzng .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#tattzycdap .gt_font_normal {
+#nxvuxwqzng .gt_font_normal {
 font-weight: normal;
 }
-#tattzycdap .gt_font_bold {
+#nxvuxwqzng .gt_font_bold {
 font-weight: bold;
 }
-#tattzycdap .gt_font_italic {
+#nxvuxwqzng .gt_font_italic {
 font-style: italic;
 }
-#tattzycdap .gt_super {
+#nxvuxwqzng .gt_super {
 font-size: 65%;
 }
-#tattzycdap .gt_footnote_marks {
+#nxvuxwqzng .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#tattzycdap .gt_asterisk {
+#nxvuxwqzng .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#tattzycdap .gt_indent_1 {
+#nxvuxwqzng .gt_indent_1 {
 text-indent: 5px;
 }
-#tattzycdap .gt_indent_2 {
+#nxvuxwqzng .gt_indent_2 {
 text-indent: 10px;
 }
-#tattzycdap .gt_indent_3 {
+#nxvuxwqzng .gt_indent_3 {
 text-indent: 15px;
 }
-#tattzycdap .gt_indent_4 {
+#nxvuxwqzng .gt_indent_4 {
 text-indent: 20px;
 }
-#tattzycdap .gt_indent_5 {
+#nxvuxwqzng .gt_indent_5 {
 text-indent: 25px;
 }
 </style>
@@ -4136,7 +4131,6 @@ PEHSPNON  1    13.30     30141      16265 0.0002657 ***
 Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</code></pre>
 </div>
 </div>
-</section>
 </section>
 <section id="roc-curve" class="level3" data-number="3.3">
 <h3 data-number="3.3" class="anchored" data-anchor-id="roc-curve"><span class="header-section-number">3.3</span> ROC curve</h3>
@@ -4524,7 +4518,7 @@ Computational engine: glmnet </code></pre>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
- 82.736   7.303  90.582 </code></pre>
+ 82.181   6.851  89.307 </code></pre>
 </div>
 </div>
 <p>Visualize CV results:</p>
