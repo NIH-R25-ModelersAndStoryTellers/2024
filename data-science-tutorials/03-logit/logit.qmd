@@ -44,6 +44,8 @@ library(glmnet)
 library(gtsummary)
 library(knitr)
 library(maps)
+library(pROC)
+library(tidymodels)
 library(tigris)
 ```
 
@@ -53,7 +55,7 @@ library(tigris)
 ![Data Science Diagram](../01-dsintro/data-science.png)
 :::
 
-In the last lecture, we focus on data wrangling (import, tidy, transform, visualize). Now we progress to the modeling part. In this lecture, we focus on predictive modeling using machine learning methods (logistic, random forest, ...). In the next lecture, we focus on policy evaluation using double machine learning.
+In the last lecture, we focused on data wrangling (import, tidy, transform, visualize). Now we progress to the modeling part. In this lecture, we focus on predictive modeling using machine learning methods (logistic, random forest, ...). In the next lecture, we focus on policy evaluation using double machine learning.
 
 ## Machine learning overview
 
@@ -82,17 +84,18 @@ In the last lecture, we focus on data wrangling (import, tidy, transform, visual
 
 ## Logistic regression
 
+We load the Food Security Supplement household data we curated earlier. Our goal is to predict food insecurity status using household's socio-economical status.
+
+```{r}
+data_clean <- read_rds("../02-wrangle/fss21.rds") |>
+  print()
+```
+
 ### Why not linear regression?
 
--   `Default` dataset
+We are interested in predicting whether a household will be food insecure, on the basis of household size, marital status, have children or not, geographical region, education level, employment status, and race.
 
-We are interested in predicting whether an individual will default on his or her credit card payment, on the basis of annual income and monthly credit card balance.
-
-::: {style="text-align: center;"}
-<img src="./4_1.jpg" alt="default" width="700"/>
-:::
-
-The response `default` falls into one of two categories, Yes or No. Rather than modeling this response Y directly, logistic regression models the probability that Y belongs to a particular category.
+The response `HRFS12M1_binary` falls into one of two categories, `Food Insecure` (1) or `Food Secure (0). Rather than modeling this response $Y$ directly, logistic regression models the probability that $Y$ belongs to a particular category.
 
 ::: {style="text-align: center;"}
 <img src="./4_2.jpg" alt="default" width="700"/>
@@ -110,164 +113,39 @@ The parameter $p_i = \mathbb{E}(Y_i)$ will be related to the predictors $\mathbf
 $$
 p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
 $$ where $\eta_i$ is the **linear predictor** or **systematic component** $$
-\eta_i = \mathbf{x}_i^T \boldsymbol{\beta}
+\eta_i = \mathbf{x}_i^T \boldsymbol{\beta} = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_q x_{iq}.
 $$
-
+In other words, logistic regression models the **log-odds** of the probability of success as a linear function of the predictors
 $$
 \log \left( \frac{p}{1-p} \right) = \log(\text{odds}) = \beta_0 + \beta_1  x_1 + \beta_2  x_2 + \dots + \beta_q  x_q. 
 $$
 
-Therefore $\beta_1$ can be interpreted as a unit increase in $x_1$ with other predictors held fixed increases the **log-odds** of success by $\beta_1$, or increase the odds of success by a factor of $e^{\beta_1}$.
+Therefore $\beta_1$ can be interpreted as a unit increase in $x_1$ with other predictors held fixed increases the log-odds of success by $\beta_1$, or increase the odds of success by a factor of $e^{\beta_1}$.
 
 ### Logistic regression on food security data
 
 To further investigate the factors that are associated with food insecurity, we can use logistic regression to model the probability of a household being in low food security.
 
-We include the following independent variables in the model:
-
--   HRNUMHOU: Total number of persons living in the household.
--   HRHTYPE: Household type
-    -   0 = Non-interview household
-    -   1 = Husband/wife primary family (neither AF)
-    -   2 = Husband/wife primary family (either/both AF)
-    -   3 = Unmarried civilian male-primary. family householder
-    -   4 = Unmarried civilian female-prim family householder
-    -   5 = Primary family householder-rp in AF, unmarried.
-    -   6 = Civilian male primary individual
-    -   7 = Civilian female primary individual
-    -   8 = Primary individual householder-rp in AF
-    -   9 = Group quarters with family
-    -   10 = Group quarters without family
--   GEREG: Region
-    -   1 = Northeast
-    -   2 = Midwest
-    -   3 = South
-    -   4 = West
--   PRTAGE: Age of the reference person
--   PEHSPNON: Hispanic or non-hispanic of the reference person
-    -   1 = Hispanic
-    -   2 = Non-Hispanic
--   PTDTRACE: Race of the reference person
-    -   1 = White only
-    -   2 = Black only
-    -   3\~26 = Others
--   PEEDUCA: Highest level of education completed
-    -   31 = Less than 1st grade
-    -   32 = 1st, 2nd, 3rd, or 4th grade
-    -   33 = 5th or 6th grade
-    -   34 = 7th or 8th grade
-    -   35 = 9th grade
-    -   36 = 10th grade
-    -   37 = 11th grade
-    -   38 = 12th grade no diploma
-    -   39 = High school grad-diploma or equiv (GED)
-    -   40 = Some college but no degree
-    -   41 = Associate degree-occupational/vocational
-    -   42 = Associate degree-academic program
-    -   43 = Bachelor's degree (ex: BA, AB, BS)
-    -   44 = Master's degree (ex: MA, MS, MEng, MEd, MSW)
-    -   45 = Professional school degree (ex: MD, DDS, DVM)
-    -   46 = Doctorate degree (ex: PhD, EdD)
--   PEMLR: Employment status
-    -   1 = Employed-at work
-    -   2 = Employed-absent
-    -   3 = Unemployed-on layoff
-    -   4 = Unemployed-looking
-    -   5 = Not in labor force-retired
-    -   6 = Not in labor force-disabled
-    -   7 = Not in labor force-other
--   PRCHLD: Presence of own children \< 18 years old
-    -   0 = No children
-    -   1\~15 = Have children
--   HRPOOR: Poverty status
-    -   1 = Poor (Below 185% poverty)
-    -   2 = Not poor (Above 185% poverty or income not reported)
-
 ```{r}
-#| eval: true
-
-fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
-                                    vintage = 2021,
-                                    vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
-                                             "HRHTYPE", "GEREG", "HRPOOR",
-                                             "PRTAGE", "PEEDUCA", "PRCHLD",
-                                             "PEMLR", "PTDTRACE", "PEHSPNON",
-                                             "HRFS12M1", "HHSUPWGT",
-                                             "PERRP")) |>
-  as_tibble() |>
-  filter(PERRP %in% c(40, 41), # Reference person
-         HRFS12M1 %in% c(1, 2, 3), # Valid food security status codes
-         PEMLR %in% c(1, 2, 3, 4, 5, 6, 7), # Valid employment status codes
-         ) |>
-  
-  # Keep householder of the family
-  group_by(HRHHID, HRHHID2) |>
-  slice_min(PERRP) |>
-  ungroup() |>
-  
-  # Data preprocessing
-  mutate(HRFS12M1 = factor(HRFS12M1,
-                           levels = c("1", "2", "3"),
-                           labels = c("Food Security",
-                                      "Low Food Security",
-                                      "Very Low Food Security")),
-         HRNUMHOU = as.numeric(HRNUMHOU),
-         HHSUPWGT = as.numeric(HHSUPWGT),
-         
-         # Combining some categories
-         HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 2, 5, 8, 10),
-                       labels = c("MarriedFamily", "UnmarriedFamily",
-                                  "Individual", "GroupQuarters")),
-         GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
-                        labels = c("Northeast", "Midwest", "South", "West")),
-         PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 38, 42, 46),
-                       labels = c("LessThanHighSchool",
-                                  "HighSchoolOrAssociateDegree",
-                                  "CollegeOrHigher")),
-         PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 2, 4, 7),
-                     labels = c("Employed", "NotEmployed",
-                                "NotInLaborForce")),
-         
-         PRTAGE = as.numeric(PRTAGE),
-         PEHSPNON = factor(PEHSPNON, levels = c(1, 2),
-                           labels = c("Hispanic", "Non-Hispanic")),
-         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 1, 2, 26),
-                        labels = c("White", "Black", "Others")),
-         RACE = ifelse(PEHSPNON == "Hispanic",
-                       "Hispanic", str_c(PTDTRACE, " non-Hispanic")),
-         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children"),
-         HRPOOR = factor(HRPOOR, levels = c(1, 2),
-                         labels = c("Poor", "NotPoor"))
-  )
-```
-
-To transform the response variable `HRFS12M1` into a binary variable, we set `HRFS12M1 = 0` if the household is in food security and `HRFS12M1 = 1` otherwise.
-
-```{r}
-#| eval: true
-
-data_clean <- fss_21_data |>
-  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
-         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
-  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security", 0, 1))
-```
-
-```{r}
-#| eval: true
-
 # Fit logistic regression
-logit_model <- glm(HRFS12M1 ~ . - HHSUPWGT,
-                   data = data_clean, family = "binomial")
+logit_model <- glm(
+  HRFS12M1_binary ~ . - HRFS12M1 - HHSUPWGT,
+  data = data_clean, 
+  family = "binomial")
+logit_model
 ```
 
 ```{r}
-#| eval: true
-
 # gtsummary package offers a nice summary of the model
 logit_model |>
   tbl_regression() |>
   bold_labels() |>
   bold_p(t = 0.05)
+```
+
+Importance of each predictor can be evaluated by the analysis of variance (ANOVA) test.
+```{r}
+anova(logit_model, test = "Chisq")
 ```
 
 ### ROC curve
@@ -287,25 +165,21 @@ $$
 $$
 
 ```{r}
-#| eval: true
-
 pred_prob <- predict(logit_model, type = "response")
 
 # Set the threshold 0.5
 threshold <- 0.5
 
-predicted_class <- ifelse(pred_prob > threshold, 1, 0)
-predicted_class <- as.factor(predicted_class)
-actual_class <- data_clean$HRFS12M1
+predicted_class <- ifelse(pred_prob > threshold, 1, 0) |> as.factor()
+actual_class <- data_clean$HRFS12M1_binary
 
 ctb_50 <- table(Predicted = predicted_class, Actual = actual_class)
 
 # Set the threshold 0.1
 threshold <- 0.1
 
-predicted_class <- ifelse(pred_prob > threshold, 1, 0)
-predicted_class <- as.factor(predicted_class)
-actual_class <- data_clean$HRFS12M1
+predicted_class <- ifelse(pred_prob > threshold, 1, 0) |> as.factor()
+actual_class <- data_clean$HRFS12M1_binary
 
 ctb_10 <- table(Predicted = predicted_class, Actual = actual_class)
 
@@ -316,8 +190,6 @@ list(threshold50 = ctb_50, threshold10 = ctb_10)
 If we set different thresholds, the confusion matrix will change, thus the metrics will change.
 
 ```{r}
-#| eval: true
-
 # Calculate metrics under different thresholds
 calc_metrics <- function(ct) {
   c(Accuracy = (ct[1, 1] + ct[2, 2]) / sum(ct),
@@ -345,14 +217,10 @@ The overall performance of a classifier, summarized over all possible thresholds
 There is another similar plot called the **precision-recall curve**, which sets the x-axis as recall and the y-axis as precision. The classifier that has a higher AUC on the ROC curve will always have a higher AUC on the PR curve as well.
 
 ```{r}
-#| eval: true
-
-library(pROC)
-
 data_clean <- data_clean |>
   mutate(prob = predict(logit_model, type = "response"))
 
-roc_data <- roc(data_clean$HRFS12M1, data_clean$prob)
+roc_data <- roc(data_clean$HRFS12M1_binary, data_clean$prob)
 
 ggroc(roc_data, legacy.axes = TRUE) +
   labs(title = "ROC Curve for Logistic Regression Model",
@@ -363,7 +231,7 @@ ggroc(roc_data, legacy.axes = TRUE) +
            label = paste("AUC =", round(auc(roc_data), 3)))
 ```
 
-The logistic regression model has an AUC of 0.792, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
+The logistic regression model has an AUC of `r round(auc(roc_data))`, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
 
 ## Assessing model accuracy
 
@@ -436,14 +304,12 @@ $$
 
 The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
 
--   In logistic regression, for ridge regression (l-2 penalty), we need to optimize the following objective function:
-
+-   In logistic regression, for ridge regression ($L_2$ penalty), we need to optimize the following objective function:
 $$
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
 $$ where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
 
--   For the lasso (l-1 penalty), we need to optimize the following objective function:
-
+-   For the lasso ($L_1$ penalty), we need to optimize the following objective function:
 $$
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
 $$ where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$.
@@ -460,36 +326,18 @@ Implementing ridge regression and the lasso requires a method for selecting a va
 
 ## Logistic regression (with enet regularization) workflow
 
-```{r}
-#| eval: true
-
-library(tidymodels)
-library(gtsummary)
-
-data_clean <- fss_21_data |>
-  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
-         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
-  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security",
-                           "Food Security", "Food Insecurity"))
-
-data_clean |>
-  tbl_summary(by = HRFS12M1)
-```
-
 ### Initial split into test and non-test sets
 
 We randomly split the data into 25% test data and 75% non-test data. Stratify on food security status.
 
 ```{r}
-#| eval: true
-
 # For reproducibility
 set.seed(2024)
 
 data_split <- initial_split(
   data_clean, 
-  # stratify by HRFS12M1
-  strata = "HRFS12M1", 
+  # stratify by HRFS12M1_binary
+  strata = "HRFS12M1_binary", 
   prop = 0.75
   )
 data_split
@@ -504,15 +352,13 @@ dim(data_test)
 ### Recipe
 
 ```{r}
-#| eval: true
-
 recipe <- 
   recipe(
-    HRFS12M1 ~ .,
+    HRFS12M1_binary ~ .,
     data = data_other
   ) |>
-  # remove the weights
-  step_rm(HHSUPWGT) |>
+  # remove the weights and original HRFS12M1
+  step_rm(HHSUPWGT, HRFS12M1) |>
   # create dummy variables for categorical predictors
   step_dummy(all_nominal_predictors()) |>
   # zero-variance filter
@@ -521,14 +367,11 @@ recipe <-
   step_normalize(all_numeric_predictors()) |>
   # estimate the means and standard deviations
   print()
-
 ```
 
 ### Model
 
 ```{r}
-#| eval: true
-
 logit_mod <- 
   logistic_reg(
     penalty = tune(), 
@@ -541,11 +384,8 @@ logit_mod <-
 ### Workflow
 
 ```{r}
-#| eval: true
-
 train_weight <- round(data_other$HHSUPWGT / 1000, 0)
 train_weight <- ifelse(train_weight == 0, 1, train_weight)
-
 
 logit_wf <- workflow() |>
   #add_case_weights(train_weight) |>
@@ -557,12 +397,10 @@ logit_wf <- workflow() |>
 ### Tuning grid
 
 ```{r}
-#| eval: true
-
 param_grid <- grid_regular(
-  penalty(range = c(-6, 3)), 
-  mixture(),
-  levels = c(100, 5)
+  penalty(range = c(-3, 3)), # lambda
+  mixture(), # alpha
+  levels = c(1000, 5)
   ) |>
   print()
 ```
@@ -572,19 +410,14 @@ param_grid <- grid_regular(
 Set cross-validation partitions.
 
 ```{r}
-#| eval: true
-
 set.seed(2024)
 
-folds <- vfold_cv(data_other, v = 5)
-folds
+(folds <- vfold_cv(data_other, v = 5))
 ```
 
 Fit cross-validation.
 
 ```{r}
-#| eval: true
-
 (logit_fit <- logit_wf |>
   tune_grid(
     resamples = folds,
@@ -597,14 +430,16 @@ Fit cross-validation.
 Visualize CV results:
 
 ```{r}
-#| eval: true
-
 logit_fit |>
   # aggregate metrics from K folds
   collect_metrics() |>
   print(width = Inf) |>
   filter(.metric == "roc_auc") |>
-  ggplot(mapping = aes(x = penalty, y = mean, color = factor(mixture))) +
+  ggplot(mapping = aes(
+    x = penalty, 
+    y = mean, 
+    color = factor(mixture)
+    )) +
   geom_point() +
   labs(x = "Penalty", y = "CV AUC") +
   scale_x_log10()
@@ -613,8 +448,6 @@ logit_fit |>
 Show the top 5 models.
 
 ```{r}
-#| eval: true
-
 logit_fit |>
   show_best(metric = "roc_auc")
 ```
@@ -622,8 +455,6 @@ logit_fit |>
 Let’s select the best model.
 
 ```{r}
-#| eval: true
-
 best_logit <- logit_fit |>
   select_best(metric = "roc_auc")
 best_logit
@@ -639,8 +470,6 @@ final_wf
 ```
 
 ```{r}
-#| eval: true
-
 # Fit the whole training set, then predict the test cases
 final_fit <- 
   final_wf |>
@@ -649,8 +478,6 @@ final_fit
 ```
 
 ```{r}
-#| eval: true
-
 # Test metrics
 final_fit |> 
   collect_metrics()

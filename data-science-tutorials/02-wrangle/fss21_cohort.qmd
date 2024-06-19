@@ -1,0 +1,207 @@
+---
+title: "Create Food Security Supplement Cohort"
+author: "Dr. Roch Nianogo, Bowen Zhang, Dr. Hua Zhou"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+    link-external-icon: true
+    link-external-newwindow: true
+---
+
+```{r}
+#| code-fold: true
+#| output: false
+
+library(tidyverse)
+library(gtsummary)
+```
+
+In this tutorial, we ingest the 2021 Food Security Supplement (FSS) data from the Current Population Survey (CPS) and create a cohort of socio-economial variables. We then summarize the characteristics of the cohort and examine the relationship between food security status and household characteristics.
+
+# Ingest and tidy data
+
+We include the following independent variables in the model:
+
+-   HRNUMHOU: Total number of persons living in the household.
+-   HRHTYPE: Household type
+    -   0 = Non-interview household
+    -   1 = Husband/wife primary family (neither AF)
+    -   2 = Husband/wife primary family (either/both AF)
+    -   3 = Unmarried civilian male-primary. family householder
+    -   4 = Unmarried civilian female-prim family householder
+    -   5 = Primary family householder-rp in AF, unmarried.
+    -   6 = Civilian male primary individual
+    -   7 = Civilian female primary individual
+    -   8 = Primary individual householder-rp in AF
+    -   9 = Group quarters with family
+    -   10 = Group quarters without family
+-   GEREG: Region
+    -   1 = Northeast
+    -   2 = Midwest
+    -   3 = South
+    -   4 = West
+-   PRTAGE: Age of the reference person
+-   PEHSPNON: Hispanic or non-hispanic of the reference person
+    -   1 = Hispanic
+    -   2 = Non-Hispanic
+-   PTDTRACE: Race of the reference person
+    -   1 = White only
+    -   2 = Black only
+    -   3 = American Indian, Alaskan Native only
+    -   4 = Asian only
+    -   5 = Hawaiian/Pacific Islander only
+    -   6\~26 = Others
+-   PEEDUCA: Highest level of education completed
+    -   31 = Less than 1st grade
+    -   32 = 1st, 2nd, 3rd, or 4th grade
+    -   33 = 5th or 6th grade
+    -   34 = 7th or 8th grade
+    -   35 = 9th grade
+    -   36 = 10th grade
+    -   37 = 11th grade
+    -   38 = 12th grade no diploma
+    -   39 = High school grad-diploma or equiv (GED)
+    -   40 = Some college but no degree
+    -   41 = Associate degree-occupational/vocational
+    -   42 = Associate degree-academic program
+    -   43 = Bachelor's degree (ex: BA, AB, BS)
+    -   44 = Master's degree (ex: MA, MS, MEng, MEd, MSW)
+    -   45 = Professional school degree (ex: MD, DDS, DVM)
+    -   46 = Doctorate degree (ex: PhD, EdD)
+-   PEMLR: Employment status
+    -   1 = Employed-at work
+    -   2 = Employed-absent
+    -   3 = Unemployed-on layoff
+    -   4 = Unemployed-looking
+    -   5 = Not in labor force-retired
+    -   6 = Not in labor force-disabled
+    -   7 = Not in labor force-other
+-   PRCHLD: Presence of own children \< 18 years old
+    -   0 = No children
+    -   1\~15 = Have children
+-   HRPOOR: Poverty status
+    -   1 = Poor (Below 185% poverty)
+    -   2 = Not poor (Above 185% poverty or income not reported)
+
+First import data from the Census API:
+
+```{r}
+fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
+                                    vintage = 2021,
+                                    vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
+                                             "HRHTYPE", "GEREG", "HRPOOR",
+                                             "PRTAGE", "PEEDUCA", "PRCHLD",
+                                             "PEMLR", "PTDTRACE", "PEHSPNON",
+                                             "HRFS12M1", "HHSUPWGT",
+                                             "PERRP")) |>
+  as_tibble() |>
+  print()
+```
+
+Recall that we can look at the details of a particular categorical variable by
+
+```{r}
+censusapi::listCensusMetadata(
+  name = "cps/foodsec/dec",
+  vintage = 2021,
+  type = "values",
+  variable = "PRCHLD"
+  ) |>
+  as_tibble() |>
+  arrange(as.numeric(as.character(code))) |>
+  print()
+```
+
+Data tidying:
+
+```{r}
+data_clean <- fss_21_data |>
+  # Remove cases
+  filter(
+    PERRP %in% c(40, 41), # Reference person
+    HRFS12M1 %in% c(1, 2, 3), # Valid food security status codes
+    PEMLR %in% c(1, 2, 3, 4, 5, 6, 7), # Valid employment status codes
+    ) |>
+  # Data preprocessing
+  mutate(
+    # Food security status
+    HRFS12M1 = factor(HRFS12M1,
+                      levels = c("1", "2", "3"),
+                      labels = c("Food Security",
+                                 "Low Food Security",
+                                 "Very Low Food Security")),
+    # Number of persons living in the household
+    HRNUMHOU = as.numeric(HRNUMHOU),
+    # Household weight
+    HHSUPWGT = as.numeric(HHSUPWGT),
+    # Combining some categories, cut uses (a, b] interval notation
+    # Household type
+    HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 2, 5, 8, 10),
+                  labels = c("MarriedFamily", "UnmarriedFamily",
+                             "Individual", "GroupQuarters")),
+    # Region
+    GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
+                   labels = c("Northeast", "Midwest", "South", "West")),
+    # Education level
+    PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 38, 42, 46),
+                  labels = c("LessThanHighSchool",
+                             "HighSchoolOrAssociateDegree",
+                             "CollegeOrHigher")),
+    # Employment status
+    PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 2, 4, 7),
+                labels = c("Employed", "NotEmployed",
+                           "NotInLaborForce")),
+    # Age of reference person
+    PRTAGE = as.numeric(PRTAGE),
+    # Hispanic or Non-Hispanic
+    PEHSPNON = factor(PEHSPNON, levels = c(2, 1),
+                      labels = c("NonHispanic", "Hispanic")),
+    # Race of reference person
+    PTDTRACE = fct_recode(PTDTRACE,
+                          "White" = "1" ,
+                          "Black" = "2",
+                          "AIAN" = "3",
+                          "Asian" = "4",
+                          "HPI" = "5") |>
+      fct_other(keep = c("White", "Black", "AIAN", "Asian", "HPI")),
+    # Presence of children
+    PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children") |> as_factor() |> relevel(ref = "NoChildren"),
+    # Poverty status
+    HRPOOR = factor(HRPOOR, levels = c(2, 1),
+                    labels = c("NotPoor", "Poor"))
+  ) |>
+  # variables we want keep in analysis
+  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
+         PRTAGE, PEEDUCA, PEMLR, PTDTRACE, HHSUPWGT, PEHSPNON) |>
+  # binary outcome:
+  # `HRFS12M1 = 0` if the household is in food security and `HRFS12M1 = 1` o/w
+  mutate(HRFS12M1_binary = fct_recode(HRFS12M1,
+                                      "Food Security" = "Food Security",
+                                      "Food Insecure" = "Low Food Security",
+                                      "Food Insecure" = "Very Low Food Security")) |>
+  print()
+```
+
+# Numerical summary
+
+Numerical summary:
+```{r}
+data_clean |>
+  tbl_summary(by = HRFS12M1_binary)
+```
+
+# Graphical summary
+
+
+# Save data set
+
+Save as RDS file:
+```{r}
+write_rds(data_clean, "fss21.rds")
+```

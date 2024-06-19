@@ -41,10 +41,7 @@ Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
 
 library(censusapi)
 library(ggplot2)
-library(gtsummary)
 library(knitr)
-library(maps)
-library(tigris)
 library(ranger)
 library(tidymodels)
 ```
@@ -52,69 +49,6 @@ library(tidymodels)
 ::: {style="text-align: center;"}
 ![Data Science Diagram](../01-dsintro/data-science.png)
 :::
-
-```{r, include=FALSE}
-#| eval: true
-
-fss_21_data <- censusapi::getCensus(name = "cps/foodsec/dec",
-                                    vintage = 2021,
-                                    vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
-                                             "HRHTYPE", "GEREG", "HRPOOR",
-                                             "PRTAGE", "PEEDUCA", "PRCHLD",
-                                             "PEMLR", "PTDTRACE", "PEHSPNON",
-                                             "HRFS12M1", "HHSUPWGT",
-                                             "PERRP")) |>
-  as_tibble() |>
-  filter(PERRP %in% c(40, 41), # Reference person
-         HRFS12M1 %in% c(1, 2, 3), # Valid food security status codes
-         PEMLR %in% c(1, 2, 3, 4, 5, 6, 7), # Valid employment status codes
-         ) |>
-  
-  # Keep householder of the family
-  group_by(HRHHID, HRHHID2) |>
-  slice_min(PERRP) |>
-  ungroup() |>
-  
-  # Data preprocessing
-  mutate(HRFS12M1 = factor(HRFS12M1,
-                           levels = c("1", "2", "3"),
-                           labels = c("Food Security",
-                                      "Low Food Security",
-                                      "Very Low Food Security")),
-         HRNUMHOU = as.numeric(HRNUMHOU),
-         HHSUPWGT = as.numeric(HHSUPWGT),
-         
-         # Combining some categories
-         HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 2, 5, 8, 10),
-                       labels = c("MarriedFamily", "UnmarriedFamily",
-                                  "Individual", "GroupQuarters")),
-         GEREG = factor(GEREG, levels = c(1, 2, 3, 4),
-                        labels = c("Northeast", "Midwest", "South", "West")),
-         PEEDUCA = cut(as.numeric(PEEDUCA), breaks = c(30, 38, 42, 46),
-                       labels = c("LessThanHighSchool",
-                                  "HighSchoolOrAssociateDegree",
-                                  "CollegeOrHigher")),
-         PEMLR = cut(as.numeric(PEMLR), breaks = c(0, 2, 4, 7),
-                     labels = c("Employed", "NotEmployed",
-                                "NotInLaborForce")),
-         
-         PRTAGE = as.numeric(PRTAGE),
-         PEHSPNON = factor(PEHSPNON, levels = c(1, 2),
-                           labels = c("Hispanic", "Non-Hispanic")),
-         PTDTRACE = cut(as.numeric(PTDTRACE), breaks = c(0, 1, 2, 26),
-                        labels = c("White", "Black", "Others")),
-         RACE = ifelse(PEHSPNON == "Hispanic",
-                       "Hispanic", str_c(PTDTRACE, " non-Hispanic")),
-         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children"),
-         HRPOOR = factor(HRPOOR, levels = c(1, 2),
-                         labels = c("Poor", "NotPoor"))
-  )
-
-data_clean <- fss_21_data |>
-  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
-         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
-  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security", 0, 1))
-```
 
 ## Classification and regression trees (CART)
 
@@ -172,7 +106,7 @@ If we let the tree become deep enough, it can achieve 0 error on the training se
     -   Trees can be displayed graphically.
     -   Trees can easily handle qualitative predictors.
 -   Disadvantages of trees
-    -   Trees have Bad predictions.
+    -   Trees can have bad predictions.
     -   Trees can be very non-robust.
 
 ## Bagging, random forests, boosting
@@ -207,14 +141,10 @@ Note that boosting reduces the bias of the strong learner, by fitting trees that
 
 ## Random forest workflow
 
-```{r}
-#| eval: true
+We load the Food Security Supplement household data we curated earlier. Our goal is to predict food insecurity status using household's socio-economical status.
 
-data_clean <- fss_21_data |>
-  select(HRFS12M1, HRNUMHOU, HRHTYPE, GEREG, PRCHLD, HRPOOR,
-         PRTAGE, PEEDUCA, PEMLR, RACE, HHSUPWGT) |>
-  mutate(HRFS12M1 = ifelse(HRFS12M1 == "Food Security",
-                           "Food Security", "Food Insecurity"))
+```{r}
+data_clean <- read_rds("../02-wrangle/fss21.rds") |> print()
 ```
 
 ### Initial split into test and non-test sets
@@ -228,7 +158,7 @@ set.seed(2024)
 data_split <- initial_split(
   data_clean, 
   # stratify by HRFS12M1
-  strata = "HRFS12M1", 
+  strata = "HRFS12M1_binary", 
   prop = 0.75
   )
 data_split
@@ -243,15 +173,13 @@ dim(data_test)
 ### Recipe
 
 ```{r}
-#| eval: true
-
 recipe <- 
   recipe(
-    HRFS12M1 ~ .,
+    HRFS12M1_binary ~ .,
     data = data_other
   ) |>
-  # remove the weights
-  step_rm(HHSUPWGT) |>
+  # remove the weights and original HRFS12M1
+  step_rm(HHSUPWGT, HRFS12M1) |>
   # create dummy variables for categorical predictors
   step_dummy(all_nominal_predictors()) |>
   # zero-variance filter
@@ -266,8 +194,6 @@ recipe <-
 ### Model
 
 ```{r}
-#| eval: true
-
 rf_mod <- 
   rand_forest(
     mode = "classification",
@@ -283,8 +209,6 @@ rf_mod
 ### Workflow
 
 ```{r}
-#| eval: true
-
 rf_wf <- workflow() |>
   add_recipe(recipe) |>
   add_model(rf_mod)
@@ -294,12 +218,10 @@ rf_wf
 ### Tuning grid
 
 ```{r}
-#| eval: true
-
 param_grid <- grid_regular(
-  trees(range = c(100L, 500L)), 
+  trees(range = c(200L, 800L)), 
   mtry(range = c(1L, 5L)),
-  levels = c(5, 5)
+  levels = c(7, 5)
   )
 param_grid
 ```
@@ -309,8 +231,6 @@ param_grid
 Set cross-validation partitions.
 
 ```{r}
-#| eval: true
-
 set.seed(2024)
 
 folds <- vfold_cv(data_other, v = 5)
@@ -320,24 +240,20 @@ folds
 Fit cross-validation.
 
 ```{r}
-#| eval: true
-
 set.seed(2024)
 
-rf_fit <- rf_wf |>
+(rf_fit <- rf_wf |>
   tune_grid(
     resamples = folds,
     grid = param_grid,
     metrics = metric_set(roc_auc, accuracy)
-    )
-rf_fit
+    )) |> 
+  system.time()
 ```
 
 Visualize CV results:
 
 ```{r}
-#| eval: true
-
 rf_fit |>
   collect_metrics() |>
   print(width = Inf) |>
@@ -351,8 +267,6 @@ rf_fit |>
 Show the top 5 models.
 
 ```{r}
-#| eval: true
-
 rf_fit |>
   show_best(metric = "roc_auc")
 ```
@@ -360,8 +274,6 @@ rf_fit |>
 Let’s select the best model.
 
 ```{r}
-#| eval: true
-
 best_rf <- rf_fit |>
   select_best(metric = "roc_auc")
 best_rf
@@ -370,8 +282,6 @@ best_rf
 ### Final model
 
 ```{r}
-#| eval: true
-
 # Final workflow
 final_wf <- rf_wf |>
   finalize_workflow(best_rf)
@@ -385,4 +295,4 @@ final_fit |>
   collect_metrics()
 ```
 
-Random forest model has a better performance than logistic regression model in terms of AUC.
+Random forest model has a better test performance than logistic regression model in terms of AUC.

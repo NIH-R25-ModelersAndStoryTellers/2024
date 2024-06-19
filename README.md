@@ -6,7 +6,7 @@ This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](ht
 
 ## Data Science Module, June 24-26, 2024
 
-Run tutorials in Rstudio: [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9)
+Run tutorials in RStudio: [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9)
 
 Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
 
