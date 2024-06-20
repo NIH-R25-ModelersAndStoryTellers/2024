@@ -10,7 +10,7 @@ Run tutorials in RStudio: [Posit Cloud](https://posit.cloud/spaces/522857/join?a
 
 Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
 
-### June 24
+### Monday, June 24
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
@@ -22,7 +22,7 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 | 1:50p-2:00p   | Break |  |
 | 2:00p-2:30p   | Review/Get feedback from trainees | Dr. Hua Zhou |
 
-### June 25
+### Tuesday, June 25
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
@@ -34,7 +34,7 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 | 1:50p-2:00p   | Break |  |
 | 2:00p-2:30p   | TBD | Dr. Roch Nianogo |
 
-### June 26
+### Wednesday, June 26
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
