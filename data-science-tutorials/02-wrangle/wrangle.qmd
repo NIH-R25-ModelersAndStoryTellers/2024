@@ -318,6 +318,24 @@ ggplot2::map_data("state") |>
   coord_fixed(ratio = 1.5)
 ```
 
+## Ingest from other data sources
+
+We can also ingest data from other sources to enrich the analysis.
+
+-   CSV and other text delimited data files (`.csv`, `.csv.gz`): `readr` package in tidyverse.
+
+-   Excel files (`.xls`, `.xlsx`): `readxl` package in tidyverse. `tidyxl` package for reading non-tabular data from Excel.
+
+-   Bigger-than-memory data files: `arrow` and `duckdb` packages.
+
+-   Big data (that cannot fit into a single computer): `sparklyr` package.
+
+-   Databases (SQLite, MySQL, PostgreSQL, BigQuery, etc): `DBI` package plus a database-specific backend package.
+
+-   Web scraping: `rvest` package in tidyverse.
+
+-   JSON files (`.json`): `jsonlite` package.
+
 ## Exercises
 
 1.  Display the food security disparity in 2021 in terms of race, household income, education level, or other social-economic determinants.
@@ -415,4 +433,3 @@ fss_21_race |>
 ```
 
 2.  How does COVID impact the food security status of households in the U.S.? Does the impact differ by state, race, household income, or other social-economic determinants?
-
