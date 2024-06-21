@@ -53,7 +53,7 @@ A typical data science project:
 
 <p align="center">
 
-<img src="../01-dsintro/data-science.png" width="80%"/>
+![](../01-dsintro/data-science.png){fig-align="center" width="80%"}
 
 </p>
 
@@ -333,6 +333,8 @@ We can also ingest data from other sources to enrich the analysis.
 -   Databases (SQLite, MySQL, PostgreSQL, BigQuery, etc): `DBI` package plus a database-specific backend package.
 
 -   Web scraping: `rvest` package in tidyverse.
+
+-   Social media: Twitter/X (`rtweet` package), Instagram (`instaR` package), Facebook (`Rfacebook` package).
 
 -   JSON files (`.json`): `jsonlite` package.
 
