@@ -53,17 +53,25 @@ library(tidymodels)
 
 ## Causal inference
 
--   Main approaches:
+-   We've done tremendous work carrying out an intervention program. You want to demonstrate to stakeholders (government, funding agencies, etc) that your program "works."
 
-    -   **RCT** (randomized controlled trials): gold standard, but impractical in most Community-Based Participatory Research **(**CBPR).
+    -   We compared the average of [Food Security Rasch Scale Score in the past 30 days](https://www.ers.usda.gov/media/8282/short2012.pdf) (higher score indicates lower food security among program) among program participants versus those not participating our program. We found a significant difference in the averages 😄 But quickly people criticize our analysis as biased 🙁 What could go wrong?
+
+    -   In another try, we ran a multiple linear regression that included the program participation status and many socio-economical variables (race, age, income, region, ...). Then we found that program participation does not significantly improve the food security Rasch score 🙁
+
+    -   Causal inference methods can help more reliably estimate the "treatment effect."
+
+-   Main approaches for causal inference:
+
+    -   **RCT** (randomized controlled trials): gold standard, but impractical in most Community-Based Participatory Research **(**CBPR) with multi-level interventions.
 
     -   Observational studies under unconfoundedness: matching, regression estimators, inverse-propensity-score weighting.
 
-    -   Observational studies without unconfoundedness: instrumental variable, difference-in-differences (DID), synthetic control, regression discontinuity designs.
+    -   Observational studies without unconfoundedness: instrumental variable, difference-in-differences (DiD), synthetic control, regression discontinuity designs.
 
 ## Partially linear regression and interactive regression model
 
-### Partially linear regression
+### Partially linear regression (PLR)
 
 Partially linear regression (PLR) model introduced by Robinson (1988):
 
@@ -94,7 +102,13 @@ Naive application of machine learning methods directly to two equations may have
 <img src="./bias.jpg" alt="bias" width="700"/>
 :::
 
-### Interactive regression model
+Remarks:
+
+1. The policy variable $D$ can be either binary or continuous (dosage).
+
+2. The policy variable $D$ can be multi-dimensional (multi-level intervention: food pantry, education classes, ads.).
+
+### Interactive regression model (IRM)
 
 We consider estimation of average treatment effects when treatment effects are fully heterogeneous, i.e., the response curves under control and treatment can be different nonparametric functions, and the treatment variable is binary, $D \in \{0,1\}$. We consider vectors $(Y,D,X)$ such that
 
@@ -177,14 +191,16 @@ We include the following variables in our analysis:
 -   `HEFAMINC`: Family income (take median of each class).
 
 ```{r}
-fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
-                                    vintage = 2020,
-                                    vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
-                                             "HRHTYPE", "GEREG", "HESP8",
-                                             "PRTAGE", "PEEDUCA", "PRCHLD",
-                                             "PEMLR", "PTDTRACE", "PEHSPNON",
-                                             "HEFAMINC", "HRFS30D1", "HHSUPWGT",
-                                             "PERRP", "HRFS30D4")) |>
+fss_20_data <- censusapi::getCensus(
+  name = "cps/foodsec/dec",
+  vintage = 2020,
+  vars = c("HRHHID", "HRHHID2", "HRNUMHOU",
+           "HRHTYPE", "GEREG", "HESP8",
+           "PRTAGE", "PEEDUCA", "PRCHLD",
+           "PEMLR", "PTDTRACE", "PEHSPNON",
+           "HEFAMINC", "HRFS30D1", "HHSUPWGT",
+           "PERRP", "HRFS30D4")
+  ) |>
   as_tibble() |>
   filter(PERRP %in% c(40, 41),
          HRFS30D1 %in% c(1, 2, 3),
@@ -196,7 +212,8 @@ fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
                            labels = c("Food Security",
                                       "Low Food Security",
                                       "Very Low Food Security")),
-         HESP8 = ifelse(HESP8 == 1, 1, 0),
+         HESP8 = ifelse(HESP8 == 1, 1, 0) |> 
+           factor(levels = c(0, 1), labels = c("NoWIC", "WIC")),
          HRNUMHOU = as.numeric(HRNUMHOU),
          HHSUPWGT = as.numeric(HHSUPWGT),
          HRHTYPE = cut(as.numeric(HRHTYPE), breaks = c(0, 2, 5, 8, 10),
@@ -221,7 +238,8 @@ fss_20_data <- censusapi::getCensus(name = "cps/foodsec/dec",
                           "Asian" = "4",
                           "HPI" = "5") |>
            fct_other(keep = c("White", "Black", "AIAN", "Asian", "HPI")),
-         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children") |> as_factor() |> relevel(ref = "NoChildren"),
+         PRCHLD = ifelse(PRCHLD == 0, "NoChildren", "Children") |> 
+           as_factor() |> relevel(ref = "NoChildren"),
          HEFAMINC = case_when(HEFAMINC == 1 ~ 2500,
                               HEFAMINC == 2 ~ 6250,
                               HEFAMINC == 3 ~ 8750,
@@ -251,7 +269,16 @@ fss_20_data |>
   tbl_summary()
 ```
 
-### Linear regression
+### Two-sample t-test (simple linear regression)
+
+```{r}
+lm(HRFS30D4 ~ factor(HESP8), data = fss_20_data) |>
+  tbl_regression() |>
+  bold_labels() |>
+  bold_p(t = 0.05)
+```
+
+### Multiple linear regression
 
 ```{r}
 fit <- lm(HRFS30D4 ~ factor(HESP8) + HRNUMHOU + HRHTYPE + GEREG + PRTAGE +
@@ -279,7 +306,9 @@ The Python and R package [DoubleML](https://docs.doubleml.org/) provide an imple
     we initialize the data-backend and thereby declare the role of the outcome, the treatment, and the confounding variables.
 
 ```{r}
-doubleML_data <- data.table(fss_20_data)
+doubleML_data <- fss_20_data |>
+  mutate(HESP8 = ifelse(HESP8 == "WIC", 1, 0)) |>
+  data.table()
 
 obj_dml_data <- DoubleMLData$new(
   doubleML_data,
@@ -319,10 +348,12 @@ learner_classif_m <- lrn("classif.ranger", num.trees = 500,
 
 ```{r}
 set.seed(2024)
-doubleml_mod <- DoubleMLIRM$new(obj_dml_data,
-                                ml_g = learner_g, ml_m = learner_classif_m,
-                                score = "ATE", dml_procedure = "dml1",
-                                n_folds = 5, n_rep = 1)
+doubleml_mod <- DoubleMLIRM$new(
+  obj_dml_data,
+  ml_g = learner_g, ml_m = learner_classif_m,
+  score = "ATE", dml_procedure = "dml1",
+  n_folds = 5, n_rep = 1
+)
 
 doubleml_mod
 ```
