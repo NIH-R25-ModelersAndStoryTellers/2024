@@ -57,7 +57,13 @@ A typical data science project:
 
 </p>
 
-In this tutorial, we ingest, tidy, transform, and visualize the 2021 Current Population Survey Food Security Supplement (CPS-FSS) data.
+In this tutorial, we ingest, tidy, transform, and visualize the 2021 Current Population Survey Food Security Supplement (CPS-FSS) data. We calculate the prevalence of food insecurity in the US and visualize the disparity in terms of geographic regions and other socio-economical factors.
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c5978882-4e0c-4de0-afca-85f6ab4482b7" width="75%" height="500" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c5978882-4e0c-4de0-afca-85f6ab4482b7)
 
 ## Ingest CPS-FSS Data
 
@@ -76,12 +82,17 @@ Sys.setenv("CENSUS_KEY" = "PUT YOUR KEY HERE")
 
 [censusapi](https://github.com/hrecht/censusapi) is a lightweight package to get data from the U.S. It uses the same Census API key as `tidycensus`, though references it with the R environment variable `CENSUS_KEY`. If this environment variable is set in a user’s `.Renviron` file, functions in `censusapi` will pick up the key without having to supply it directly.
 
--   `getCensus()`: Retrieve Census data from a given API.
 -   `listCensusApis()`: Get useful dataset metadata on all available APIs as a data frame.
+
 -   `listCensusMetadata()`: Get information about a specific API as a data frame.
+
+-   `getCensus()`: Retrieve Census data from a given API.
+
 -   `makeVarlist()`: Use variable metadata to find variables containing a given string.
 
 `censusapi`’s core function is `getCensus()`, which translates R code to Census API queries. The `name` argument references the API name; the `censusapi` documentation or the function `listCensusApis()` helps you understand how to format this.
+
+#### List available APIs by `listCensusApis()`
 
 To see a current table of every available endpoint, run `listCensusApis()`:
 
@@ -90,7 +101,8 @@ censusapi::listCensusApis() |>
   # convert data.frame to tibble
   as_tibble() |>
   # only keep the columns needed
-  select(title, name, vintage, type, temporal, url)
+  select(title, name, vintage, type, temporal, url) |>
+  print()
 ```
 
 `listCensusApis()` returns a dataframe that includes: title, description, name, vintage, url, dataset type, and other useful fields. Search for the dataset you are interested in.
@@ -102,6 +114,20 @@ censusapi::listCensusApis() |>
   filter(str_detect(title, "Food Security"), vintage >= 2019) |>
   select(title, name, vintage, type, description)
 ```
+
+#### Metadata for a specific API by `listCensusMetadata()`
+
+Get the metadata for the CPS Food Security Supplement December 2021 Public-Use Microdata File
+```{r}
+censusapi::listCensusMetadata(
+  name = "cps/foodsec/dec", 
+  vintage = 2021
+  ) |>
+  as_tibble() |>
+  print()
+```
+
+#### Request data by `getCensus()`
 
 The example below makes a request to API for the CPS Food Security Supplement December 2021 Public-Use Microdata File. The `name` argument is set to "cps/foodsec/dec" and the `vintage` argument is set to 2021. If we are interested in Household Food Security Scale, then for the `vars` argument, we should include the following terms:
 
@@ -162,7 +188,7 @@ HRFS12M1_lb <- censusapi::listCensusMetadata(
   print()
 ```
 
-Therefore, we can use the following code to convert the variable `HRFS12M1` to a factor with meaningful labels.
+Therefore, we can also use the following code to convert the variable `HRFS12M1` to a factor with meaningful labels.
 
 ```{r}
 fss_21_status <- fss_21_status |>
@@ -184,12 +210,14 @@ To compute some household characteristics (such as household size, presence of c
 
 ```{r}
 fss_21_status <- fss_21_status |>
-  # Filter observations with PERRP 40 or 41 (reference person in the household) 
-  filter(PERRP %in% c(40, 41)) |>
-  # Arrange by PERRP
-  arrange(PERRP) |>
+  # # Filter observations with PERRP 40 or 41 (reference person in the household) 
+  # filter(PERRP %in% c(40, 41)) |>
+  # # Arrange by PERRP
+  # arrange(PERRP) |>
   # Keep the record with the lowest-numbered PERRP in the household
-  slice_head(by = c(HRHHID, HRHHID2), n = 1) |>
+  group_by(HRHHID, HRHHID2) |>
+  slice_min(PERRP, n = 1) |>
+  ungroup() |>
   print()
 ```
 
@@ -263,7 +291,7 @@ fss_21_status <- fss_21_status |>
 sum(fss_21_status$HRFS12M1_low) / sum(fss_21_status$HRFS12M1_res) * 100
 ```
 
-The percentage of households with low food security or very low food security in 2021 is 10.23%. We can verify this result by comparing this number to the Economic Research Report [Household Food Security in the United States in 2021](https://www.ers.usda.gov/webdocs/publications/104656/err-309.pdf?v=7855.7) Figure 1.
+The percentage of households with low food security or very low food security in 2021 is 10.23%. We can verify this result by comparing this number to the USDA Economic Research Report [Household Food Security in the United States in 2021](https://www.ers.usda.gov/webdocs/publications/104656/err-309.pdf?v=7855.7) Figure 1.
 
 Since we have already computed the rate of low food security in 2021. We can further investigate the rate of low food security in each state.
 
@@ -318,9 +346,9 @@ ggplot2::map_data("state") |>
   coord_fixed(ratio = 1.5)
 ```
 
-## Ingest from other data sources
+## Ingest from other data sources by R
 
-We can also ingest data from other sources to enrich the analysis.
+In R, we can easily ingest data in other formats to enrich the analysis.
 
 -   CSV and other text delimited data files (`.csv`, `.csv.gz`): `readr` package in tidyverse.
 
@@ -434,4 +462,39 @@ fss_21_race |>
     )
 ```
 
-2.  How does COVID impact the food security status of households in the U.S.? Does the impact differ by state, race, household income, or other social-economic determinants?
+2. Calculate the percentage of LA County households in low food security in 2021.
+
+```{r}
+#| eval: false
+#| code-fold: true
+
+# Find the State Code for California and the County Code for Los Angeles County
+state_names <- tigris::fips_codes |>
+  as_tibble() |>
+  filter(
+    state_name == "California",
+    county == "Los Angeles County"
+    ) |>
+  print()
+```
+```{r}
+#| eval: false
+#| code-fold: true
+
+fss_21_status |>
+  # Filter for Los Angeles County
+  filter(GESTFIPS == "6" & GTCO == "37") |>
+  summarize(fd_insec_rate = sum(HRFS12M1_low) / sum(HRFS12M1_res)) |>
+  print()
+```
+
+
+3.  How does COVID impact the food security status of households in the U.S.? Does the impact differ by state, race, household income, or other social-economic determinants?
+
+## Feedback
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/b28b3d9a-c118-4e0c-ae6f-903aa7c9cea0" width="75%" height="400" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/b28b3d9a-c118-4e0c-ae6f-903aa7c9cea0)
