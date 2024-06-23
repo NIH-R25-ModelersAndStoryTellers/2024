@@ -43,6 +43,8 @@ library(tidyverse)
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/81de78f7-a83c-4c28-9875-b82bbe7132d6" width="75%" height="500" data-external="1"></iframe>
 ```
 
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/81de78f7-a83c-4c28-9875-b82bbe7132d6)
+
 ## Roadmap
 
 A typical data science project:
@@ -101,6 +103,8 @@ Please feel free to ask questions and make comments. You can
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/6cf7fb80-becd-4f4b-82d3-5ff3a4dcaf74" width="75%" height="400" data-external="1"></iframe>
 ```
 
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/6cf7fb80-becd-4f4b-82d3-5ff3a4dcaf74)
+
 ![Census Bureau](https://www.census.gov/etc.clientlibs/census/clientlibs/census-pattern-library/resources/images/USCENSUS_IDENTITY_SOLO_BLACK_1.5in_R_no_padding.svg){fig-align="center" width="240"}
 
 ### Census and ACS
@@ -157,6 +161,8 @@ It is worth noting that beginning in 2015 and continuing through 2021, there wer
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/d9f4ab22-4a83-4ef9-ba60-62cd4c7ff915" width="75%" height="400" data-external="1"></iframe>
 ```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/d9f4ab22-4a83-4ef9-ba60-62cd4c7ff915)
 
 ### Tidyverse
 
@@ -535,3 +541,5 @@ ggplot(iris_tb) +
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/60aa4347-c88f-4ca2-92ca-8d1b3da48dbe" width="75%" height="400" data-external="1"></iframe>
 ```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/60aa4347-c88f-4ca2-92ca-8d1b3da48dbe)
