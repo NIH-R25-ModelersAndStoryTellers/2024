@@ -37,11 +37,11 @@ comments:
 library(tidyverse)
 ```
 
-## Poll
+## Tell me about you
 
-[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt) or scan QR code
-
-![](slido_session_1.png){fig-align="center"}
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/81de78f7-a83c-4c28-9875-b82bbe7132d6" width="75%" height="500" data-external="1"></iframe>
+```
 
 ## Roadmap
 
@@ -59,7 +59,7 @@ In the next 1.5 days, we learn
 
 -   the life cycle of a data science project
 
--   some R ecosystems (tidyverse, tidymodels) for Open Data Science
+-   some R ecosystems (tidyverse, tidymodels, dml) for Open Data Science
 
 -   basic machine learning
 
@@ -96,6 +96,10 @@ Please feel free to ask questions and make comments. You can
 -   make comments or ask questions on tutorial pages (need to sign up an account on [hypothes.is](https://web.hypothes.is/))
 
 ## Data source
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/6cf7fb80-becd-4f4b-82d3-5ff3a4dcaf74" width="75%" height="400" data-external="1"></iframe>
+```
 
 ![Census Bureau](https://www.census.gov/etc.clientlibs/census/clientlibs/census-pattern-library/resources/images/USCENSUS_IDENTITY_SOLO_BLACK_1.5in_R_no_padding.svg){fig-align="center" width="240"}
 
@@ -143,6 +147,10 @@ Food Security Supplement Questionnaire includes the following major sections:
 It is worth noting that beginning in 2015 and continuing through 2021, there were changes from previous years in how the Census Bureau processes some variables. Details can be found in the technical documentation, which can be found [here](https://www.census.gov/data/datasets/time-series/demo/cps/cps-supp_cps-repwgt/cps-food-security.html)
 
 ## Introduction to R
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/d9f4ab22-4a83-4ef9-ba60-62cd4c7ff915" width="75%" height="400" data-external="1"></iframe>
+```
 
 ### Tidyverse
 
@@ -267,7 +275,7 @@ The [Posit dplyr cheat sheet](https://rstudio.github.io/cheatsheets/data-transfo
 
 Some examples of using dplyr functions.
 
--   Filter observations with `Sepal.Length` greater than 5.0, arrange the data by `Sepal.Length` in descending, and create a new column `Sepal.Length_2` that is the square of `Sepal.Length`.
+-   Filter observations with `Sepal.Length` greater than 5.0, arrange the data by `Sepal.Length` in descending order, and create a new column `Sepal.Length_2` that is the square of `Sepal.Length`.
 
 ```{r}
 iris_tb |>
@@ -495,7 +503,10 @@ ggplot(iris_tb) +
 ```
 
 -   Again the [Posit ggplot2 cheat sheet](https://rstudio.github.io/cheatsheets/data-visualization.pdf) is extremely intuitive and helpful.
--   Interactive plots are easily achieved by `plotly` package. Interactive apps can be developed by the popular `shiny` package.
+
+-   Interactive plots are easily achieved by `plotly` package.
+
+-   Interactive apps can be developed by the popular `shiny` package.
 
 ### Exercises
 
@@ -512,3 +523,9 @@ ggplot(iris_tb) +
     # geom_histogram
 
     ```
+
+### Feedback
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/60aa4347-c88f-4ca2-92ca-8d1b3da48dbe" width="75%" height="400" data-external="1"></iframe>
+```

@@ -3083,7 +3083,7 @@ vertical-align: -.125em;
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#poll" id="toc-poll" class="nav-link active" data-scroll-target="#poll"><span class="header-section-number">1</span> Poll</a></li>
+  <li><a href="#tell-me-about-you" id="toc-tell-me-about-you" class="nav-link active" data-scroll-target="#tell-me-about-you"><span class="header-section-number">1</span> Tell me about you</a></li>
   <li><a href="#roadmap" id="toc-roadmap" class="nav-link" data-scroll-target="#roadmap"><span class="header-section-number">2</span> Roadmap</a>
   <ul>
   <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link" data-scroll-target="#learning-objectives"><span class="header-section-number">2.1</span> Learning objectives</a></li>
@@ -3108,6 +3108,7 @@ vertical-align: -.125em;
   </ul></li>
   <li><a href="#data-visualization-using-ggplot" id="toc-data-visualization-using-ggplot" class="nav-link" data-scroll-target="#data-visualization-using-ggplot"><span class="header-section-number">4.2</span> Data visualization using ggplot</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises"><span class="header-section-number">4.3</span> Exercises</a></li>
+  <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback"><span class="header-section-number">4.4</span> Feedback</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -3148,14 +3149,9 @@ vertical-align: -.125em;
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<section id="poll" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="poll"><span class="header-section-number">1</span> Poll</h2>
-<p><a href="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt">Slido</a> or scan QR code</p>
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure">
-<p><img src="data:image/png;base64,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" class="img-fluid quarto-figure quarto-figure-center figure-img"></p>
-</figure>
-</div>
+<section id="tell-me-about-you" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="tell-me-about-you"><span class="header-section-number">1</span> Tell me about you</h2>
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/81de78f7-a83c-4c28-9875-b82bbe7132d6" width="75%" height="500" data-external="1"></iframe>
 </section>
 <section id="roadmap" class="level2" data-number="2">
 <h2 data-number="2" class="anchored" data-anchor-id="roadmap"><span class="header-section-number">2</span> Roadmap</h2>
@@ -3168,7 +3164,7 @@ vertical-align: -.125em;
 <p>In the next 1.5 days, we learn</p>
 <ul>
 <li><p>the life cycle of a data science project</p></li>
-<li><p>some R ecosystems (tidyverse, tidymodels) for Open Data Science</p></li>
+<li><p>some R ecosystems (tidyverse, tidymodels, dml) for Open Data Science</p></li>
 <li><p>basic machine learning</p></li>
 <li><p>policy evaluation using double machine learning</p></li>
 </ul>
@@ -3201,6 +3197,7 @@ vertical-align: -.125em;
 </section>
 <section id="data-source" class="level2" data-number="3">
 <h2 data-number="3" class="anchored" data-anchor-id="data-source"><span class="header-section-number">3</span> Data source</h2>
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/6cf7fb80-becd-4f4b-82d3-5ff3a4dcaf74" width="75%" height="400" data-external="1"></iframe>
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><svg id="Layer_1" class="img-fluid quarto-figure quarto-figure-center figure-img" width="240" x="0px" y="0px" viewBox="19 19 109 42" style="enable-background:new 0 0 142.5 80.5;" xml:space="preserve">
@@ -3387,6 +3384,7 @@ vertical-align: -.125em;
 </section>
 <section id="introduction-to-r" class="level2" data-number="4">
 <h2 data-number="4" class="anchored" data-anchor-id="introduction-to-r"><span class="header-section-number">4</span> Introduction to R</h2>
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/d9f4ab22-4a83-4ef9-ba60-62cd4c7ff915" width="75%" height="400" data-external="1"></iframe>
 <section id="tidyverse" class="level3" data-number="4.1">
 <h3 data-number="4.1" class="anchored" data-anchor-id="tidyverse"><span class="header-section-number">4.1</span> Tidyverse</h3>
 <ul>
@@ -3719,7 +3717,7 @@ Tip
 <p>The <a href="https://rstudio.github.io/cheatsheets/data-transformation.pdf">Posit dplyr cheat sheet</a> is extremely intuitive and helpful.</p>
 <p>Some examples of using dplyr functions.</p>
 <ul>
-<li>Filter observations with <code>Sepal.Length</code> greater than 5.0, arrange the data by <code>Sepal.Length</code> in descending, and create a new column <code>Sepal.Length_2</code> that is the square of <code>Sepal.Length</code>.</li>
+<li>Filter observations with <code>Sepal.Length</code> greater than 5.0, arrange the data by <code>Sepal.Length</code> in descending order, and create a new column <code>Sepal.Length_2</code> that is the square of <code>Sepal.Length</code>.</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>iris_tb <span class="sc">|&gt;</span></span>
@@ -4081,8 +4079,9 @@ Tip
 </div>
 </div>
 <ul>
-<li>Again the <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">Posit ggplot2 cheat sheet</a> is extremely intuitive and helpful.</li>
-<li>Interactive plots are easily achieved by <code>plotly</code> package. Interactive apps can be developed by the popular <code>shiny</code> package.</li>
+<li><p>Again the <a href="https://rstudio.github.io/cheatsheets/data-visualization.pdf">Posit ggplot2 cheat sheet</a> is extremely intuitive and helpful.</p></li>
+<li><p>Interactive plots are easily achieved by <code>plotly</code> package.</p></li>
+<li><p>Interactive apps can be developed by the popular <code>shiny</code> package.</p></li>
 </ul>
 </section>
 <section id="exercises" class="level3" data-number="4.3">
@@ -4097,6 +4096,10 @@ Tip
 <div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="co"># geom_histogram</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div></li>
 </ol>
+</section>
+<section id="feedback" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="feedback"><span class="header-section-number">4.4</span> Feedback</h3>
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/60aa4347-c88f-4ca2-92ca-8d1b3da48dbe" width="75%" height="400" data-external="1"></iframe>
 </section>
 </section>
 
