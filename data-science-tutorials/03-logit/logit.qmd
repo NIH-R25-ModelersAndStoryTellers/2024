@@ -55,7 +55,17 @@ library(tigris)
 ![Data Science Diagram](../01-dsintro/data-science.png)
 :::
 
-In the last lecture, we focused on data wrangling (import, tidy, transform, visualize). Now we progress to the modeling part. In this lecture, we focus on predictive modeling using machine learning methods (logistic, random forest, ...). In the next lecture, we focus on policy evaluation using double machine learning.
+In the last lecture, we focused on data wrangling (import, tidy, transform, visualize). Now we progress to the modeling part. In this lecture, we focus on predictive modeling using machine learning methods (logistic, random forest, neural network, ...). In the next lecture, we focus on policy evaluation using double machine learning.
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c943bd98-f0a6-4308-b9ee-ab93ea242a92" width="75%" height="500" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c943bd98-f0a6-4308-b9ee-ab93ea242a92)
+
+## Learning objectives 
+
+Supervised vs unsuperversed learning, logistic regression, ROC curve, overfitting, regularization, L1 and L2 penalty, elastic net, cross-validation, hyperparameter tuning, model evaluation, and interpretation.
 
 ## Machine learning overview
 
@@ -95,7 +105,7 @@ data_clean <- read_rds("../02-wrangle/fss21.rds") |>
 
 We are interested in predicting whether a household will be food insecure, on the basis of household size, marital status, have children or not, geographical region, education level, employment status, and race.
 
-The response `HRFS12M1_binary` falls into one of two categories, `Food Insecure` (1) or `Food Secure (0). Rather than modeling this response $Y$ directly, logistic regression models the probability that $Y$ belongs to a particular category.
+The response `HRFS12M1_binary` falls into one of two categories, `Food Insecure` (1) or `Food Secure` (0). Rather than modeling this response $Y$ directly, logistic regression models the probability that $Y$ belongs to a particular category.
 
 ::: {style="text-align: center;"}
 <img src="./4_2.jpg" alt="default" width="700"/>
@@ -112,7 +122,7 @@ The parameter $p_i = \mathbb{E}(Y_i)$ will be related to the predictors $\mathbf
 
 $$
 p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
-$$ where $\eta_i$ is the **linear predictor** or **systematic component** $$
+$$ where $\eta_i$ is the linear predictor (or systematic component) $$
 \eta_i = \mathbf{x}_i^T \boldsymbol{\beta} = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_q x_{iq}.
 $$
 In other words, logistic regression models the **log-odds** of the probability of success as a linear function of the predictors
@@ -129,14 +139,16 @@ To further investigate the factors that are associated with food insecurity, we 
 ```{r}
 # Fit logistic regression
 logit_model <- glm(
+  # All predictors except HRFS12M1 and HHSUPWGT
   HRFS12M1_binary ~ . - HRFS12M1 - HHSUPWGT,
   data = data_clean, 
-  family = "binomial")
+  family = "binomial"
+  )
 logit_model
 ```
 
+`gtsummary` package offers a nice summary of the model
 ```{r}
-# gtsummary package offers a nice summary of the model
 logit_model |>
   tbl_regression() |>
   bold_labels() |>
@@ -231,7 +243,7 @@ ggroc(roc_data, legacy.axes = TRUE) +
            label = paste("AUC =", round(auc(roc_data), 3)))
 ```
 
-The logistic regression model has an AUC of `r round(auc(roc_data))`, which indicates that the model has a good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
+The logistic regression model has an AUC of `{r} round(auc(roc_data), 3)`, which indicates that the model has a reasonably good discrimination ability. However, if we want to evaluate the model's predictive performance, simply fitting models and calculating AUC is not enough.
 
 ## Assessing model accuracy
 
@@ -249,7 +261,7 @@ The MSE is computed using the training data that was used to fit the model. But 
 <img src="./2_9.jpg" alt="default" width="700"/>
 :::
 
-As model flexibility increases, training MSE will decrease, but the test MSE may not. When a given method yields a small training MSE but a large test MSE, we are said to be overfitting the data.
+As model flexibility increases, training MSE will decrease, but the test MSE may not. When a given method yields a small training MSE but a large test MSE, we are said to be **overfitting** the data.
 
 ::: callout-tip
 -   Does it mean simpler models are always better?
@@ -304,17 +316,17 @@ $$
 
 The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
 
--   In logistic regression, for ridge regression ($L_2$ penalty), we need to optimize the following objective function:
+-   In logistic regression, for **ridge regression** (**$L_2$ penalty**), we need to optimize the following objective function:
 $$
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
 $$ where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
 
--   For the lasso ($L_1$ penalty), we need to optimize the following objective function:
+-   For the **lasso** (**$L_1$ penalty**), we need to optimize the following objective function:
 $$
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
 $$ where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$.
 
--   The elastic net combines the ridge and lasso penalties, and the penalty term is $\lambda \left( \alpha \sum_{j=1}^{p} |\beta_j| + \frac{1 - \alpha}{2} \sum_{j=1}^{p} \beta_j^2 \right)$, where $\alpha$ controls the relative weight of the two penalties.
+-   The **elastic net** combines the ridge and lasso penalties, and the penalty term is $\lambda \left( \alpha \sum_{j=1}^{p} |\beta_j| + \frac{1 - \alpha}{2} \sum_{j=1}^{p} \beta_j^2 \right)$, where $\alpha$ controls the relative weight of the two penalties.
 
 <p align="center">
 
@@ -334,8 +346,8 @@ We randomly split the data into 25% test data and 75% non-test data. Stratify on
 # For reproducibility
 set.seed(2024)
 
-data_split <- initial_split(
-  data_clean, 
+data_split <- data_clean |>
+  initial_split(
   # stratify by HRFS12M1_binary
   strata = "HRFS12M1_binary", 
   prop = 0.75
@@ -351,9 +363,9 @@ dim(data_test)
 
 ### Recipe
 
+Recipe for preprocessing the data:
 ```{r}
-recipe <- 
-  recipe(
+recipe <- recipe(
     HRFS12M1_binary ~ .,
     data = data_other
   ) |>
@@ -372,10 +384,9 @@ recipe <-
 ### Model
 
 ```{r}
-logit_mod <- 
-  logistic_reg(
-    penalty = tune(), 
-    mixture = tune()
+logit_mod <- logistic_reg(
+    penalty = tune(), # \lambda
+    mixture = tune()  # \alpha
   ) |> 
   set_engine("glmnet", standardize = FALSE) |>
   print()
@@ -398,8 +409,8 @@ logit_wf <- workflow() |>
 
 ```{r}
 param_grid <- grid_regular(
-  penalty(range = c(-3, 3)), # lambda
-  mixture(), # alpha
+  penalty(range = c(-3, 3)), # \lambda
+  mixture(), # \alpha
   levels = c(1000, 5)
   ) |>
   print()
@@ -471,8 +482,7 @@ final_wf
 
 ```{r}
 # Fit the whole training set, then predict the test cases
-final_fit <- 
-  final_wf |>
+final_fit <- final_wf |>
   last_fit(data_split)
 final_fit
 ```
@@ -482,3 +492,11 @@ final_fit
 final_fit |> 
   collect_metrics()
 ```
+
+## Feedback
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/994db4eb-3af7-4f04-b710-7bb082c7f320" width="75%" height="400" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/994db4eb-3af7-4f04-b710-7bb082c7f320)
