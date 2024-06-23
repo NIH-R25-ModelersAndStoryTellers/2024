@@ -312,6 +312,22 @@ $$
 
 -   tidymodels is the R analog of [sklearn.pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) in Python and [MLJ.jl](https://juliaai.github.io/MLJ.jl/stable/) in Julia.
 
+::: {.panel-tabset}
+
+#### R
+
+Supported models in tidymodels ecosystem. [link](https://www.tidymodels.org/find/parsnip/#models)
+
+#### Python 
+
+scikit-learn in Python. [link](https://scikit-learn.org/stable/)
+
+#### Julia
+
+Supported models in Julia MLJ ecosystem. [link](https://alan-turing-institute.github.io/MLJ.jl/dev/model_browser/#Model-Browser)
+
+:::
+
 ## Elastic-net (enet) regularization and shrinkage methods
 
 The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
