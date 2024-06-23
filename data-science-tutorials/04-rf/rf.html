@@ -3222,23 +3222,25 @@ window.Quarto = {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#classification-and-regression-trees-cart" id="toc-classification-and-regression-trees-cart" class="nav-link active" data-scroll-target="#classification-and-regression-trees-cart"><span class="header-section-number">1</span> Classification and regression trees (CART)</a></li>
-  <li><a href="#bagging-random-forests-boosting" id="toc-bagging-random-forests-boosting" class="nav-link" data-scroll-target="#bagging-random-forests-boosting"><span class="header-section-number">2</span> Bagging, random forests, boosting</a>
+  <li><a href="#roadmap" id="toc-roadmap" class="nav-link active" data-scroll-target="#roadmap"><span class="header-section-number">1</span> Roadmap</a></li>
+  <li><a href="#classification-and-regression-trees-cart" id="toc-classification-and-regression-trees-cart" class="nav-link" data-scroll-target="#classification-and-regression-trees-cart"><span class="header-section-number">2</span> Classification and regression trees (CART)</a></li>
+  <li><a href="#bagging-random-forests-boosting" id="toc-bagging-random-forests-boosting" class="nav-link" data-scroll-target="#bagging-random-forests-boosting"><span class="header-section-number">3</span> Bagging, random forests, boosting</a>
   <ul>
-  <li><a href="#bagging" id="toc-bagging" class="nav-link" data-scroll-target="#bagging"><span class="header-section-number">2.1</span> Bagging</a></li>
-  <li><a href="#random-forests" id="toc-random-forests" class="nav-link" data-scroll-target="#random-forests"><span class="header-section-number">2.2</span> Random forests</a></li>
-  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">2.3</span> Boosting</a></li>
+  <li><a href="#bagging" id="toc-bagging" class="nav-link" data-scroll-target="#bagging"><span class="header-section-number">3.1</span> Bagging</a></li>
+  <li><a href="#random-forests" id="toc-random-forests" class="nav-link" data-scroll-target="#random-forests"><span class="header-section-number">3.2</span> Random forests</a></li>
+  <li><a href="#boosting" id="toc-boosting" class="nav-link" data-scroll-target="#boosting"><span class="header-section-number">3.3</span> Boosting</a></li>
   </ul></li>
-  <li><a href="#random-forest-workflow" id="toc-random-forest-workflow" class="nav-link" data-scroll-target="#random-forest-workflow"><span class="header-section-number">3</span> Random forest workflow</a>
+  <li><a href="#random-forest-workflow" id="toc-random-forest-workflow" class="nav-link" data-scroll-target="#random-forest-workflow"><span class="header-section-number">4</span> Random forest workflow</a>
   <ul>
-  <li><a href="#initial-split-into-test-and-non-test-sets" id="toc-initial-split-into-test-and-non-test-sets" class="nav-link" data-scroll-target="#initial-split-into-test-and-non-test-sets"><span class="header-section-number">3.1</span> Initial split into test and non-test sets</a></li>
-  <li><a href="#recipe" id="toc-recipe" class="nav-link" data-scroll-target="#recipe"><span class="header-section-number">3.2</span> Recipe</a></li>
-  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model"><span class="header-section-number">3.3</span> Model</a></li>
-  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">3.4</span> Workflow</a></li>
-  <li><a href="#tuning-grid" id="toc-tuning-grid" class="nav-link" data-scroll-target="#tuning-grid"><span class="header-section-number">3.5</span> Tuning grid</a></li>
-  <li><a href="#cross-validation-cv" id="toc-cross-validation-cv" class="nav-link" data-scroll-target="#cross-validation-cv"><span class="header-section-number">3.6</span> Cross-validation (CV)</a></li>
-  <li><a href="#final-model" id="toc-final-model" class="nav-link" data-scroll-target="#final-model"><span class="header-section-number">3.7</span> Final model</a></li>
+  <li><a href="#initial-split-into-test-and-non-test-sets" id="toc-initial-split-into-test-and-non-test-sets" class="nav-link" data-scroll-target="#initial-split-into-test-and-non-test-sets"><span class="header-section-number">4.1</span> Initial split into test and non-test sets</a></li>
+  <li><a href="#recipe" id="toc-recipe" class="nav-link" data-scroll-target="#recipe"><span class="header-section-number">4.2</span> Recipe</a></li>
+  <li><a href="#model" id="toc-model" class="nav-link" data-scroll-target="#model"><span class="header-section-number">4.3</span> Model</a></li>
+  <li><a href="#workflow" id="toc-workflow" class="nav-link" data-scroll-target="#workflow"><span class="header-section-number">4.4</span> Workflow</a></li>
+  <li><a href="#tuning-grid" id="toc-tuning-grid" class="nav-link" data-scroll-target="#tuning-grid"><span class="header-section-number">4.5</span> Tuning grid</a></li>
+  <li><a href="#cross-validation-cv" id="toc-cross-validation-cv" class="nav-link" data-scroll-target="#cross-validation-cv"><span class="header-section-number">4.6</span> Cross-validation (CV)</a></li>
+  <li><a href="#final-model" id="toc-final-model" class="nav-link" data-scroll-target="#final-model"><span class="header-section-number">4.7</span> Final model</a></li>
   </ul></li>
+  <li><a href="#feedback" id="toc-feedback" class="nav-link" data-scroll-target="#feedback"><span class="header-section-number">5</span> Feedback</a></li>
   </ul>
 </nav>
 </div>
@@ -3287,6 +3289,8 @@ window.Quarto = {
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+<section id="roadmap" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="roadmap"><span class="header-section-number">1</span> Roadmap</h2>
 <div style="text-align: center;">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
@@ -3295,8 +3299,11 @@ window.Quarto = {
 </figure>
 </div>
 </div>
-<section id="classification-and-regression-trees-cart" class="level2" data-number="1">
-<h2 data-number="1" class="anchored" data-anchor-id="classification-and-regression-trees-cart"><span class="header-section-number">1</span> Classification and regression trees (CART)</h2>
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76" width="75%" height="500" data-external="1"></iframe>
+<p><a href="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76">Slido</a></p>
+</section>
+<section id="classification-and-regression-trees-cart" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="classification-and-regression-trees-cart"><span class="header-section-number">2</span> Classification and regression trees (CART)</h2>
 <p>A CART model is a tree structure consisting of a set of nested decision rules. At each node <span class="math inline">\(i\)</span>, the feature dimension <span class="math inline">\(d_i\)</span> of the input vector <span class="math inline">\(\mathbf x\)</span> is compared to a threshold value <span class="math inline">\(t_i\)</span>, and the input is then passed down to the left or right branch, depending on whether it is above or below threshold. (For categorical values, we compare if <span class="math inline">\(x_{d_i}\)</span> is equal to the target value <span class="math inline">\(t_i\)</span> or not.) At the leaves of the tree, the model specifies a distribution over the output for points that are in that part of the input space.</p>
 <p>Formally, a CART model can be defined by</p>
 <p><span class="math display">\[
@@ -3325,7 +3332,7 @@ G_i = \sum_{c=1}^C \widehat \pi_{i,c} (1 - \widehat \pi_{i,c})
 H_i = - \sum_{c=1}^C \widehat \pi_{i,c} \log \widehat \pi_{i,c}
 \]</span></p>
 <p>A node that is pure (i.e., only has examples of one class) will have 0 entropy.</p>
-<p>According to the above rule, we can to pick the best feature, and best threshold at each node. We then partition the data, and call the fitting algorithm recursively on each subset of the data.</p>
+<p>According to the above rule, we can pick the best feature, and best threshold at each node. We then partition the data, and call the fitting algorithm recursively on each subset of the data.</p>
 <p>If we let the tree become deep enough, it can achieve 0 error on the training set (assuming no label noise), by partitioning the input space into sufficiently small regions where the output is constant. However, this will typically result in overfitting. To prevent this, there are two main approaches: The first is to stop the tree growing process according to some heuristic. The second approach is to grow the tree to its maximum depth, where no more splits are possible, and then to prune it back.</p>
 <ul>
 <li>Advantages of trees
@@ -3342,10 +3349,10 @@ H_i = - \sum_{c=1}^C \widehat \pi_{i,c} \log \widehat \pi_{i,c}
 </ul></li>
 </ul>
 </section>
-<section id="bagging-random-forests-boosting" class="level2" data-number="2">
-<h2 data-number="2" class="anchored" data-anchor-id="bagging-random-forests-boosting"><span class="header-section-number">2</span> Bagging, random forests, boosting</h2>
-<section id="bagging" class="level3" data-number="2.1">
-<h3 data-number="2.1" class="anchored" data-anchor-id="bagging"><span class="header-section-number">2.1</span> Bagging</h3>
+<section id="bagging-random-forests-boosting" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="bagging-random-forests-boosting"><span class="header-section-number">3</span> Bagging, random forests, boosting</h2>
+<section id="bagging" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="bagging"><span class="header-section-number">3.1</span> Bagging</h3>
 <p>The decision trees suffer from high variance. This means that if we split the training data into two parts at random, and fit a decision tree to both halves, the results that we get could be quite different.</p>
 <p>Bootstrap aggregation, or bagging, is a general-purpose procedure for reducing the bagging variance of a statistical learning method.</p>
 <p><strong>Averaging a set of observations reduces variance</strong>, we generate B different bootstrapped training data sets to get <span class="math inline">\(\hat f^{*b}(x)\)</span>. We then train our method on the <span class="math inline">\(b\)</span>th bootstrapped training set, and finally average all the predictions, to obtain</p>
@@ -3354,23 +3361,24 @@ H_i = - \sum_{c=1}^C \widehat \pi_{i,c} \log \widehat \pi_{i,c}
 \]</span></p>
 <p>Bagging has been demonstrated to give impressive improvements in accuracy by combining together hundreds or even thousands of trees into a single procedure.</p>
 </section>
-<section id="random-forests" class="level3" data-number="2.2">
-<h3 data-number="2.2" class="anchored" data-anchor-id="random-forests"><span class="header-section-number">2.2</span> Random forests</h3>
+<section id="random-forests" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="random-forests"><span class="header-section-number">3.2</span> Random forests</h3>
 <p>Random forests provide an improvement over bagged trees by way of a small tweak that decorrelates the trees. As in bagging, we build a number of decision trees on bootstrapped training samples. But when building these decision trees, each time a split in a tree is considered, a random sample of <span class="math inline">\(m\)</span> predictors is chosen as split candidates from the full set of <span class="math inline">\(p\)</span> predictors. <strong>The split is allowed to use only one of those</strong> <span class="math inline">\(m\)</span> <strong>predictors</strong>. Using a small value of m in building a random forest will typically be helpful when we have a large number of correlated predictors.</p>
 </section>
-<section id="boosting" class="level3" data-number="2.3">
-<h3 data-number="2.3" class="anchored" data-anchor-id="boosting"><span class="header-section-number">2.3</span> Boosting</h3>
+<section id="boosting" class="level3" data-number="3.3">
+<h3 data-number="3.3" class="anchored" data-anchor-id="boosting"><span class="header-section-number">3.3</span> Boosting</h3>
 <p>Boosting works in a similar way as bagging, except that <strong>the trees are grown sequentially</strong>: each tree is grown using information from previously grown trees. Boosting does not involve bootstrap sampling; instead each tree is fit on a modified version of the original data set.</p>
 <p>For binary classification problem, each classifier <span class="math inline">\(F_m \in \{-1, +1\}\)</span>. In particular, we first <span class="math inline">\(F_1\)</span> on the original data, and then we weight the data samples by the errors made by <span class="math inline">\(F_1\)</span>, so misclassified examples get more weight. Next we fit <span class="math inline">\(F_2\)</span> to this weighted data set. We keep repeating this process until we have fit the desired number <span class="math inline">\(M\)</span> of components.</p>
 <p>It can be shown that, as long as each <span class="math inline">\(F_m\)</span> has an accuracy that is better than chance (even on the weighted dataset), then the final ensemble of classifiers will have higher accuracy than any given component. That is, if <span class="math inline">\(F_m\)</span> is a <strong>weak learner</strong> (so its accuracy is only slightly better than 50%), then we can boost its performance using the above procedure so that the final f becomes a <strong>strong learner</strong>.</p>
 <p>Note that boosting reduces the bias of the strong learner, by fitting trees that depend on each other, whereas bagging and RF reduce the variance by fitting independent trees. In many cases, boosting can work better (but take more time to train).</p>
 </section>
 </section>
-<section id="random-forest-workflow" class="level2" data-number="3">
-<h2 data-number="3" class="anchored" data-anchor-id="random-forest-workflow"><span class="header-section-number">3</span> Random forest workflow</h2>
+<section id="random-forest-workflow" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="random-forest-workflow"><span class="header-section-number">4</span> Random forest workflow</h2>
 <p>We load the Food Security Supplement household data we curated earlier. Our goal is to predict food insecurity status using household’s socio-economical status.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">&quot;../02-wrangle/fss21.rds&quot;</span>) <span class="sc">|&gt;</span> <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data_clean <span class="ot">&lt;-</span> <span class="fu">read_rds</span>(<span class="st">&quot;../02-wrangle/fss21.rds&quot;</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 30,162 × 13
    HRFS12M1   HRNUMHOU HRHTYPE GEREG PRCHLD HRPOOR PRTAGE PEEDUCA PEMLR PTDTRACE
@@ -3389,8 +3397,8 @@ H_i = - \sum_{c=1}^C \widehat \pi_{i,c} \log \widehat \pi_{i,c}
 # ℹ 3 more variables: HHSUPWGT &lt;dbl&gt;, PEHSPNON &lt;fct&gt;, HRFS12M1_binary &lt;fct&gt;</code></pre>
 </div>
 </div>
-<section id="initial-split-into-test-and-non-test-sets" class="level3" data-number="3.1">
-<h3 data-number="3.1" class="anchored" data-anchor-id="initial-split-into-test-and-non-test-sets"><span class="header-section-number">3.1</span> Initial split into test and non-test sets</h3>
+<section id="initial-split-into-test-and-non-test-sets" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="initial-split-into-test-and-non-test-sets"><span class="header-section-number">4.1</span> Initial split into test and non-test sets</h3>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># For reproducibility</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
@@ -3401,56 +3409,51 @@ H_i = - \sum_{c=1}^C \widehat \pi_{i,c} \log \widehat \pi_{i,c}
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">strata =</span> <span class="st">&quot;HRFS12M1_binary&quot;</span>, </span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">prop =</span> <span class="fl">0.75</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>data_split</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>&lt;Training/Testing/Total&gt;
-&lt;22621/7541/30162&gt;</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_other <span class="ot">&lt;-</span> <span class="fu">training</span>(data_split)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data_other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>data_other <span class="ot">&lt;-</span> <span class="fu">training</span>(data_split)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data_other)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 22621    13</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(data_split)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>data_test <span class="ot">&lt;-</span> <span class="fu">testing</span>(data_split)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(data_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] 7541   13</code></pre>
 </div>
 </div>
 </section>
-<section id="recipe" class="level3" data-number="3.2">
-<h3 data-number="3.2" class="anchored" data-anchor-id="recipe"><span class="header-section-number">3.2</span> Recipe</h3>
+<section id="recipe" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="recipe"><span class="header-section-number">4.2</span> Recipe</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>recipe <span class="ot">&lt;-</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(</span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    HRFS12M1_binary <span class="sc">~</span> .,</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_other</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove the weights and original HRFS12M1</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_rm</span>(HHSUPWGT, HRFS12M1) <span class="sc">|&gt;</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create dummy variables for categorical predictors</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># zero-variance filter</span></span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># center and scale numeric data</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate the means and standard deviations</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>recipe <span class="ot">&lt;-</span> </span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">recipe</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    HRFS12M1_binary <span class="sc">~</span> .,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> data_other</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># remove the weights and original HRFS12M1</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_rm</span>(HHSUPWGT, HRFS12M1) <span class="sc">|&gt;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># create dummy variables for categorical predictors</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_dummy</span>(<span class="fu">all_nominal_predictors</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># zero-variance filter</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_zv</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># center and scale numeric data</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="co"># estimate the means and standard deviations</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="model" class="level3" data-number="3.3">
-<h3 data-number="3.3" class="anchored" data-anchor-id="model"><span class="header-section-number">3.3</span> Model</h3>
+<section id="model" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="model"><span class="header-section-number">4.3</span> Model</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rf_mod <span class="ot">&lt;-</span> </span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rand_forest</span>(</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode =</span> <span class="st">&quot;classification&quot;</span>,</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Number of predictors randomly sampled in each split</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">mtry =</span> <span class="fu">tune</span>(),</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Number of trees in ensemble</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">trees =</span> <span class="fu">tune</span>()</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;ranger&quot;</span>)</span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>rf_mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rf_mod <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="at">mode =</span> <span class="st">&quot;classification&quot;</span>,</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Number of predictors randomly sampled in each split</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mtry =</span> <span class="fu">tune</span>(),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Number of trees in ensemble</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">trees =</span> <span class="fu">tune</span>()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">set_engine</span>(<span class="st">&quot;ranger&quot;</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>rf_mod</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Random Forest Model Specification (classification)
 
@@ -3462,13 +3465,13 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 </section>
-<section id="workflow" class="level3" data-number="3.4">
-<h3 data-number="3.4" class="anchored" data-anchor-id="workflow"><span class="header-section-number">3.4</span> Workflow</h3>
+<section id="workflow" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="workflow"><span class="header-section-number">4.4</span> Workflow</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rf_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(recipe) <span class="sc">|&gt;</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_mod)</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>rf_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rf_wf <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_recipe</span>(recipe) <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_model</span>(rf_mod)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>rf_wf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>══ Workflow ════════════════════════════════════════════════════════════════════
 Preprocessor: Recipe
@@ -3493,15 +3496,15 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 </section>
-<section id="tuning-grid" class="level3" data-number="3.5">
-<h3 data-number="3.5" class="anchored" data-anchor-id="tuning-grid"><span class="header-section-number">3.5</span> Tuning grid</h3>
+<section id="tuning-grid" class="level3" data-number="4.5">
+<h3 data-number="4.5" class="anchored" data-anchor-id="tuning-grid"><span class="header-section-number">4.5</span> Tuning grid</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trees</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">200</span>L, <span class="dv">800</span>L)), </span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtry</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>L, <span class="dv">5</span>L)),</span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">5</span>)</span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>param_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>param_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">trees</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">200</span>L, <span class="dv">800</span>L)), </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mtry</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">1</span>L, <span class="dv">5</span>L)),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="dv">7</span>, <span class="dv">5</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>param_grid</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 35 × 2
    trees  mtry
@@ -3520,14 +3523,14 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 </section>
-<section id="cross-validation-cv" class="level3" data-number="3.6">
-<h3 data-number="3.6" class="anchored" data-anchor-id="cross-validation-cv"><span class="header-section-number">3.6</span> Cross-validation (CV)</h3>
+<section id="cross-validation-cv" class="level3" data-number="4.6">
+<h3 data-number="4.6" class="anchored" data-anchor-id="cross-validation-cv"><span class="header-section-number">4.6</span> Cross-validation (CV)</h3>
 <p>Set cross-validation partitions.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(data_other, <span class="at">v =</span> <span class="dv">5</span>)</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(data_other, <span class="at">v =</span> <span class="dv">5</span>)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>folds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>#  5-fold cross-validation 
 # A tibble: 5 × 2
@@ -3542,30 +3545,30 @@ Computational engine: ranger </code></pre>
 </div>
 <p>Fit cross-validation.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>(rf_fit <span class="ot">&lt;-</span> rf_wf <span class="sc">|&gt;</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(</span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> folds,</span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> param_grid,</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, accuracy)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">|&gt;</span> </span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>(rf_fit <span class="ot">&lt;-</span> rf_wf <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tune_grid</span>(</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">resamples =</span> folds,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">grid =</span> param_grid,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">metrics =</span> <span class="fu">metric_set</span>(roc_auc, accuracy)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    )) <span class="sc">|&gt;</span> </span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-478.851  15.598 380.589 </code></pre>
+479.057  13.494 385.350 </code></pre>
 </div>
 </div>
 <p>Visualize CV results:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">|&gt;</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() <span class="sc">|&gt;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>) <span class="sc">|&gt;</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">&quot;roc_auc&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> trees, <span class="at">y =</span> mean, <span class="at">color =</span> <span class="fu">factor</span>(mtry))) <span class="sc">+</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_line() + </span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Num. of Trees&quot;</span>, <span class="at">y =</span> <span class="st">&quot;CV AUC&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">|&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>() <span class="sc">|&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">width =</span> <span class="cn">Inf</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(.metric <span class="sc">==</span> <span class="st">&quot;roc_auc&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> trees, <span class="at">y =</span> mean, <span class="at">color =</span> <span class="fu">factor</span>(mtry))) <span class="sc">+</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># geom_line() + </span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&quot;Num. of Trees&quot;</span>, <span class="at">y =</span> <span class="st">&quot;CV AUC&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 70 × 8
     mtry trees .metric  .estimator  mean     n std_err .config              
@@ -3592,8 +3595,8 @@ Computational engine: ranger </code></pre>
 </div>
 <p>Show the top 5 models.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">|&gt;</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show_best</span>(<span class="at">metric =</span> <span class="st">&quot;roc_auc&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>rf_fit <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">show_best</span>(<span class="at">metric =</span> <span class="st">&quot;roc_auc&quot;</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 5 × 8
    mtry trees .metric .estimator  mean     n std_err .config              
@@ -3607,9 +3610,9 @@ Computational engine: ranger </code></pre>
 </div>
 <p>Let’s select the best model.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>best_rf <span class="ot">&lt;-</span> rf_fit <span class="sc">|&gt;</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">&quot;roc_auc&quot;</span>)</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>best_rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>best_rf <span class="ot">&lt;-</span> rf_fit <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">&quot;roc_auc&quot;</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>best_rf</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 1 × 3
    mtry trees .config              
@@ -3618,20 +3621,20 @@ Computational engine: ranger </code></pre>
 </div>
 </div>
 </section>
-<section id="final-model" class="level3" data-number="3.7">
-<h3 data-number="3.7" class="anchored" data-anchor-id="final-model"><span class="header-section-number">3.7</span> Final model</h3>
+<section id="final-model" class="level3" data-number="4.7">
+<h3 data-number="4.7" class="anchored" data-anchor-id="final-model"><span class="header-section-number">4.7</span> Final model</h3>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Final workflow</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>final_wf <span class="ot">&lt;-</span> rf_wf <span class="sc">|&gt;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(best_rf)</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>final_fit <span class="ot">&lt;-</span> </span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  final_wf <span class="sc">|&gt;</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">last_fit</span>(data_split)</span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Test metrics</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>final_fit <span class="sc">|&gt;</span> </span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Final workflow</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>final_wf <span class="ot">&lt;-</span> rf_wf <span class="sc">|&gt;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">finalize_workflow</span>(best_rf)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>final_fit <span class="ot">&lt;-</span> </span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  final_wf <span class="sc">|&gt;</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">last_fit</span>(data_split)</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Test metrics</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>final_fit <span class="sc">|&gt;</span> </span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">collect_metrics</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 2 × 4
   .metric  .estimator .estimate .config             
@@ -3642,6 +3645,11 @@ Computational engine: ranger </code></pre>
 </div>
 <p>Random forest model has a better test performance than logistic regression model in terms of AUC.</p>
 </section>
+</section>
+<section id="feedback" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="feedback"><span class="header-section-number">5</span> Feedback</h2>
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/449510f0-6577-4dbb-a535-c0acd9aba906" width="75%" height="400" data-external="1"></iframe>
+<p><a href="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/449510f0-6577-4dbb-a535-c0acd9aba906">Slido</a></p>
 </section>
 
 </main>

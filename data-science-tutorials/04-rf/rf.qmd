@@ -46,9 +46,17 @@ library(ranger)
 library(tidymodels)
 ```
 
+## Roadmap
+
 ::: {style="text-align: center;"}
 ![Data Science Diagram](../01-dsintro/data-science.png)
 :::
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76" width="75%" height="500" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76)
 
 ## Classification and regression trees (CART)
 
@@ -96,7 +104,7 @@ $$
 
 A node that is pure (i.e., only has examples of one class) will have 0 entropy.
 
-According to the above rule, we can to pick the best feature, and best threshold at each node. We then partition the data, and call the fitting algorithm recursively on each subset of the data.
+According to the above rule, we can pick the best feature, and best threshold at each node. We then partition the data, and call the fitting algorithm recursively on each subset of the data.
 
 If we let the tree become deep enough, it can achieve 0 error on the training set (assuming no label noise), by partitioning the input space into sufficiently small regions where the output is constant. However, this will typically result in overfitting. To prevent this, there are two main approaches: The first is to stop the tree growing process according to some heuristic. The second approach is to grow the tree to its maximum depth, where no more splits are possible, and then to prune it back.
 
@@ -144,14 +152,13 @@ Note that boosting reduces the bias of the strong learner, by fitting trees that
 We load the Food Security Supplement household data we curated earlier. Our goal is to predict food insecurity status using household's socio-economical status.
 
 ```{r}
-data_clean <- read_rds("../02-wrangle/fss21.rds") |> print()
+data_clean <- read_rds("../02-wrangle/fss21.rds") |> 
+  print()
 ```
 
 ### Initial split into test and non-test sets
 
 ```{r}
-#| eval: true
-
 # For reproducibility
 set.seed(2024)
 
@@ -161,7 +168,6 @@ data_split <- initial_split(
   strata = "HRFS12M1_binary", 
   prop = 0.75
   )
-data_split
 
 data_other <- training(data_split)
 dim(data_other)
@@ -188,14 +194,12 @@ recipe <-
   step_normalize(all_numeric_predictors()) |>
   # estimate the means and standard deviations
   print()
-
 ```
 
 ### Model
 
 ```{r}
-rf_mod <- 
-  rand_forest(
+rf_mod <- rand_forest(
     mode = "classification",
     # Number of predictors randomly sampled in each split
     mtry = tune(),
@@ -296,3 +300,11 @@ final_fit |>
 ```
 
 Random forest model has a better test performance than logistic regression model in terms of AUC.
+
+## Feedback
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/449510f0-6577-4dbb-a535-c0acd9aba906" width="75%" height="400" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/449510f0-6577-4dbb-a535-c0acd9aba906)
