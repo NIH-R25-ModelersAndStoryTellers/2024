@@ -1,0 +1,261 @@
+---
+title: "Food Image Recognition"
+author: "Dr. Roch Nianogo, Bowen Zhang, Dr. Hua Zhou"
+format:
+  html:
+    theme: cosmo
+    embed-resources: true
+    number-sections: true
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    code-fold: false
+    link-external-icon: true
+    link-external-newwindow: true
+knitr:
+  opts_chunk: 
+    cache: false    
+    echo: true
+    fig.align: 'center'
+    # fig.width: 6
+    # fig.height: 4
+    message: FALSE
+jupyter:
+    kernelspec:
+        name: "ir43"
+        language: "R"
+        display_name: "R 4.3.2"    
+comments:
+  hypothesis: true
+---
+
+This tutorial is sparked by a conversation with Dr. May Wang years ago. Also see this [blog](https://www.labellerr.com/blog/food-recognition-and-classification-using-deep-learning/amp/). This note is not to be reproduced on Posit Cloud. It requires downloading the food image data from [Kaggle](https://www.kaggle.com/datasets/kmader/food41) and significant computing resource (memory, GPU) to run the code.
+
+![](Food-image.jpeg){fig-align="center" width="75%"}
+
+```{r}
+#| code-fold: true
+#| output: false
+
+library(imager)
+library(keras)
+library(tidyverse)
+```
+
+## Learning objectives
+
+Keywords: Convolution neural network (CNN), transfer learning.
+
+## Data ingestion
+
+We will use the [Food-101 dataset](https://www.vision.ee.ethz.ch/datasets_extra/food-101/), which contains 101 food categories, each with 1,000 images. The images are of varying sizes and aspect ratios. We will resize the images to 224x224 pixels, which is the input size required by the pre-trained model we will use.
+
+```{bash}
+ls food/images
+```
+
+Create a tibble of file paths and labels for all food images.
+```{r}
+image_df <- list.dirs("food/images", full.names = TRUE, recursive = FALSE) %>%
+  map_dfr(~tibble(filepath = list.files(.x, full.names = TRUE), label = basename(.x))) %>%
+  # mutate(filepath = str_c(getwd(), filepath, sep = "/")) %>%
+  mutate(label = factor(label)) %>%
+  print()
+```
+
+Show a few random sample images.
+```{r}
+set.seed(2024)
+
+num_images <- 6
+# par(mar = c(1, 1, 1, 1), mfrow = c(2, 3))
+for (i in 1:num_images) {
+  img <- image_df |> slice_sample(n = 1)
+  plot(load.image(img[["filepath"]]))
+  title(img[["label"]])
+};
+```
+
+How many images per food category?
+```{r}
+image_df %>%
+  count(label)
+```
+
+To save trees, we will only use only 100 images per food category.
+```{r}
+image_df <- image_df %>%
+  group_by(label) %>%
+  slice_sample(n = 100) %>%
+  ungroup() %>%
+  print()
+```
+
+Sanity check:
+```{r}
+image_df %>% 
+  count(label)
+```
+
+## Data preprocessing
+
+We split the data into 60% training, 20% validation, and 20% testing set.
+```{r}
+set.seed(2024)
+
+spec <- c(train = .6, test = .2, validate = .2)
+
+g = sample(cut(
+  seq(nrow(image_df)), 
+  nrow(image_df) * cumsum(c(0, spec)),
+  labels = names(spec)
+))
+
+image_split <- split(image_df, g)
+```
+
+Training set.
+```{r}
+train_data <- image_split$train
+x_train <- array(dim = c(nrow(train_data), 224, 224, 3))
+for (i in 1:nrow(train_data)) {
+    img <- image_load(train_data$filepath[i], target_size = c(224, 224))
+    x_train[i, , ,] <- image_to_array(img)
+}
+x_train <- mobilenet_preprocess_input(x_train)
+# x_train <- resnet_v2_preprocess_input(x_train)
+# x_train <- imagenet_preprocess_input(x_train)
+dim(x_train)
+```
+
+Encode label as binary class matrix.
+```{r}
+y_train <- to_categorical(as.integer(factor(train_data$label)) - 1)
+dim(y_train)
+```
+
+Validation set.
+```{r}
+validate_data <- image_split$validate
+x_validate <- array(dim = c(nrow(validate_data), 224, 224, 3))
+for (i in 1:nrow(validate_data)) {
+    img <- image_load(validate_data$filepath[i], target_size = c(224, 224))
+    x_validate[i, , ,] <- image_to_array(img)
+}
+x_validate <- mobilenet_preprocess_input(x_validate)
+# x_validate <- resnet_v2_preprocess_input(x_validate)
+# x_validate <- imagenet_preprocess_input(x_validate)
+dim(x_validate)
+```
+
+```{r}
+y_validate <- to_categorical(as.integer(factor(validate_data$label)) - 1)
+dim(y_validate)
+```
+
+Test set.
+```{r}
+test_data <- image_split$test
+x_test <- array(dim = c(nrow(test_data), 224, 224, 3))
+for (i in 1:nrow(test_data)) {
+    img <- image_load(test_data$filepath[i], target_size = c(224, 224))
+    x_test[i, , ,] <- image_to_array(img)
+}
+x_test <- mobilenet_preprocess_input(x_test)
+# x_test <- resnet_v2_preprocess_input(x_test)
+# x_test <- imagenet_preprocess_input(x_test)
+dim(x_test)
+```
+
+```{r}
+y_test <- to_categorical(as.integer(factor(test_data$label)) - 1)
+dim(y_test)
+```
+
+
+## Model
+
+Instead of building and training a CNN from scratch, we will use a pre-trained model, [MobileNet](https://keras.io/api/applications/mobilenet/), and fine-tune it to our food image dataset. MobileNet is a  CNN model that has been pre-trained on the ImageNet dataset. We will use the pre-trained model to extract features from our food images and then train a new model on top of these features.
+
+For a list of available pre-trained models, see [Keras Applications](https://keras.io/api/applications/).
+
+```{r}
+pretrained_model <- application_mobilenet(
+# pretrained_model <- application_resnet50_v2(
+  weights = "imagenet",
+  include_top = FALSE,
+  input_shape = c(224, 224, 3),
+  pooling = "avg"
+)
+# Freeze the weights of the pre-trained model
+pretrained_model$trainable <- FALSE
+```
+
+Add additional dense layers on top of the pre-trained model.
+```{r}
+# Dropout doesn't seem to help
+# One layter of 256 units slightly better than 2 layers of 128 units
+model <- keras_model_sequential()  %>%
+  pretrained_model %>%
+  layer_dense(units = 256, activation = "relu") %>%
+  # layer_dropout(rate = 0.5) %>%
+  # layer_dense(units = 128, activation = "relu") %>%
+  # layer_dropout(rate = 0.5) %>%
+  layer_dense(units = 101, activation = "softmax")
+
+summary(model)
+```
+
+## Training
+
+Compile the model.
+```{r}
+# Slower learning rate helps
+# No big difference between rmsprop and adam
+model %>%
+  compile(
+    loss = "categorical_crossentropy",
+    # optimizer = "rmsprop",
+    optimizer = optimizer_rmsprop(learning_rate = 0.00005),
+    # optimizer = optimizer_adam(learning_rate = 0.0001),
+    metrics = c("accuracy")
+  )
+```
+
+```{r}
+history <- model %>%
+  fit(
+    x_train,
+    y_train,
+    validation_data = list(x_validate, y_validate),
+    epochs = 50,
+    batch_size = 32,
+    shuffle = TRUE,
+    callbacks = list(
+      callback_early_stopping(
+        monitor = "val_accuracy",
+        patience = 3,
+        restore_best_weights = TRUE
+        )
+    )
+  )
+```
+
+```{r}
+plot(history)
+```
+
+## Evaluation
+
+```{r}
+model %>% 
+  evaluate(x_test, y_test)
+```
+
+Generate predictions on new data.
+```{r}
+predictions <- model %>% 
+  predict(x_test) %>%
+  k_argmax()
+```
+

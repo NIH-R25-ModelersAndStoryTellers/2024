@@ -8,7 +8,7 @@ This training is hosted by the [UCLA Fielding School of Public Health (FSPH)](ht
 
 Run tutorials in RStudio: [Posit Cloud](https://posit.cloud/spaces/522857/join?access_code=jp20j2u42A7Ygue-OICZ2U4S6IWZCnI5GFp0r_N9)
 
-Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
+Run tutorials in Jupyter notebooks (can be slow): [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/NIH-R25-ModelersAndStoryTellers/binder-sandbox.git/main?urlpath=git-pull?repo=https://github.com/NIH-R25-ModelersAndStoryTellers/2024.git)
 
 ### Monday, June 24
 
@@ -26,7 +26,7 @@ Run tutorials in Jupyter notebooks: [![Binder](https://mybinder.org/badge_logo.s
 
 | Time          | Topic            | Instructor          |
 |:----------------------|:------------------------|:------------------------|
-| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/04-rf/rf.html)\] | Dr. Hua Zhou |
+| 8:30a-10:10a  | Predictive modeling (random forest) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/04-rf/rf.html)\], Predictive modeling (food recognition) \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/07-foodimg/foodimg.html)\] | Dr. Hua Zhou |
 | 10:10a-10:20a | Break  |                     |
 | 10:20a-11:50a | Policy evaluation by DML \[[tutorial](https://nih-r25-modelersandstorytellers.github.io/2024/data-science-tutorials/05-dml/dml.html)\] | Dr. Hua Zhou |
 | 11:50a-12:20p  | Lunch Break  |                     |
