@@ -146,6 +146,12 @@ Food Security Supplement Questionnaire includes the following major sections:
 
 It is worth noting that beginning in 2015 and continuing through 2021, there were changes from previous years in how the Census Bureau processes some variables. Details can be found in the technical documentation, which can be found [here](https://www.census.gov/data/datasets/time-series/demo/cps/cps-supp_cps-repwgt/cps-food-security.html)
 
+### Other data sources
+
+-   [NIH All of US](https://commonfund.nih.gov/nutritionforprecisionhealth).
+
+-   WIC administrative data.
+
 ## Introduction to R
 
 ```{=html}
