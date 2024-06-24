@@ -47,23 +47,25 @@ library(mlr3)
 library(tidymodels)
 ```
 
+## Roadmap
+
 ::: {style="text-align: center;"}
 ![Data Science Diagram](../01-dsintro/data-science.png)
 :::
 
 ## Causal inference
 
--   We've done tremendous work carrying out an intervention program. You want to demonstrate to stakeholders (government, funding agencies, etc) that your program "works."
+-   You've done tremendous work carrying out an intervention program. You want to demonstrate to stakeholders (government, funding agencies, etc) that your program "works."
 
-    -   We compared the average of [Food Security Rasch Scale Score in the past 30 days](https://www.ers.usda.gov/media/8282/short2012.pdf) (higher score indicates lower food security among program) among program participants versus those not participating our program. We found a significant difference in the averages 😄 But quickly people criticize our analysis as biased 🙁 What could go wrong?
+    -   You compared the average of [Food Security Rasch Scale Score in the past 30 days](https://www.ers.usda.gov/media/8282/short2012.pdf) (higher score indicates lower food security) among program participants versus those not participating our program. We found a significant difference in the averages 😄 But people criticize your analysis as biased 🙁 What could go wrong?
 
-    -   In another try, we ran a multiple linear regression that included the program participation status and many socio-economical variables (race, age, income, region, ...). Then we found that program participation does not significantly improve the food security Rasch score 🙁
+    -   In another try, you ran a multiple linear regression that included the program participation status and many socio-economical variables (race, age, income, region, ...), hoping to adjust for hidden confounding. Then you found that program participation does not significantly improve the food security Rasch score 🙁
 
     -   Causal inference methods can help more reliably estimate the "treatment effect."
 
 -   Main approaches for causal inference:
 
-    -   **RCT** (randomized controlled trials): gold standard, but impractical in most Community-Based Participatory Research **(**CBPR) with multi-level interventions.
+    -   **RCT** (randomized controlled trials): gold standard, but impractical in most Community-Based Participatory Research (**CBPR**) with multi-level interventions.
 
     -   Observational studies under unconfoundedness: matching, regression estimators, inverse-propensity-score weighting.
 
@@ -106,7 +108,7 @@ Remarks:
 
 1. The policy variable $D$ can be either binary or continuous (dosage).
 
-2. The policy variable $D$ can be multi-dimensional (multi-level intervention: food pantry, education classes, ads.).
+2. The policy variable $D$ can be multi-dimensional (multi-level intervention: food pantry, mobile clinics, referral system, education classes, ads.).
 
 ### Interactive regression model (IRM)
 
@@ -131,6 +133,14 @@ The general idea for identification of $θ_0$ using the IRM is similar. Once we 
 
 ### Basic Idea behind Double Machine Learning for the PLR Model
 
+The basic idea behind double machine learning method is to use machine learning methods to estimate the nuisance functions $m_0(X)$ and $g_0(X)$ and then use these estimates to construct a doubly robust estimator of the target parameter $\theta_0$. The doubly robust estimator is consistent if either the machine learning estimator of $m_0(X)$ or $g_0(X)$ is consistent.
+
+Reference: [Chernozhukov, V., Chetverikov, D., Demirer, M., Duflo, E., Hansen, C., Newey, W., and Robins, J. (2018). Double/debiased machine learning for treatment and structural parameters. The Econometrics Journal, 21(1), C1-C68.](https://onlinelibrary.wiley.com/doi/abs/10.1111/ectj.12097)
+
+#### Idea 1: Neyman orthogonal score
+
+The Neyman orthogonal score is orthogonal to the nuisance parameter in the sense that its expectation is zero. The Neyman orthogonal score is a key concept in the theory of efficient estimation of the target parameter in semiparametric models.
+
 The PLR model can be rewritten in the following residualized form:
 
 $$
@@ -154,6 +164,10 @@ The variable $W$ and $V$ represent original variables after taking out or **part
 
 2.  Estimate $\theta_0$ by regressing the residuals $\hat{W}$ on $\hat{V}$. Use the conventional inference for this regression estimator, ignoring the estimation error in $\hat{W}$ and $\hat{V}$.
 
+#### Idea 2: Sample splitting
+
+The key idea behind sample splitting is to split the sample into two parts, one for estimating the nuisance functions and the other for estimating the causal parameter. This is also known as **cross-fitting**.
+
 ## Example: causal effect of WIC on food security
 
 ### Background
@@ -168,9 +182,9 @@ We use the 2020 Current Population Survey (CPS) Food Security Supplement (FSS) d
 
 We include the following variables in our analysis:
 
--   `HRFS30D4`: Food Security Rasch Scale Score in the past 30 days. (100 - 1400) Higher score indicates lower food security.
+-   `HRFS30D4`: Food Security Rasch Scale Score in the past 30 days (100 - 1400). Higher score indicates lower food security.
 
--   `HESP8`: WIC participation status. (1: Yes, 2: No)
+-   `HESP8`: WIC participation status (1: Yes, 2: No).
 
 -   `HRNUMHOU`: Number of people in the household.
 
@@ -348,10 +362,11 @@ learner_classif_m <- lrn("classif.ranger", num.trees = 500,
 
 ```{r}
 set.seed(2024)
+
 doubleml_mod <- DoubleMLIRM$new(
   obj_dml_data,
   ml_g = learner_g, ml_m = learner_classif_m,
-  score = "ATE", dml_procedure = "dml1",
+  score = "ATE", dml_procedure = "dml2",
   n_folds = 5, n_rep = 1
 )
 
@@ -365,3 +380,11 @@ doubleml_mod$fit()
 doubleml_mod$summary()
 doubleml_mod$confint()
 ```
+
+## Feedback
+
+```{=html}
+<iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/5187fffc-a7a4-49aa-bb47-486a580d09ef" width="75%" height="400" data-external="1"></iframe>
+```
+
+[Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/5187fffc-a7a4-49aa-bb47-486a580d09ef)
