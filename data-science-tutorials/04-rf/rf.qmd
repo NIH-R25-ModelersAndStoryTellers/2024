@@ -55,7 +55,6 @@ library(tidymodels)
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76" width="75%" height="500" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76)
 
 ## Classification and regression trees (CART)
@@ -306,5 +305,4 @@ Random forest model has a better test performance than logistic regression model
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/449510f0-6577-4dbb-a535-c0acd9aba906" width="75%" height="400" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/449510f0-6577-4dbb-a535-c0acd9aba906)

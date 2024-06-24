@@ -61,7 +61,6 @@ In this tutorial, we ingest, tidy, transform, and visualize the 2021 Current Pop
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c5978882-4e0c-4de0-afca-85f6ab4482b7" width="75%" height="500" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c5978882-4e0c-4de0-afca-85f6ab4482b7)
 
 ## Ingest CPS-FSS Data
@@ -117,6 +116,7 @@ censusapi::listCensusApis() |>
 #### Metadata for a specific API by `listCensusMetadata()`
 
 Get the metadata for the CPS Food Security Supplement December 2021 Public-Use Microdata File
+
 ```{r}
 censusapi::listCensusMetadata(
   name = "cps/foodsec/dec", 
@@ -461,7 +461,7 @@ fss_21_race |>
     )
 ```
 
-2. Calculate the percentage of LA County households in low food security in 2021.
+2.  Calculate the percentage of LA County households in low food security in 2021.
 
 ```{r}
 #| eval: false
@@ -476,6 +476,7 @@ state_names <- tigris::fips_codes |>
     ) |>
   print()
 ```
+
 ```{r}
 #| eval: false
 #| code-fold: true
@@ -487,7 +488,6 @@ fss_21_status |>
   print()
 ```
 
-
 3.  How does COVID impact the food security status of households in the U.S.? Does the impact differ by state, race, household income, or other social-economic determinants?
 
 ## Feedback
@@ -495,5 +495,4 @@ fss_21_status |>
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/b28b3d9a-c118-4e0c-ae6f-903aa7c9cea0" width="75%" height="400" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/b28b3d9a-c118-4e0c-ae6f-903aa7c9cea0)

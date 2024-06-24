@@ -55,6 +55,7 @@ ls food/images
 ```
 
 Create a tibble of file paths and labels for all food images.
+
 ```{r}
 image_df <- list.dirs("food/images", full.names = TRUE, recursive = FALSE) %>%
   map_dfr(~tibble(filepath = list.files(.x, full.names = TRUE), label = basename(.x))) %>%
@@ -64,6 +65,7 @@ image_df <- list.dirs("food/images", full.names = TRUE, recursive = FALSE) %>%
 ```
 
 Show a few random sample images.
+
 ```{r}
 set.seed(2024)
 
@@ -77,12 +79,14 @@ for (i in 1:num_images) {
 ```
 
 How many images per food category?
+
 ```{r}
 image_df %>%
   count(label)
 ```
 
 To save trees, we will only use only 100 images per food category.
+
 ```{r}
 image_df <- image_df %>%
   group_by(label) %>%
@@ -92,6 +96,7 @@ image_df <- image_df %>%
 ```
 
 Sanity check:
+
 ```{r}
 image_df %>% 
   count(label)
@@ -100,6 +105,7 @@ image_df %>%
 ## Data preprocessing
 
 We split the data into 60% training, 20% validation, and 20% testing set.
+
 ```{r}
 set.seed(2024)
 
@@ -115,6 +121,7 @@ image_split <- split(image_df, g)
 ```
 
 Training set.
+
 ```{r}
 train_data <- image_split$train
 x_train <- array(dim = c(nrow(train_data), 224, 224, 3))
@@ -129,12 +136,14 @@ dim(x_train)
 ```
 
 Encode label as binary class matrix.
+
 ```{r}
 y_train <- to_categorical(as.integer(factor(train_data$label)) - 1)
 dim(y_train)
 ```
 
 Validation set.
+
 ```{r}
 validate_data <- image_split$validate
 x_validate <- array(dim = c(nrow(validate_data), 224, 224, 3))
@@ -154,6 +163,7 @@ dim(y_validate)
 ```
 
 Test set.
+
 ```{r}
 test_data <- image_split$test
 x_test <- array(dim = c(nrow(test_data), 224, 224, 3))
@@ -172,10 +182,9 @@ y_test <- to_categorical(as.integer(factor(test_data$label)) - 1)
 dim(y_test)
 ```
 
-
 ## Model
 
-Instead of building and training a CNN from scratch, we will use a pre-trained model, [MobileNet](https://keras.io/api/applications/mobilenet/), and fine-tune it to our food image dataset. MobileNet is a  CNN model that has been pre-trained on the ImageNet dataset. We will use the pre-trained model to extract features from our food images and then train a new model on top of these features.
+Instead of building and training a CNN from scratch, we will use a pre-trained model, [MobileNet](https://keras.io/api/applications/mobilenet/), and fine-tune it to our food image dataset. MobileNet is a CNN model that has been pre-trained on the ImageNet dataset. We will use the pre-trained model to extract features from our food images and then train a new model on top of these features.
 
 For a list of available pre-trained models, see [Keras Applications](https://keras.io/api/applications/).
 
@@ -192,6 +201,7 @@ pretrained_model$trainable <- FALSE
 ```
 
 Add additional dense layers on top of the pre-trained model.
+
 ```{r}
 # Dropout doesn't seem to help
 # One layter of 256 units slightly better than 2 layers of 128 units
@@ -209,6 +219,7 @@ summary(model)
 ## Training
 
 Compile the model.
+
 ```{r}
 # Slower learning rate helps
 # No big difference between rmsprop and adam
@@ -253,9 +264,9 @@ model %>%
 ```
 
 Generate predictions on new data.
+
 ```{r}
 predictions <- model %>% 
   predict(x_test) %>%
   k_argmax()
 ```
-

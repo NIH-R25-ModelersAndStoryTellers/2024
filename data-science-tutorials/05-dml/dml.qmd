@@ -106,9 +106,9 @@ Naive application of machine learning methods directly to two equations may have
 
 Remarks:
 
-1. The policy variable $D$ can be either binary or continuous (dosage).
+1.  The policy variable $D$ can be either binary or continuous (dosage).
 
-2. The policy variable $D$ can be multi-dimensional (multi-level intervention: food pantry, mobile clinics, referral system, education classes, ads.).
+2.  The policy variable $D$ can be multi-dimensional (multi-level intervention: food pantry, mobile clinics, referral system, education classes, ads.).
 
 ### Interactive regression model (IRM)
 
@@ -386,5 +386,4 @@ doubleml_mod$confint()
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/5187fffc-a7a4-49aa-bb47-486a580d09ef" width="75%" height="400" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/5187fffc-a7a4-49aa-bb47-486a580d09ef)

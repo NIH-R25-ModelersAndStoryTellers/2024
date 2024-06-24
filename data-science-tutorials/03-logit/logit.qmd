@@ -60,10 +60,9 @@ In the last lecture, we focused on data wrangling (import, tidy, transform, visu
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c943bd98-f0a6-4308-b9ee-ab93ea242a92" width="75%" height="500" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c943bd98-f0a6-4308-b9ee-ab93ea242a92)
 
-## Learning objectives 
+## Learning objectives
 
 Supervised vs unsuperversed learning, logistic regression, ROC curve, overfitting, regularization, L1 and L2 penalty, elastic net, cross-validation, hyperparameter tuning, model evaluation, and interpretation.
 
@@ -122,10 +121,12 @@ The parameter $p_i = \mathbb{E}(Y_i)$ will be related to the predictors $\mathbf
 
 $$
 p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
-$$ where $\eta_i$ is the linear predictor (or systematic component) $$
-\eta_i = \mathbf{x}_i^T \boldsymbol{\beta} = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_q x_{iq}.
-$$
-In other words, logistic regression models the **log-odds** of the probability of success as a linear function of the predictors
+$$ where $\eta_i$ is the linear predictor (or systematic component)
+
+\$\$ \eta\_i = \mathbf{x}\_i\^T \boldsymbol{\beta} = \beta\_0 + \beta*1 x*{i1} + \beta*2 x*{i2} + \dots + \beta*q x*{iq}.
+
+\$\$ In other words, logistic regression models the **log-odds** of the probability of success as a linear function of the predictors
+
 $$
 \log \left( \frac{p}{1-p} \right) = \log(\text{odds}) = \beta_0 + \beta_1  x_1 + \beta_2  x_2 + \dots + \beta_q  x_q. 
 $$
@@ -148,6 +149,7 @@ logit_model
 ```
 
 `gtsummary` package offers a nice summary of the model
+
 ```{r}
 logit_model |>
   tbl_regression() |>
@@ -156,6 +158,7 @@ logit_model |>
 ```
 
 Importance of each predictor can be evaluated by the analysis of variance (ANOVA) test.
+
 ```{r}
 anova(logit_model, test = "Chisq")
 ```
@@ -312,35 +315,31 @@ $$
 
 -   tidymodels is the R analog of [sklearn.pipeline](https://scikit-learn.org/stable/modules/generated/sklearn.pipeline.Pipeline.html) in Python and [MLJ.jl](https://juliaai.github.io/MLJ.jl/stable/) in Julia.
 
-::: {.panel-tabset}
-
+::: panel-tabset
 #### R
 
 Supported models in tidymodels ecosystem. [link](https://www.tidymodels.org/find/parsnip/#models)
 
-#### Python 
+#### Python
 
 scikit-learn in Python. [link](https://scikit-learn.org/stable/)
 
 #### Julia
 
 Supported models in Julia MLJ ecosystem. [link](https://alan-turing-institute.github.io/MLJ.jl/dev/model_browser/#Model-Browser)
-
 :::
 
 ## Elastic-net (enet) regularization and shrinkage methods
 
 The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.
 
--   In logistic regression, for **ridge regression** (**$L_2$ penalty**), we need to optimize the following objective function:
-$$
-\ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
-$$ where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
+-   In logistic regression, for **ridge regression** ($L_2$ penalty), we need to optimize the following objective function: $$
+    \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
+    $$ where the penalty term is $\lambda \sum_{j=1}^{p} \beta_j^2$.
 
--   For the **lasso** (**$L_1$ penalty**), we need to optimize the following objective function:
-$$
-\ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
-$$ where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$.
+-   For the **lasso** ($L_1$ penalty), we need to optimize the following objective function: $$
+    \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
+    $$ where the penalty term is $\lambda \sum_{j=1}^{p} |\beta_j|$.
 
 -   The **elastic net** combines the ridge and lasso penalties, and the penalty term is $\lambda \left( \alpha \sum_{j=1}^{p} |\beta_j| + \frac{1 - \alpha}{2} \sum_{j=1}^{p} \beta_j^2 \right)$, where $\alpha$ controls the relative weight of the two penalties.
 
@@ -380,6 +379,7 @@ dim(data_test)
 ### Recipe
 
 Recipe for preprocessing the data:
+
 ```{r}
 recipe <- recipe(
     HRFS12M1_binary ~ .,
@@ -514,5 +514,4 @@ final_fit |>
 ```{=html}
 <iframe src="https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/994db4eb-3af7-4f04-b710-7bb082c7f320" width="75%" height="400" data-external="1"></iframe>
 ```
-
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/994db4eb-3af7-4f04-b710-7bb082c7f320)

@@ -3388,9 +3388,10 @@ Y_i = \begin{cases}
 <p>The parameter <span class="math inline">\(p_i = \mathbb{E}(Y_i)\)</span> will be related to the predictors <span class="math inline">\(\mathbf{x}_i\)</span> via</p>
 <p><span class="math display">\[
 p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
-\]</span> where <span class="math inline">\(\eta_i\)</span> is the linear predictor (or systematic component) <span class="math display">\[
-\eta_i = \mathbf{x}_i^T \boldsymbol{\beta} = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_q x_{iq}.
-\]</span> In other words, logistic regression models the <strong>log-odds</strong> of the probability of success as a linear function of the predictors <span class="math display">\[
+\]</span> where <span class="math inline">\(\eta_i\)</span> is the linear predictor (or systematic component)</p>
+<p>$$ _i = _i^T = _0 + x<em>{i1} + x</em>{i2} + + q x*{iq}.</p>
+<p>$$ In other words, logistic regression models the <strong>log-odds</strong> of the probability of success as a linear function of the predictors</p>
+<p><span class="math display">\[
 \log \left( \frac{p}{1-p} \right) = \log(\text{odds}) = \beta_0 + \beta_1  x_1 + \beta_2  x_2 + \dots + \beta_q  x_q.
 \]</span></p>
 <p>Therefore <span class="math inline">\(\beta_1\)</span> can be interpreted as a unit increase in <span class="math inline">\(x_1\)</span> with other predictors held fixed increases the log-odds of success by <span class="math inline">\(\beta_1\)</span>, or increase the odds of success by a factor of <span class="math inline">\(e^{\beta_1}\)</span>.</p>
@@ -3448,20 +3449,20 @@ Residual Deviance: 16270    AIC: 16310</code></pre>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_labels</span>() <span class="sc">|&gt;</span></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">bold_p</span>(<span class="at">t =</span> <span class="fl">0.05</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="tnbypyrarc" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#tnbypyrarc table {
+<div id="wgvsdqqxkv" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#wgvsdqqxkv table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#tnbypyrarc thead, #tnbypyrarc tbody, #tnbypyrarc tfoot, #tnbypyrarc tr, #tnbypyrarc td, #tnbypyrarc th {
+#wgvsdqqxkv thead, #wgvsdqqxkv tbody, #wgvsdqqxkv tfoot, #wgvsdqqxkv tr, #wgvsdqqxkv td, #wgvsdqqxkv th {
 border-style: none;
 }
-#tnbypyrarc p {
+#wgvsdqqxkv p {
 margin: 0;
 padding: 0;
 }
-#tnbypyrarc .gt_table {
+#wgvsdqqxkv .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3486,11 +3487,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#tnbypyrarc .gt_caption {
+#wgvsdqqxkv .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#tnbypyrarc .gt_title {
+#wgvsdqqxkv .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3501,7 +3502,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#tnbypyrarc .gt_subtitle {
+#wgvsdqqxkv .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3512,7 +3513,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#tnbypyrarc .gt_heading {
+#wgvsdqqxkv .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3523,12 +3524,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tnbypyrarc .gt_bottom_border {
+#wgvsdqqxkv .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tnbypyrarc .gt_col_headings {
+#wgvsdqqxkv .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3542,7 +3543,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#tnbypyrarc .gt_col_heading {
+#wgvsdqqxkv .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3561,7 +3562,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#tnbypyrarc .gt_column_spanner_outer {
+#wgvsdqqxkv .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3572,13 +3573,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#tnbypyrarc .gt_column_spanner_outer:first-child {
+#wgvsdqqxkv .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#tnbypyrarc .gt_column_spanner_outer:last-child {
+#wgvsdqqxkv .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#tnbypyrarc .gt_column_spanner {
+#wgvsdqqxkv .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3589,10 +3590,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#tnbypyrarc .gt_spanner_row {
+#wgvsdqqxkv .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#tnbypyrarc .gt_group_heading {
+#wgvsdqqxkv .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3617,7 +3618,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#tnbypyrarc .gt_empty_group_heading {
+#wgvsdqqxkv .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3631,13 +3632,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#tnbypyrarc .gt_from_md > :first-child {
+#wgvsdqqxkv .gt_from_md > :first-child {
 margin-top: 0;
 }
-#tnbypyrarc .gt_from_md > :last-child {
+#wgvsdqqxkv .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#tnbypyrarc .gt_row {
+#wgvsdqqxkv .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3655,7 +3656,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#tnbypyrarc .gt_stub {
+#wgvsdqqxkv .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3667,7 +3668,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tnbypyrarc .gt_stub_row_group {
+#wgvsdqqxkv .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3680,13 +3681,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#tnbypyrarc .gt_row_group_first td {
+#wgvsdqqxkv .gt_row_group_first td {
 border-top-width: 2px;
 }
-#tnbypyrarc .gt_row_group_first th {
+#wgvsdqqxkv .gt_row_group_first th {
 border-top-width: 2px;
 }
-#tnbypyrarc .gt_summary_row {
+#wgvsdqqxkv .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3695,14 +3696,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tnbypyrarc .gt_first_summary_row {
+#wgvsdqqxkv .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#tnbypyrarc .gt_first_summary_row.thick {
+#wgvsdqqxkv .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#tnbypyrarc .gt_last_summary_row {
+#wgvsdqqxkv .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3711,7 +3712,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tnbypyrarc .gt_grand_summary_row {
+#wgvsdqqxkv .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3720,7 +3721,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tnbypyrarc .gt_first_grand_summary_row {
+#wgvsdqqxkv .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3729,7 +3730,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#tnbypyrarc .gt_last_grand_summary_row_top {
+#wgvsdqqxkv .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3738,10 +3739,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#tnbypyrarc .gt_striped {
+#wgvsdqqxkv .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#tnbypyrarc .gt_table_body {
+#wgvsdqqxkv .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3749,7 +3750,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#tnbypyrarc .gt_footnotes {
+#wgvsdqqxkv .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3762,7 +3763,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tnbypyrarc .gt_footnote {
+#wgvsdqqxkv .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3770,7 +3771,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tnbypyrarc .gt_sourcenotes {
+#wgvsdqqxkv .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3783,57 +3784,57 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#tnbypyrarc .gt_sourcenote {
+#wgvsdqqxkv .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#tnbypyrarc .gt_left {
+#wgvsdqqxkv .gt_left {
 text-align: left;
 }
-#tnbypyrarc .gt_center {
+#wgvsdqqxkv .gt_center {
 text-align: center;
 }
-#tnbypyrarc .gt_right {
+#wgvsdqqxkv .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#tnbypyrarc .gt_font_normal {
+#wgvsdqqxkv .gt_font_normal {
 font-weight: normal;
 }
-#tnbypyrarc .gt_font_bold {
+#wgvsdqqxkv .gt_font_bold {
 font-weight: bold;
 }
-#tnbypyrarc .gt_font_italic {
+#wgvsdqqxkv .gt_font_italic {
 font-style: italic;
 }
-#tnbypyrarc .gt_super {
+#wgvsdqqxkv .gt_super {
 font-size: 65%;
 }
-#tnbypyrarc .gt_footnote_marks {
+#wgvsdqqxkv .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#tnbypyrarc .gt_asterisk {
+#wgvsdqqxkv .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#tnbypyrarc .gt_indent_1 {
+#wgvsdqqxkv .gt_indent_1 {
 text-indent: 5px;
 }
-#tnbypyrarc .gt_indent_2 {
+#wgvsdqqxkv .gt_indent_2 {
 text-indent: 10px;
 }
-#tnbypyrarc .gt_indent_3 {
+#wgvsdqqxkv .gt_indent_3 {
 text-indent: 15px;
 }
-#tnbypyrarc .gt_indent_4 {
+#wgvsdqqxkv .gt_indent_4 {
 text-indent: 20px;
 }
-#tnbypyrarc .gt_indent_5 {
+#wgvsdqqxkv .gt_indent_5 {
 text-indent: 25px;
 }
 </style>
@@ -4358,10 +4359,10 @@ Tip
 <h2 data-number="7" class="anchored" data-anchor-id="elastic-net-enet-regularization-and-shrinkage-methods"><span class="header-section-number">7</span> Elastic-net (enet) regularization and shrinkage methods</h2>
 <p>The subset selection methods such as best subset selection, forward stepwise selection, and backward stepwise selection have some limitations. They are computationally expensive and can lead to overfitting. Shrinkage methods are an alternative approach to subset selection. we fit a model containing all p predictors using a technique that constrains or regularizes the coefficient estimates, or equivalently, that shrinks the coefficient estimates towards zero. It may not be immediately obvious why such a constraint should improve the fit, but it turns out that shrinking the coefficient estimates can significantly reduce their variance. The two best-known techniques for shrinking the regression coefficients towards zero are ridge regression and the lasso.</p>
 <ul>
-<li><p>In logistic regression, for <strong>ridge regression</strong> (<strong><span class="math inline">\(L_2\)</span> penalty</strong>), we need to optimize the following objective function: <span class="math display">\[
+<li><p>In logistic regression, for <strong>ridge regression</strong> (<span class="math inline">\(L_2\)</span> penalty), we need to optimize the following objective function: <span class="math display">\[
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} \beta_j^2,
 \]</span> where the penalty term is <span class="math inline">\(\lambda \sum_{j=1}^{p} \beta_j^2\)</span>.</p></li>
-<li><p>For the <strong>lasso</strong> (<strong><span class="math inline">\(L_1\)</span> penalty</strong>), we need to optimize the following objective function: <span class="math display">\[
+<li><p>For the <strong>lasso</strong> (<span class="math inline">\(L_1\)</span> penalty), we need to optimize the following objective function: <span class="math display">\[
 \ell^*(\boldsymbol\beta) = \ell(\boldsymbol\beta) - \lambda \sum_{j=1}^{p} |\beta_j|,
 \]</span> where the penalty term is <span class="math inline">\(\lambda \sum_{j=1}^{p} |\beta_j|\)</span>.</p></li>
 <li><p>The <strong>elastic net</strong> combines the ridge and lasso penalties, and the penalty term is <span class="math inline">\(\lambda \left( \alpha \sum_{j=1}^{p} |\beta_j| + \frac{1 - \alpha}{2} \sum_{j=1}^{p} \beta_j^2 \right)\)</span>, where <span class="math inline">\(\alpha\)</span> controls the relative weight of the two penalties.</p></li>
@@ -4541,7 +4542,7 @@ Computational engine: glmnet </code></pre>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">system.time</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
- 85.345   6.513  94.713 </code></pre>
+ 86.018   6.501  95.525 </code></pre>
 </div>
 </div>
 <p>Visualize CV results:</p>
