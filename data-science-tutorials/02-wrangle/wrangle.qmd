@@ -43,7 +43,6 @@ Sys.setenv("CENSUS_KEY" = "4cf445b70eabd0b297a45e7f62f52c27ba3b5cae")
 library(censusapi)
 library(gtsummary)
 library(maps)
-library(plotly)
 library(tigris)
 ```
 

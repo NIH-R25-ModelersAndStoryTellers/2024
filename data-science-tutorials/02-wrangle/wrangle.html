@@ -3282,8 +3282,7 @@ window.Quarto = {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(censusapi)</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gtsummary)</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(maps)</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(plotly)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tigris)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="roadmap" class="level2" data-number="1">
@@ -3568,20 +3567,20 @@ Sys.setenv(&quot;CENSUS_KEY&quot; = &quot;PUT YOUR KEY HERE&quot;)</code></pre>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(HRFS12M1) <span class="sc">|&gt;</span></span>
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  gtsummary<span class="sc">::</span><span class="fu">tbl_summary</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="mgvdbojvbp" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#mgvdbojvbp table {
+<div id="eskdgplnhs" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#eskdgplnhs table {
 font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 -webkit-font-smoothing: antialiased;
 -moz-osx-font-smoothing: grayscale;
 }
-#mgvdbojvbp thead, #mgvdbojvbp tbody, #mgvdbojvbp tfoot, #mgvdbojvbp tr, #mgvdbojvbp td, #mgvdbojvbp th {
+#eskdgplnhs thead, #eskdgplnhs tbody, #eskdgplnhs tfoot, #eskdgplnhs tr, #eskdgplnhs td, #eskdgplnhs th {
 border-style: none;
 }
-#mgvdbojvbp p {
+#eskdgplnhs p {
 margin: 0;
 padding: 0;
 }
-#mgvdbojvbp .gt_table {
+#eskdgplnhs .gt_table {
 display: table;
 border-collapse: collapse;
 line-height: normal;
@@ -3606,11 +3605,11 @@ border-left-style: none;
 border-left-width: 2px;
 border-left-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_caption {
+#eskdgplnhs .gt_caption {
 padding-top: 4px;
 padding-bottom: 4px;
 }
-#mgvdbojvbp .gt_title {
+#eskdgplnhs .gt_title {
 color: #333333;
 font-size: 125%;
 font-weight: initial;
@@ -3621,7 +3620,7 @@ padding-right: 5px;
 border-bottom-color: #FFFFFF;
 border-bottom-width: 0;
 }
-#mgvdbojvbp .gt_subtitle {
+#eskdgplnhs .gt_subtitle {
 color: #333333;
 font-size: 85%;
 font-weight: initial;
@@ -3632,7 +3631,7 @@ padding-right: 5px;
 border-top-color: #FFFFFF;
 border-top-width: 0;
 }
-#mgvdbojvbp .gt_heading {
+#eskdgplnhs .gt_heading {
 background-color: #FFFFFF;
 text-align: center;
 border-bottom-color: #FFFFFF;
@@ -3643,12 +3642,12 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_bottom_border {
+#eskdgplnhs .gt_bottom_border {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_col_headings {
+#eskdgplnhs .gt_col_headings {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3662,7 +3661,7 @@ border-right-style: none;
 border-right-width: 1px;
 border-right-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_col_heading {
+#eskdgplnhs .gt_col_heading {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3681,7 +3680,7 @@ padding-left: 5px;
 padding-right: 5px;
 overflow-x: hidden;
 }
-#mgvdbojvbp .gt_column_spanner_outer {
+#eskdgplnhs .gt_column_spanner_outer {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3692,13 +3691,13 @@ padding-bottom: 0;
 padding-left: 4px;
 padding-right: 4px;
 }
-#mgvdbojvbp .gt_column_spanner_outer:first-child {
+#eskdgplnhs .gt_column_spanner_outer:first-child {
 padding-left: 0;
 }
-#mgvdbojvbp .gt_column_spanner_outer:last-child {
+#eskdgplnhs .gt_column_spanner_outer:last-child {
 padding-right: 0;
 }
-#mgvdbojvbp .gt_column_spanner {
+#eskdgplnhs .gt_column_spanner {
 border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
@@ -3709,10 +3708,10 @@ overflow-x: hidden;
 display: inline-block;
 width: 100%;
 }
-#mgvdbojvbp .gt_spanner_row {
+#eskdgplnhs .gt_spanner_row {
 border-bottom-style: hidden;
 }
-#mgvdbojvbp .gt_group_heading {
+#eskdgplnhs .gt_group_heading {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3737,7 +3736,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 text-align: left;
 }
-#mgvdbojvbp .gt_empty_group_heading {
+#eskdgplnhs .gt_empty_group_heading {
 padding: 0.5px;
 color: #333333;
 background-color: #FFFFFF;
@@ -3751,13 +3750,13 @@ border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 vertical-align: middle;
 }
-#mgvdbojvbp .gt_from_md > :first-child {
+#eskdgplnhs .gt_from_md > :first-child {
 margin-top: 0;
 }
-#mgvdbojvbp .gt_from_md > :last-child {
+#eskdgplnhs .gt_from_md > :last-child {
 margin-bottom: 0;
 }
-#mgvdbojvbp .gt_row {
+#eskdgplnhs .gt_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3775,7 +3774,7 @@ border-right-color: #D3D3D3;
 vertical-align: middle;
 overflow-x: hidden;
 }
-#mgvdbojvbp .gt_stub {
+#eskdgplnhs .gt_stub {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3787,7 +3786,7 @@ border-right-color: #D3D3D3;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mgvdbojvbp .gt_stub_row_group {
+#eskdgplnhs .gt_stub_row_group {
 color: #333333;
 background-color: #FFFFFF;
 font-size: 100%;
@@ -3800,13 +3799,13 @@ padding-left: 5px;
 padding-right: 5px;
 vertical-align: top;
 }
-#mgvdbojvbp .gt_row_group_first td {
+#eskdgplnhs .gt_row_group_first td {
 border-top-width: 2px;
 }
-#mgvdbojvbp .gt_row_group_first th {
+#eskdgplnhs .gt_row_group_first th {
 border-top-width: 2px;
 }
-#mgvdbojvbp .gt_summary_row {
+#eskdgplnhs .gt_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3815,14 +3814,14 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mgvdbojvbp .gt_first_summary_row {
+#eskdgplnhs .gt_first_summary_row {
 border-top-style: solid;
 border-top-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_first_summary_row.thick {
+#eskdgplnhs .gt_first_summary_row.thick {
 border-top-width: 2px;
 }
-#mgvdbojvbp .gt_last_summary_row {
+#eskdgplnhs .gt_last_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3831,7 +3830,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_grand_summary_row {
+#eskdgplnhs .gt_grand_summary_row {
 color: #333333;
 background-color: #FFFFFF;
 text-transform: inherit;
@@ -3840,7 +3839,7 @@ padding-bottom: 8px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mgvdbojvbp .gt_first_grand_summary_row {
+#eskdgplnhs .gt_first_grand_summary_row {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3849,7 +3848,7 @@ border-top-style: double;
 border-top-width: 6px;
 border-top-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_last_grand_summary_row_top {
+#eskdgplnhs .gt_last_grand_summary_row_top {
 padding-top: 8px;
 padding-bottom: 8px;
 padding-left: 5px;
@@ -3858,10 +3857,10 @@ border-bottom-style: double;
 border-bottom-width: 6px;
 border-bottom-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_striped {
+#eskdgplnhs .gt_striped {
 background-color: rgba(128, 128, 128, 0.05);
 }
-#mgvdbojvbp .gt_table_body {
+#eskdgplnhs .gt_table_body {
 border-top-style: solid;
 border-top-width: 2px;
 border-top-color: #D3D3D3;
@@ -3869,7 +3868,7 @@ border-bottom-style: solid;
 border-bottom-width: 2px;
 border-bottom-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_footnotes {
+#eskdgplnhs .gt_footnotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3882,7 +3881,7 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_footnote {
+#eskdgplnhs .gt_footnote {
 margin: 0px;
 font-size: 90%;
 padding-top: 4px;
@@ -3890,7 +3889,7 @@ padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mgvdbojvbp .gt_sourcenotes {
+#eskdgplnhs .gt_sourcenotes {
 color: #333333;
 background-color: #FFFFFF;
 border-bottom-style: none;
@@ -3903,57 +3902,57 @@ border-right-style: none;
 border-right-width: 2px;
 border-right-color: #D3D3D3;
 }
-#mgvdbojvbp .gt_sourcenote {
+#eskdgplnhs .gt_sourcenote {
 font-size: 90%;
 padding-top: 4px;
 padding-bottom: 4px;
 padding-left: 5px;
 padding-right: 5px;
 }
-#mgvdbojvbp .gt_left {
+#eskdgplnhs .gt_left {
 text-align: left;
 }
-#mgvdbojvbp .gt_center {
+#eskdgplnhs .gt_center {
 text-align: center;
 }
-#mgvdbojvbp .gt_right {
+#eskdgplnhs .gt_right {
 text-align: right;
 font-variant-numeric: tabular-nums;
 }
-#mgvdbojvbp .gt_font_normal {
+#eskdgplnhs .gt_font_normal {
 font-weight: normal;
 }
-#mgvdbojvbp .gt_font_bold {
+#eskdgplnhs .gt_font_bold {
 font-weight: bold;
 }
-#mgvdbojvbp .gt_font_italic {
+#eskdgplnhs .gt_font_italic {
 font-style: italic;
 }
-#mgvdbojvbp .gt_super {
+#eskdgplnhs .gt_super {
 font-size: 65%;
 }
-#mgvdbojvbp .gt_footnote_marks {
+#eskdgplnhs .gt_footnote_marks {
 font-size: 75%;
 vertical-align: 0.4em;
 position: initial;
 }
-#mgvdbojvbp .gt_asterisk {
+#eskdgplnhs .gt_asterisk {
 font-size: 100%;
 vertical-align: 0;
 }
-#mgvdbojvbp .gt_indent_1 {
+#eskdgplnhs .gt_indent_1 {
 text-indent: 5px;
 }
-#mgvdbojvbp .gt_indent_2 {
+#eskdgplnhs .gt_indent_2 {
 text-indent: 10px;
 }
-#mgvdbojvbp .gt_indent_3 {
+#eskdgplnhs .gt_indent_3 {
 text-indent: 15px;
 }
-#mgvdbojvbp .gt_indent_4 {
+#eskdgplnhs .gt_indent_4 {
 text-indent: 20px;
 }
-#mgvdbojvbp .gt_indent_5 {
+#eskdgplnhs .gt_indent_5 {
 text-indent: 25px;
 }
 </style>
