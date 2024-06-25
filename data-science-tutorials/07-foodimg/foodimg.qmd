@@ -48,7 +48,7 @@ Keywords: Convolution neural network (CNN), transfer learning.
 
 ## Data ingestion
 
-We will use the [Food-101 dataset](https://www.vision.ee.ethz.ch/datasets_extra/food-101/), which contains 101 food categories, each with 1,000 images. The images are of varying sizes and aspect ratios. We will resize the images to 224x224 pixels, which is the input size required by the pre-trained model we will use.
+We will use the [Food-101 dataset](https://www.kaggle.com/datasets/kmader/food41), which contains 101 food categories, each with 1,000 images. The images are of varying sizes and aspect ratios. We will resize the images to 224x224 pixels, which is the input size required by the pre-trained model we will use.
 
 ```{bash}
 ls food/images
@@ -185,6 +185,8 @@ dim(y_test)
 ## Model
 
 Instead of building and training a CNN from scratch, we will use a pre-trained model, [MobileNet](https://keras.io/api/applications/mobilenet/), and fine-tune it to our food image dataset. MobileNet is a CNN model that has been pre-trained on the ImageNet dataset. We will use the pre-trained model to extract features from our food images and then train a new model on top of these features.
+
+![MobileNet architecture](mobilenet.jpeg){fig-align="center"}
 
 For a list of available pre-trained models, see [Keras Applications](https://keras.io/api/applications/).
 
