@@ -123,9 +123,9 @@ $$
 p_i = \frac{e^{\eta_i}}{1 + e^{\eta_i}},
 $$ where $\eta_i$ is the linear predictor (or systematic component)
 
-\$\$ \eta\_i = \mathbf{x}\_i\^T \boldsymbol{\beta} = \beta\_0 + \beta*1 x*{i1} + \beta*2 x*{i2} + \dots + \beta*q x*{iq}.
-
-\$\$ In other words, logistic regression models the **log-odds** of the probability of success as a linear function of the predictors
+$$ 
+\eta_i = \mathbf{x}_i^T \boldsymbol{\beta} = \beta_0 + \beta_1 x_{i1} + \beta_2 x_{i2} + \dots + \beta_q x_{iq}.
+$$ In other words, logistic regression models the **log-odds** of the probability of success as a linear function of the predictors
 
 $$
 \log \left( \frac{p}{1-p} \right) = \log(\text{odds}) = \beta_0 + \beta_1  x_1 + \beta_2  x_2 + \dots + \beta_q  x_q. 
