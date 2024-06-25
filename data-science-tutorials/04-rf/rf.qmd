@@ -57,6 +57,10 @@ library(tidymodels)
 ```
 [Slido](https://app.sli.do/event/aGHTYktNjhMJFDCe92w9Rt/embed/polls/c7b77562-59a7-48a6-8530-ee06904d8c76)
 
+## Learning objectives
+
+Keywords: Decision trees, Random forests, gradient boosting, XGBoost, LightGBM, bagging.
+
 ## Classification and regression trees (CART)
 
 A CART model is a tree structure consisting of a set of nested decision rules. At each node $i$, the feature dimension $d_i$ of the input vector $\mathbf x$ is compared to a threshold value $t_i$, and the input is then passed down to the left or right branch, depending on whether it is above or below threshold. (For categorical values, we compare if $x_{d_i}$ is equal to the target value $t_i$ or not.) At the leaves of the tree, the model specifies a distribution over the output for points that are in that part of the input space.
@@ -147,6 +151,8 @@ It can be shown that, as long as each $F_m$ has an accuracy that is better than 
 Note that boosting reduces the bias of the strong learner, by fitting trees that depend on each other, whereas bagging and RF reduce the variance by fitting independent trees. In many cases, boosting can work better (but take more time to train).
 
 ## Random forest workflow
+
+![Machine learning workflow](../03-logit/resampling.svg){fig-align="center" width="75%"}
 
 We load the Food Security Supplement household data we curated earlier. Our goal is to predict food insecurity status using household's socio-economical status.
 

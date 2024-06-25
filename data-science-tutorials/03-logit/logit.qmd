@@ -353,6 +353,8 @@ Implementing ridge regression and the lasso requires a method for selecting a va
 
 ## Logistic regression (with enet regularization) workflow
 
+![Machine learning workflow](resampling.svg){fig-align="center" width="75%"}
+
 ### Initial split into test and non-test sets
 
 We randomly split the data into 25% test data and 75% non-test data. Stratify on food security status.
